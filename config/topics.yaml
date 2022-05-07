@@ -1,0 +1,8 @@
+robot_state_topic: /robot_state
+pedestrian_topic: pedsim_visualizer/tracked_persons
+command_topic: jackal_velocity_controller/cmd_vel
+laser_topic: front/scan
+grid_topic: local_map/local_map
+predict_topic: /predicted_cmd
+rate: 4
+      

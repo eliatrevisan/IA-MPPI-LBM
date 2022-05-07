@@ -1,0 +1,11 @@
+<launch>
+
+<node
+pkg="rosbag"
+name="record_data"
+type="record"
+args="-o /home/bdebrito/code/I-LSTM/data/data.bag /robot_state /pedsim_visualizer/tracked_persons /jackal_velocity_controller/cmd_vel /predicted_cmd"
+/>
+
+</launch>
+
