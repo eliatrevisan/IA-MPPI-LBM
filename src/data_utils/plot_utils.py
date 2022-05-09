@@ -748,6 +748,8 @@ def plot_batch(batch_x, batch_grid, batch_ped_grid, batch_y, other_agents_pos,ar
 
 	ax_in.clear()
 
+    #x_lim = [-args.map_size[0]*args.resolution/2 ,args.map_size[0]*args.resolution/2]
+	#y_lim = [-args.map_size[1]*args.resolution/2,args.map_size[1]*args.resolution/2]
 	x_lim = [-args.grid_width*args.submap_resolution/2 ,args.grid_width*args.submap_resolution/2]
 	y_lim = [-args.grid_height*args.submap_resolution/2,args.grid_height*args.submap_resolution/2]
 	x_lim = [-5,5]

@@ -268,6 +268,10 @@ with tf.Session(config=config) as sess:
 				y_model_pred = model.predict(sess, feed_dict_, test_args.update_state)
 				samples.append(y_model_pred[:,0,:])
 
+			#plot_batch(batch_x, batch_grid, other_agents_info, y_model_pred, other_agents_pos, map_args)
+			#fig, ax = plt.subplots()
+			#sup.plot_grid(ax, map_args["map_center"], map_args["file_name"], map_args['resolution'], map_args['map_size'])
+			#plt.show()
 			traj_likelihood.append(likelihood)
 			predictions.append(samples)
 
@@ -358,13 +362,13 @@ if test_args.record:
 		else:
 			#recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 			#	                       trajectories,test_args)
-			recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
-		                 trajectories,test_args)
+			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
+		    #             trajectories,test_args)
 			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
 			#                       other_agents_list,
 			#                       trajectories, all_traj_likelihood,test_args)
 
-		print("Recorder is done!")
+			print("Recorder is done!")
 else:
 	print("Performance tests")
 	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)

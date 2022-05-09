@@ -29,17 +29,36 @@ from copy import deepcopy
 from multiprocessing.pool import ThreadPool
 from progressbar import *
 
+home = os.path.expanduser('~')
+
+class Map:
+    size = [1715, 881]
+    data = pl.imread(home + '/I-LSTM/data/simulation/roboat/map.png')
+    origin = [-78, -40, 0.0]
+    resolution = 0.081
+
+def plot_map(map, ax):
+    ax.imshow(map.data,
+               extent = (map.origin[0], map.origin[0] + map.size[0] * map.resolution,
+                         map.origin[1], map.origin[1] + map.size[1] * map.resolution),
+               cmap='gray_r')
+    ax.set_facecolor('#262626')
+    ax.set_xlabel('x [m]')
+    ax.set_ylabel('y [m]')
+    ax.yaxis.set_label_coords(-0.08, .5)
+    ax.xaxis.set_label_coords(0.5, -0.09)
+
 #os.environ['TF_ENABLE_AUTO_MIXED_PRECISION'] = '1'
 
 pretrained_convnet_path = "../trained_models/autoencoder_with_ped"
 
-data_path = '../data/2_agents_swap/trajs/'
-scenario = 'GA3C-CADRL-10-py27'
-data_path = '../data/cyberzoo_experiments/'
-scenario = 'all_trajectories'
-exp_num = 6
+#data_path = '../data/2_agents_swap/trajs/'
+#scenario = 'GA3C-CADRL-10-py27'
+#data_path = '../data/cyberzoo_experiments/'
+#scenario = 'all_trajectories'
+exp_num = 2
 data_path = '../data/'
-scenario = 'simulation/6_peds_corridor'
+scenario = 'simulation/roboat'
 
 # Hyperparameters
 n_epochs = 2
@@ -84,7 +103,7 @@ max_range_ped_grid = 3
 
 print_freq = 2000
 save_freq = 2000
-dt = 0.1
+dt = 0.4
 
 warmstart_model = False
 pretrained_convnet = False
@@ -100,12 +119,14 @@ normalize_data = False
 real_world_data = False
 regulate_log_loss = False
 # Map parameters
-submap_resolution = 0.1
-submap_width = 6
-submap_height = 6
+submap_resolution = 0.081
+submap_width = 4.86
+submap_height = 4.86
 diversity_update = False
 predict_positions = False
 warm_start_convnet = True
+
+train_set = 1.0
 
 def parse_args():
 	parser = argparse.ArgumentParser(description='LSTM model training')
@@ -258,6 +279,7 @@ def parse_args():
 	parser.add_argument('--sy_vel', help='sy_vel', type=float, default=1)
 	parser.add_argument('--sx_pos', help='sx_pos', type=float, default=1)
 	parser.add_argument('--sy_pos', help='sy_pos', type=float, default=1)
+	parser.add_argument('--train_set', help='Percentage of the dataset used for training', type=float, default=train_set)
 	args = parser.parse_args()
 
 	return args
@@ -327,9 +349,16 @@ while not new_epoch:
 
 	batch_x, batch_vel, batch_pos,batch_goal,batch_grid, batch_ped_grid, batch_y,batch_pos_target, other_agents_pos, new_epoch = data_prep.getBatch()
 	mij = np.min(batch_ped_grid,axis=2)
-	if np.min(batch_ped_grid,axis=2) < 1.0:
-		ax_pos.plot(batch_pos_target[0,0,0::2],batch_pos_target[0,0,1::2], color=plt_colors)
-
+	#print(np.min(mij,axis=1))
+	if np.min(mij, axis=1) < 1.0:
+		#ax_pos.plot(batch_pos_target[0,0,0::2], batch_pos_target[0,0,1::2], color=plt_colors)
+		ax_pos.plot(batch_pos[0,:,0], batch_pos[0,:,1], color=plt_colors)
+map = Map()
+plot_map(map, ax_pos)
 pl.show(block=True)
+
+print(batch_pos[0,:,0])
+print(batch_pos[0,:,1])
+
 
 fig_animate.savefig(args.data_path + args.scenario + "/trajectories.jpg")

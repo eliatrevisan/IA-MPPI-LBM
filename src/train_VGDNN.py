@@ -305,7 +305,7 @@ data_prep = dhlstm.DataHandlerLSTM(args)
 # Make sure this parameters are correct otherwise it will fail training and ploting the results
 map_args = {"file_name": 'map.png',
 	            "resolution": 0.081,
-	            "map_size": np.array([[1715,881]]), 
+	            "map_size": np.array([[1715,881]]),
 				"map_center": np.array([-78,-40])} # THIS IS HARDCODED FOR SOME REASON AND NOT EXTRACTED FROM MAP.JSON
 # Load dataset
 data_prep.processData(**map_args)

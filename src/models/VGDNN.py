@@ -383,6 +383,7 @@ class NetworkModel():
 	def feed_test_dic(self, **kwargs):
 		step = kwargs["step"]
 		n_other_agents = np.zeros([self.args.batch_size])
+		#print(kwargs.keys())
 		for i, other in enumerate(kwargs['other_agents_pos']):
 			n_other_agents[i] = len(other)
 		return {self.input_state_placeholder: np.expand_dims(kwargs["batch_vel"][:, step, :], axis=1),
@@ -937,6 +938,7 @@ class NetworkModel():
 		Fully connected layer with given weights and biases.
 		Activation and summary can be activated with the arguments.
 		"""
+		#print(input.size, weights.size)
 		affine_result = tf.matmul(input, weights) + biases
 		if activation is None:
 			activations = affine_result

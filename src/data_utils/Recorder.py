@@ -446,7 +446,7 @@ class Recorder():
 			print('[INF] No map file')
 		ax_pos.imshow(resized,extent=[0, 30, -3, 2])
 		"""
-		sup.plot_grid(ax_pos, np.array([0.0, 0.0]), self.gridmap.gridmap, self.gridmap.resolution,
+		sup.plot_grid(ax_pos, self.gridmap.map_center, self.gridmap.gridmap, self.gridmap.resolution,  # np.array([0.0, 0.0])
 		              self.gridmap.map_size)
 
 		axbackground = fig_animate.canvas.copy_from_bbox(ax_pos.bbox)
