@@ -364,9 +364,9 @@ if test_args.record:
 			#	                       trajectories,test_args)
 			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 		    #             trajectories,test_args)
-			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-			#                       other_agents_list,
-			#                       trajectories, all_traj_likelihood,test_args)
+			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
+			                       other_agents_list,
+			                       trajectories, all_traj_likelihood,test_args)
 
 			print("Recorder is done!")
 else:

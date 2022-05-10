@@ -118,12 +118,23 @@ def plot_grid(ax, center, grid, grid_resolution, submap_size):
     plot_values = np.zeros([0, 2])
     for idx_x in range(grid.shape[0]):
         for idx_y in range(grid.shape[1]):
-            grid_coordinate_local = np.array([idx_x, idx_y]) * grid_resolution - submap_size / 2.0
+            grid_coordinate_local = np.array([idx_x, idx_y]) * grid_resolution - np.array(submap_size) / 2.0
             grid_coordinate_global = grid_coordinate_local + center
             if grid[idx_x, idx_y] == 1:
                 plot_values = np.append(plot_values, np.array([[grid_coordinate_global[0], grid_coordinate_global[1]]]),
                                         axis=0)
     return ax.plot(plot_values[:, 0], plot_values[:, 1], marker='s', alpha=0.8, color='k', lw=0)
+
+def plot_grid_roboat(ax, origin, grid, resolution, size):
+    ax.imshow(grid,
+               extent = (origin[0], origin[0] + size[0] * resolution,
+                         origin[1], origin[1] + size[1] * resolution),
+               cmap='gray_r')
+    ax.set_facecolor('#262626')
+    ax.set_xlabel('x [m]')
+    ax.set_ylabel('y [m]')
+    ax.yaxis.set_label_coords(-0.08, .5)
+    ax.xaxis.set_label_coords(0.5, -0.09)
 
 def create_map_from_png(file_name,resolution,map_size,map_center,data_path='../data',):
   # Create grid for SF model
