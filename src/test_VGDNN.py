@@ -299,13 +299,14 @@ with tf.Session(config=config) as sess:
 			save_img_to_file = model_path + "/figs"
 			if not os.path.exists(save_img_to_file):
 				os.makedirs(save_img_to_file)
-			pl.savefig(save_img_to_file+"/cell_state" + str(exp_idx) + '.png')
+			pl.savefig(save_img_to_file+"/cell_state" + str(exp_id) + '.png')
 			pl.close()
 
 			fig = pl.figure()
 			ax = pl.axes(projection="3d")
 			time = np.arange(0, len(cell_ped_list), 1)
 			R= np.array(cell_ped_list)
+			#print(R)
 			ax.clear()
 			X, Y = np.meshgrid(x_ped,time)
 			surf = ax.plot_surface(X, Y, R,cmap=cm.coolwarm)
@@ -313,7 +314,7 @@ with tf.Session(config=config) as sess:
 			ax.set_xlabel("Time [s]")
 			ax.set_xlabel("Features")
 			fig.colorbar(surf)
-			pl.savefig(save_img_to_file+"/cell_ped" + str(exp_idx) + '.png')
+			pl.savefig(save_img_to_file+"/cell_ped" + str(exp_id) + '.png')
 			pl.close()
 
 			fig = pl.figure()
@@ -327,7 +328,7 @@ with tf.Session(config=config) as sess:
 			ax.set_xlabel("Time [s]")
 			ax.set_xlabel("Features")
 			fig.colorbar(surf)
-			pl.savefig(save_img_to_file+"/cell_concat" + str(exp_idx) + '.png')
+			pl.savefig(save_img_to_file+"/cell_concat" + str(exp_id) + '.png')
 			pl.close()
 
 		all_predictions.append(predictions)
@@ -360,13 +361,13 @@ if test_args.record:
 			                       other_agents_list,
 			                       trajectories,all_traj_likelihood, test_args)
 		else:
-			#recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
-			#	                       trajectories,test_args)
+			recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
+				                       trajectories,test_args)
 			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 		    #             trajectories,test_args)
-			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-			                       other_agents_list,
-			                       trajectories, all_traj_likelihood,test_args)
+			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
+			#                       other_agents_list,
+			#                       trajectories, all_traj_likelihood,test_args)
 
 			print("Recorder is done!")
 else:

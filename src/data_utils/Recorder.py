@@ -403,8 +403,8 @@ class Recorder():
 
 		fig_animate = pl.figure('Global Scenario')
 		fig_animate.tight_layout()
-		fig_width = 12  # width in inches
-		fig_height = 10  # height in inches
+		fig_width = 3  # width in inches
+		fig_height = 2  # height in inches
 		fig_size = [fig_width, fig_height]
 		fontsize = 26
 
@@ -413,7 +413,7 @@ class Recorder():
 		          'font.size': fontsize,
 		          'xtick.labelsize': fontsize,
 		          'ytick.labelsize': fontsize,
-		          'figure.figsize': fig_size,
+		          #'figure.figsize': fig_size,
 		          'legend.loc': 'upper right',
 		          'legend.fontsize': 14}
 
@@ -476,6 +476,7 @@ class Recorder():
 				ax_pos.add_artist(el)
 
 		ax_pos.legend()
+
 
 		with self.writer.saving(fig_animate, self.args.model_path + '/results/' + self.args.scenario+"/video.mp4", 100):
 			for animation_idx in range(0,len(input_list)):
@@ -608,6 +609,7 @@ class Recorder():
 							animation_idx) + "_" + str(step) + ".jpg")
 
 					fig_animate.canvas.flush_events()
+
 
 	def plot_local_scenario(self,ax_pos_local, batch_x, batch_grid, model_vel_pred, model_vel_real, other_agents_pos,step,
 	            rotate=False,n_samples=1):
