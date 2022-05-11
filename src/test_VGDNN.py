@@ -99,6 +99,7 @@ with open(args.model_path + '/model_parameters.json', 'w') as f:
 	json.dump(args.__dict__,f)
 
 # change some args because we are doing inference
+# TODO: Why change these arguments, how to infer for multiple agents simultaneously?
 truncated_backprop_length = args.truncated_backprop_length
 args.truncated_backprop_length = 1
 args.batch_size = 1
@@ -361,13 +362,13 @@ if test_args.record:
 			                       other_agents_list,
 			                       trajectories,all_traj_likelihood, test_args)
 		else:
-			recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
-				                       trajectories,test_args)
+			#recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
+			#	                       trajectories,test_args)
 			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 		    #             trajectories,test_args)
-			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-			#                       other_agents_list,
-			#                       trajectories, all_traj_likelihood,test_args)
+			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
+			                       other_agents_list,
+			                       trajectories, all_traj_likelihood,test_args)
 
 			print("Recorder is done!")
 else:

@@ -12,4 +12,8 @@
 #python3 test_VGDNN.py --exp_num 122 --model_name VRNN --num_test_sequences 100 --scenario real_world/ewap_dataset/seq_hotel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 #python3 test_VGDNN.py --exp_num 123 --model_name VRNN --num_test_sequences 100 --scenario real_world/ewap_dataset/seq_hotel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
+#python3 test_VGDNN.py --exp_num 3 --model_name VGDNN --num_test_sequences 10 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 3 --model_name VGDNN --num_test_sequences 10 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
 python3 test_VGDNN.py --exp_num 3 --model_name VGDNN --num_test_sequences 10 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 1 --model_name VGDNN --num_test_sequences 10 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;

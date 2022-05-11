@@ -403,8 +403,8 @@ class Recorder():
 
 		fig_animate = pl.figure('Global Scenario')
 		fig_animate.tight_layout()
-		fig_width = 3  # width in inches
-		fig_height = 2  # height in inches
+		fig_width = 12  # width in inches
+		fig_height = 10  # height in inches
 		fig_size = [fig_width, fig_height]
 		fontsize = 26
 
@@ -413,11 +413,11 @@ class Recorder():
 		          'font.size': fontsize,
 		          'xtick.labelsize': fontsize,
 		          'ytick.labelsize': fontsize,
-		          #'figure.figsize': fig_size,
+		          'figure.figsize': fig_size,
 		          'legend.loc': 'upper right',
 		          'legend.fontsize': 14}
 
-		pl.rcParams.update(params)
+		#pl.rcParams.update(params)
 
 		plt_colors = []
 		plt_colors.append([0.8500, 0.3250, 0.0980])  # orange
@@ -428,7 +428,7 @@ class Recorder():
 		ax_pos.set_xlabel('x [m]')
 		ax_pos.set_ylabel('y [m]')
 		ax_pos.axis('on')
-		ax_pos.set_aspect('equal')
+		#ax_pos.set_aspect('equal')
 
 		# Load Map
 		"""
@@ -480,13 +480,15 @@ class Recorder():
 
 		with self.writer.saving(fig_animate, self.args.model_path + '/results/' + self.args.scenario+"/video.mp4", 100):
 			for animation_idx in range(0,len(input_list)):
-				input = input_list[animation_idx]
+				input = input_list[animation_idx] #* (1 / self.gridmap.resolution)
 				grid = grid_list[animation_idx]
 
 				#ax_pos.set_xlim([int(np.min(input/self.args.sx_pos))-2.0, int(np.max(input/self.args.sx_pos))+2.0])
 				#ax_pos.set_ylim([int(np.min(input/self.args.sy_pos))-2.0, int(np.max(input/self.args.sy_pos))+2.0])
-				ax_pos.set_xlim([-self.gridmap.map_size[0]/2, self.gridmap.map_size[0]/2])
-				ax_pos.set_ylim([-self.gridmap.map_size[1]/2, self.gridmap.map_size[1]/2])
+				#ax_pos.set_xlim([-self.gridmap.map_size[0]/2, self.gridmap.map_size[0]/2])
+				#ax_pos.set_ylim([-self.gridmap.map_size[1]/2, self.gridmap.map_size[1]/2])
+				#ax_pos.set_xlim([self.gridmap.map_size[0], -self.gridmap.map_size[0]])
+				#ax_pos.set_ylim([self.gridmap.map_size[1], -self.gridmap.map_size[1]])
 
 				if not (y_pred_list_global is None):
 					model_vel_pred = y_pred_list_global[animation_idx]
@@ -1146,7 +1148,10 @@ class Recorder():
 		else:
 			"Video not found"
 
-	def plot_on_image(self,input_list,grid_list,y_pred_list_global,y_ground_truth_list,other_agents_list,traj_list,test_args,social_trajectories=None):
+	def plot_on_image(self,input_list, grid_list, y_pred_list_global, y_ground_truth_list, other_agents_list, traj_list, test_args, social_trajectories=None):
+		"""
+		Not working yet for Herengracht map. Seems to be something wrong with the H.txt file and size of plotting
+		"""
 
 		scenario = self.args.scenario.split('/')[-1]
 
@@ -1173,11 +1178,16 @@ class Recorder():
 		print("Resolution: " + str(resolution))
 
 		im = np.uint8(cv2.imread(map_file) * -1 + 255)
-		im = cv2.rotate(im, cv2.ROTATE_90_COUNTERCLOCKWISE)
+		#im = cv2.rotate(im, cv2.ROTATE_90_COUNTERCLOCKWISE)
 		frame_height, frame_width, layers = im.shape
 		scale_factor = 2
 		resized_img = cv2.resize(im, (frame_width * scale_factor, frame_height * scale_factor),
 		                         interpolation=cv2.INTER_AREA)
+		print(resized_img.shape)
+
+		h, w, c = resized_img.shape
+		blank_image = 255 * np.ones(shape=(h, w, c), dtype=np.uint8)
+
 
 		if os.path.exists(map_file):
 			print('[INF] Using video file ' + video_file)
@@ -1204,6 +1214,7 @@ class Recorder():
 				for step in range(input.shape[0]):
 
 					overlay = resized_img.copy()
+					#overlay = blank_image.copy()
 
 					# Initial positions
 					if self.args.normalize_data:
@@ -1276,6 +1287,7 @@ class Recorder():
 
 							obsv_XY = sup.to_image_frame(Hinv, traj_pred)*scale_factor
 							sup.line_cv(overlay, obsv_XY, (0, 0, 255),2)
+							#print(obsv_XY)
 						else:
 							for sample_id in range(test_args.n_samples):
 								prediction_sample = model_vel_pred[step][sample_id]
@@ -1310,6 +1322,7 @@ class Recorder():
 									obsv_XY = sup.to_image_frame(Hinv, traj_pred)*scale_factor
 
 									sup.line_cv(overlay, obsv_XY, colors[mix_idx], 2)
+									print(obsv_XY)
 
 									try:
 										if self.args.output_pred_state_dim > 2:
