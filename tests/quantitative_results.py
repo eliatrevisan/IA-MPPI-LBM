@@ -2,8 +2,8 @@ import sys
 import os
 import csv
 import numpy as np
-import pandas as pd
-from io import StringIO
+import matplotlib.pyplot as plt
+
 sys.path.append('../')
 
 
@@ -14,7 +14,15 @@ file = "_summary.csv"
 
 def main():
     results = getResults()
-    print(results)
+
+    fig, ax =  plt.subplots()
+    ax.set_axis_off()
+    printResults(ax, results)
+
+    #print(results)
+    fig.tight_layout()
+
+    plt.show()
 
 def getResults():
     """
@@ -22,10 +30,21 @@ def getResults():
     """
     #data = np.genfromtxt(home + directory + model + file, delimiter=",", skip_header=1, usecols=(0,2,3,4,5,6,7,8,9,10), dtype='unicode')
     data = np.genfromtxt(home + directory + model + file, delimiter=",", dtype='unicode')
+    print(data)
+    #for row in range(data.shape[0]):
+        #for col in range(data.shape[1]);
+            #data[row, col]
     return data
 
-def printResults(results):
+def printResults(ax, results):
 
+    labels = results[0,:]
+    print(labels)
+    table = ax.table(cellText=results[1:,1:], colLabels=labels, loc='center')
+    #table.set_fontsize(40)
+    #table.scale(1.5, 1.5)
+
+    return
 
 
 if __name__ == "__main__":

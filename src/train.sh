@@ -345,7 +345,7 @@ python3 train_VGDNN.py --exp_num 110 --model_name VRNNwLikelihood --n_mixtures 3
 python3 test_VGDNN.py --exp_num 110 --model_name VRNNwLikelihood --num_test_sequences 10 --scenario real_world/zara_02 --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
 python3 test_VGDNN.py --exp_num 110 --model_name VRNNwLikelihood --num_test_sequences 100 --scenario real_world/zara_02 --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
-END
+
 
 #python3 train_VGDNN.py --exp_num 1 --model_name VGDNN --n_mixtures 3 --output_pred_state_dim 4 --scenario simulation/roboat --gpu false --prev_horizon 8 --prediction_horizon 12 --dt 0.4 --truncated_backprop_length 12 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update true;
 #python3 train_VGDNN.py --exp_num 2 --model_name VGDNN --n_mixtures 3 --output_pred_state_dim 4 --scenario simulation/roboat --gpu false --prev_horizon 8 --prediction_horizon 12 --dt 0.4 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update true;
@@ -391,3 +391,14 @@ python3 test_VGDNN.py --exp_num 8 --model_name VGDNN --num_test_sequences 10 --s
 python3 test_VGDNN.py --exp_num 8 --model_name VGDNN --num_test_sequences 100 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
 #####
+
+END
+
+python3 train_VGDNN.py --exp_num 9 --model_name VGDNN --n_mixtures 3 --output_pred_state_dim 4 --scenario simulation/roboat --gpu false --prev_horizon 8 --prediction_horizon 12 --dt 0.4 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update true;
+python3 test_VGDNN.py --exp_num 9 --model_name VGDNN --num_test_sequences 10 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 9 --model_name VGDNN --num_test_sequences 100 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+
+python3 train_VGDNN.py --exp_num 10 --model_name VGDNN --n_mixtures 3 --output_pred_state_dim 4 --scenario simulation/roboat --gpu false --prev_horizon 12 --prediction_horizon 25 --dt 0.4 --truncated_backprop_length 12 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update true;
+python3 test_VGDNN.py --exp_num 10 --model_name VGDNN --num_test_sequences 10 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 10 --model_name VGDNN --num_test_sequences 100 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;

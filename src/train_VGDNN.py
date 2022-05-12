@@ -43,7 +43,7 @@ data_path = '../data/'
 scenario = '20_ped_with_obstacles/short_few_obstacles'
 
 # Hyperparameters
-n_epochs = 2
+n_epochs = 1000
 
 batch_size = 128
 regularization_weight = 0.0001
@@ -85,7 +85,7 @@ max_range_ped_grid = 5
 
 print_freq = 200
 save_freq = 500
-total_training_steps = 20000
+total_training_steps = 100000
 dt = 0.1
 
 warmstart_model = False
@@ -302,11 +302,11 @@ with open(args.model_path + '/model_parameters.json', 'w') as f:
 # Create Datahandler class
 data_prep = dhlstm.DataHandlerLSTM(args)
 # Only used to create a map from png
-# Make sure this parameters are correct otherwise it will fail training and ploting the results
+# Make sure this parameters are correct otherwise it will fail training and plotting the results
 map_args = {"file_name": 'map.png',
 	            "resolution": 0.081,
-	            "map_size": np.array([[1715,881]]),
-				"map_center": np.array([-78,-40])} # THIS IS HARDCODED FOR SOME REASON AND NOT EXTRACTED FROM MAP.JSON
+	            "map_size": np.array([1715,881]),
+				"map_center": np.array([-78,-40])} # THIS IS HARDCODED FOR SOME REASON AND NOT EXTRACTED FROM MAP.JSON ?
 # Load dataset
 data_prep.processData(**map_args)
 

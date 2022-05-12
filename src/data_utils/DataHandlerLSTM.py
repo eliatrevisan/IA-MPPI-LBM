@@ -315,7 +315,7 @@ class DataHandlerLSTM():
 #         if len(traj) > self.min_length_trajectory:
 #           traj.smoothenTrajectory(dt=self.dt)
 
-        # Subsample trajectories (longer discretization time) from dt=0.1 to dt=0.3
+        # Subsample trajectories (longer discretization time) from dt=0.1 to dt=0.4
         for id in self.agent_container.getAgentIDs():
             for traj in self.agent_container.getAgentTrajectories(id):
                 traj.subsample(int(self.args.dt*10))
