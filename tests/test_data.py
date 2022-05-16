@@ -316,4 +316,4 @@ data_prep.processData(**map_args)
 
 traj = data_prep.trajectory_set[0][1]
 
-print(traj.other_agents_positions) # Don't understand the output of this
+print(traj.other_agents_positions) # Full traj (pos) of other agents

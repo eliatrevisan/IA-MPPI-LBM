@@ -43,7 +43,7 @@ data_path = '../data/'
 scenario = '20_ped_with_obstacles/short_few_obstacles'
 
 # Hyperparameters
-n_epochs = 1000
+n_epochs = 10000
 
 batch_size = 128
 regularization_weight = 0.0001
@@ -85,7 +85,7 @@ max_range_ped_grid = 5
 
 print_freq = 200
 save_freq = 500
-total_training_steps = 100000
+total_training_steps = 1000000
 dt = 0.1
 
 warmstart_model = False
