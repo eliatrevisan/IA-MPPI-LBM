@@ -75,7 +75,10 @@ def printResults(ax, models, results,labels):
     print(labels)
     print(table)
 
-    ax[1].table(cellText=table, rowLabels=labels, colLabels=models, loc='center')
+    table = ax[1].table(cellText=table, rowLabels=labels, colLabels=models, loc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    
     ax[1].axis('off')
     
     return

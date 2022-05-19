@@ -314,6 +314,10 @@ map_args = {"file_name": 'map.png',
 # Load dataset
 data_prep.processData(**map_args)
 
-traj = data_prep.trajectory_set[0][1]
+#traj = data_prep.trajectory_set[0][1]
 
-print(traj.other_agents_positions) # Full traj (pos) of other agents
+#print(traj.other_agents_positions) # Full traj (pos) of other agents
+
+batch_x, batch_vel, batch_pos,batch_goal,batch_grid, batch_ped_grid, batch_y,batch_pos_target, other_agents_pos, new_epoch = data_prep.getBatch()
+
+print(batch_vel[0].shape)
