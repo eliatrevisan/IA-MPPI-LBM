@@ -82,6 +82,10 @@ else:
 	os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 	import tensorflow as tf
 
+# Suppress TensorFlow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
 cwd = os.getcwd()
 
 model_path = os.path.normpath(cwd + '/../') + '/trained_models/' + test_args.model_name + "/" + str(test_args.exp_num)
@@ -102,9 +106,9 @@ with open(args.model_path + '/model_parameters.json', 'w') as f:
 # TODO: Why change these arguments, how to infer for multiple agents simultaneously?
 truncated_backprop_length = args.truncated_backprop_length
 args.truncated_backprop_length = 1
-args.batch_size = 1
+args.batch_size = 2
 args.keep_prob = 1.0
-#args.others_info = "relative"
+#args.others_info = "none"#"relative"
 # args.data_path = "../data/2_agents_swap/trajs/"
 # args.scenario = "GA3C-CADRL-10-py27"
 # args.dataset = args.scenario+'.pkl'
@@ -175,8 +179,13 @@ with tf.Session(config=config) as sess:
 		traj_likelihood = []
 		# sample a trajectory id for testing
 		traj_id = random.randint(0, len(data_prep.trajectory_set) - 1)
-		batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTrajectoryAsBatch(
-			traj_id,freeze = test_args.freeze_other_agents)  # trajectory_set random.randint(0, len(data_prep.dataset) - 1)
+
+		#print(args.others_info)
+
+		#batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTrajectoryAsBatch(
+		#	traj_id,freeze = test_args.freeze_other_agents)  # trajectory_set random.randint(0, len(data_prep.dataset) - 1)
+		
+		batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getGroupOfTrajectoriesAsBatch(traj_id)
 
 		trajectories.append(traj)
 		x_input_series = np.zeros([0, (args.prev_horizon + 1) * args.input_dim])
@@ -370,9 +379,9 @@ if test_args.record:
 
 			#print(other_agents_list[0][:][0])
 
-			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-			                       other_agents_list,
-			                       trajectories, all_traj_likelihood,test_args)
+			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
+			#                       other_agents_list,
+			#                       trajectories, all_traj_likelihood,test_args)
 
 			print("Recorder is done!")
 else:

@@ -280,6 +280,10 @@ else:
 	os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 	import tensorflow as tf
 
+# Suppress TensorFlow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
 # Create Log and Model Directory to save training model
 args.model_path = '../trained_models/' + args.model_name + "/" + str(args.exp_num)
 args.log_dir = args.model_path + '/log'

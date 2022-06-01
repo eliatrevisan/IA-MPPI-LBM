@@ -21,5 +21,5 @@
 #python3 test_VGDNN.py --exp_num 8 --model_name VGDNN --num_test_sequences 10 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
 #python3 test_VGDNN.py --exp_num 8 --model_name VGDNN --num_test_sequences 100 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
-python3 test_VGDNN.py --exp_num 13 --model_name VGDNN --num_test_sequences 3 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 13 --model_name VGDNN --num_test_sequences 1 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
 #python3 test_VGDNN.py --exp_num 8 --model_name VGDNN --num_test_sequences 100 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
