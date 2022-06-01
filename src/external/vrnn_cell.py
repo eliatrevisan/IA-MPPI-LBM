@@ -40,7 +40,7 @@ class VariationalRNNCell(tf.contrib.rnn.RNNCell):
                 with tf.variable_scope("mu"):
                     prior_mu = linear(prior_hidden, self.n_z)
                 with tf.variable_scope("sigma"):
-                    prior_sigma = tf.exp(linear(prior_hidden, self.n_z))
+                    prior_sigma = tf.exp(linear(prior_hidden, self.n_z)) # exp() ensures the std.dev. is always positive
 
             with tf.variable_scope("phi_x"):
                 x_1 = tf.nn.relu(linear(x, self.n_x_1))
@@ -53,7 +53,7 @@ class VariationalRNNCell(tf.contrib.rnn.RNNCell):
                 with tf.variable_scope("mu"):
                     enc_mu    = linear(enc_hidden, self.n_z)
                 with tf.variable_scope("sigma"):
-                    enc_sigma = tf.exp(linear(enc_hidden, self.n_z))
+                    enc_sigma = tf.exp(linear(enc_hidden, self.n_z)) # exp() ensures the std.dev. is always positive
             eps = tf.random.normal(tf.shape(enc_mu), prior_mu, prior_sigma, dtype=tf.float32)
             # z = mu + sigma*epsilon
             z = tf.add(enc_mu, tf.multiply(enc_sigma, eps))

@@ -43,9 +43,9 @@ data_path = '../data/'
 scenario = '20_ped_with_obstacles/short_few_obstacles'
 
 # Hyperparameters
-n_epochs = 10000
+n_epochs = 0
 
-batch_size = 128
+batch_size = 16 #128
 regularization_weight = 0.0001
 
 # Time parameters
@@ -85,8 +85,8 @@ max_range_ped_grid = 5
 
 print_freq = 200
 save_freq = 500
-total_training_steps = 1000000
-dt = 0.1
+total_training_steps = 100000
+dt = 0.4
 
 warmstart_model = False
 pretrained_convnet = False
@@ -396,11 +396,11 @@ with tf.Session(config=config) as sess:
 
 		training_loss.append(model_output["batch_loss"])
 
-		if step == 1 :
-			avg_training_loss *= model_output["batch_loss"]
-		else:
-			avg_training_loss = np.roll(avg_training_loss,shift=1)
-			avg_training_loss[0] = model_output["batch_loss"]
+		#if step == 1 :
+			#avg_training_loss *= model_output["batch_loss"]
+		#else:
+			#avg_training_loss = np.roll(avg_training_loss,shift=1)
+			#avg_training_loss[0] = model_output["batch_loss"]
 
 		# Print training info
 		if step % print_freq == 0:
@@ -415,9 +415,13 @@ with tf.Session(config=config) as sess:
 			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_train)
 
 			ellapsed_time = time.time() - start_time
-
-			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
-			      .format(epoch + 1, step, np.mean(avg_training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
+			# 0 = np.mean(avg_training_loss)
+			print(np.mean(avg_training_loss))
+			print(validation_loss)
+			#print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
+			#      .format(epoch + 1, step, np.mean(avg_training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
+			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Epoch time: {:01.2f} sec"
+			      .format(epoch + 1, step, ellapsed_time)+Style.RESET_ALL)
 
 			if tensorboard_logging:
 				model.summary_writer.add_summary(model_output["summary"], step)

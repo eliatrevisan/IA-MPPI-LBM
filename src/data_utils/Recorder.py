@@ -454,6 +454,8 @@ class Recorder():
 
 		axbackground = fig_animate.canvas.copy_from_bbox(ax_pos.bbox)
 		current_pos_, = ax_pos.plot([], color='b', marker='o')
+		other_agent_traj, = ax_pos.plot([], color='r', marker='.', alpha=0.5, label='Real Trajectory Agent 2')
+		other_agent_traj_, = ax_pos.plot([], color='r', marker='.', alpha=0.5, label='Real Trajectory Agent 3')
 		other_agents_line_ = []
 		pred_line_list = []
 		for i in range(self.args.n_mixtures):
@@ -505,6 +507,43 @@ class Recorder():
 				sigmax = np.zeros((self.args.prediction_horizon))
 				sigmay = np.zeros((self.args.prediction_horizon))
 
+				#print(other_agents_pos[0][0])
+				#print(other_agents_pos[:][0,0])
+				#print(other_agents_pos[0][:,1])
+
+				other_agent_traj.set_data(None,None)
+				other_agent_traj_.set_data(None,None)
+			
+				x_real = list()
+				y_real = list()
+				for test in range(input.shape[0]):
+					x_real.append(other_agents_pos[test][:,0])
+					y_real.append(other_agents_pos[test][:,1])
+
+				print(len(x_real))
+				print(len(x_real[0]))
+				if len(x_real[0]) == 1:
+					other_agent_traj.set_data(x_real[:], y_real[:])
+				else:
+					n_agents = len(x_real[0])
+
+					# Hard coded because maximum of two other agents
+					x_real_one = list()
+					x_real_two = list()
+					y_real_one = list()
+					y_real_two = list()
+
+					for test in range(input.shape[0]):
+						x_real_one.append(x_real[test][0])
+						x_real_two.append(x_real[test][1])
+						y_real_one.append(y_real[test][0])	
+						y_real_two.append(y_real[test][1])
+
+					other_agent_traj.set_data(x_real_one[:], y_real_one[:])
+					other_agent_traj_.set_data(x_real_two[:], y_real_two[:])
+				
+
+
 				for step in range(input.shape[0]): # trajectory length considering data from getTrajectoryAsBatch
 					fig_animate.canvas.restore_region(axbackground)
 					# Eucldean / position space
@@ -512,6 +551,10 @@ class Recorder():
 					#ax_pos.plot(input[:step, 0], input[:step, 1], color='b', lw=2)
 					current_pos_.set_data(input[step, 0]/self.args.sx_pos, input[step, 1]/self.args.sy_pos)
 					#ax_pos.add_patch(pl.Rectangle(bottom_left_submap, self.args.submap_width, self.args.submap_height, fill=None))
+					#ax_pos.plot(other_agents_pos[:,0], other_agents_pos[:,1])
+
+					#ax_pos.plot(other_agents_pos[:][0, 0], other_agents_pos[:][0, 1])
+					#other_agents_line_[0].set_data(other_agents_pos[:step, 0], other_agents_pos[:step, 1])
 
 					# Other agents
 					for id in range(other_agents_pos[step].shape[0]): # number of agents
@@ -604,11 +647,11 @@ class Recorder():
 
 					self.writer.grab_frame()
 
-					if not os.path.exists(self.args.model_path + '/results/' + self.args.scenario + "/figs/"):
-						os.makedirs(self.args.model_path + '/results/' + self.args.scenario + "/figs/")
-					if test_args.save_figs:
-						fig_animate.savefig(self.args.model_path + '/results/' + self.args.scenario + "/figs/result_" + str(
-							animation_idx) + "_" + str(step) + ".jpg")
+					#if not os.path.exists(self.args.model_path + '/results/' + self.args.scenario + "/figs/"):
+					#	os.makedirs(self.args.model_path + '/results/' + self.args.scenario + "/figs/")
+					#if test_args.save_figs:
+					#	fig_animate.savefig(self.args.model_path + '/results/' + self.args.scenario + "/figs/result_" + str(
+					#		animation_idx) + "_" + str(step) + ".jpg")
 
 					fig_animate.canvas.flush_events()
 

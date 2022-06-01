@@ -104,7 +104,7 @@ truncated_backprop_length = args.truncated_backprop_length
 args.truncated_backprop_length = 1
 args.batch_size = 1
 args.keep_prob = 1.0
-#args.others_info = "sequence_cv"
+#args.others_info = "relative"
 # args.data_path = "../data/2_agents_swap/trajs/"
 # args.scenario = "GA3C-CADRL-10-py27"
 # args.dataset = args.scenario+'.pkl'
@@ -366,6 +366,10 @@ if test_args.record:
 			#	                       trajectories,test_args)
 			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 		    #             trajectories,test_args)
+			#print(other_agents_list)
+
+			#print(other_agents_list[0][:][0])
+
 			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
 			                       other_agents_list,
 			                       trajectories, all_traj_likelihood,test_args)
