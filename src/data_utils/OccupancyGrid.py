@@ -113,8 +113,14 @@ class OccupancyGrid():
 		#self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y] = 0.5
 
 		#print("Shape in func: ", self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y].shape)
+
+		#self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y]
+
+		submap = self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y]
+
+		submap_rotated = list(zip(*submap[::-1]))
 		
-		return self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y], debug_info
+		return submap_rotated, debug_info
 		
 	def getSubmapByCoords(self, center_pos_x, center_pos_y, size_x, size_y):
 		"""

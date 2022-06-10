@@ -84,7 +84,6 @@ class Recorder():
 			input = input_list[animation_idx]
 			grid = grid_list[animation_idx]
 
-			
 			traj = trajectories[animation_idx]
 			gt_vel = y_ground_truth_list[animation_idx]
 
@@ -98,8 +97,6 @@ class Recorder():
 
 				self.plot_local_scenario(ax_pos,input, grid, model_vel_pred[step], gt_vel, other_agents_pos, step,
 					                    rotate=False,n_samples=test_args.n_samples)
-				print(grid.shape)
-				print(grid)
 
 				ax_pos.axis("on")
 				ax_pos.set_xlabel('x [m]',fontsize=26)
@@ -693,7 +690,7 @@ class Recorder():
 				model_vel_pred: agent predicted trajectory in global frame
 			"""
 		ax_pos_local.clear()
-		
+
 
 		#plot initial and goal pose
 		x_init_global_frame = batch_x[step, 0]
@@ -808,6 +805,8 @@ class Recorder():
 				              np.array([self.args.submap_width, self.args.submap_height]))
 			else:
 			"""
+			#batch_grid[step, :, :] = list(zip(*batch_grid[step, :, :][::-1]))
+
 			sup.plot_grid(ax_pos_local, np.array([0.0,0.0]), batch_grid[step, :, :], self.gridmap.resolution,
 		            np.array([self.args.submap_width, self.args.submap_height]))
 			#sup.plot_submap(ax_pos_local, np.array([0.0,0.0]), batch_grid[step, :, :], self.gridmap.resolution,
