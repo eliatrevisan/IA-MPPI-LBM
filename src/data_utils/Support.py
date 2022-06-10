@@ -110,6 +110,13 @@ def rotate_batch_to_local_frame(batch_y, batch_x):
                                                                                    2 * pred_step:2 * pred_step + 2])
   return bx , by
 
+def plot_submap(ax, origin, grid, resolution, submap_size):
+    ax.imshow(grid,
+      extent = (origin[0], origin[0] + submap_size[0] * resolution,
+                         origin[1], origin[1] + submap_size[1] * resolution))
+    pl.show()
+    
+
 def plot_grid(ax, center, grid, grid_resolution, submap_size):
     """
     Plot a binary occupancy grid in the axis ax.

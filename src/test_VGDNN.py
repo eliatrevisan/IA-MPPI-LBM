@@ -106,7 +106,7 @@ with open(args.model_path + '/model_parameters.json', 'w') as f:
 # TODO: Why change these arguments, how to infer for multiple agents simultaneously?
 truncated_backprop_length = args.truncated_backprop_length
 args.truncated_backprop_length = 1
-args.batch_size = 2
+args.batch_size = 1
 args.keep_prob = 1.0
 #args.others_info = "none"#"relative"
 # args.data_path = "../data/2_agents_swap/trajs/"
@@ -182,10 +182,10 @@ with tf.Session(config=config) as sess:
 
 		#print(args.others_info)
 
-		#batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTrajectoryAsBatch(
-		#	traj_id,freeze = test_args.freeze_other_agents)  # trajectory_set random.randint(0, len(data_prep.dataset) - 1)
+		batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTrajectoryAsBatch(
+			traj_id,freeze = test_args.freeze_other_agents)  # trajectory_set random.randint(0, len(data_prep.dataset) - 1)
 		
-		batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getGroupOfTrajectoriesAsBatch(traj_id)
+		#batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getGroupOfTrajectoriesAsBatch(traj_id)
 
 		trajectories.append(traj)
 		x_input_series = np.zeros([0, (args.prev_horizon + 1) * args.input_dim])
@@ -204,6 +204,9 @@ with tf.Session(config=config) as sess:
 			ped_grid_series = np.zeros([0, args.pedestrian_vector_dim])
 		y_ground_truth_series = np.zeros([0, args.prediction_horizon * 2])
 		y_pred_series = np.zeros([0, args.n_mixtures * args.prediction_horizon * args.output_pred_state_dim])
+
+		#for i in range(50):
+		#	print("Batch grid mean: ",np.mean(batch_grid[0,i,:,:]))
 
 		batch_y.append(batch_target)
 		model.reset_test_cells(np.ones((args.batch_size)))
@@ -363,6 +366,8 @@ scenario = args.scenario.split('/')[-1]
 results_file = args.model_path + '/'+ scenario + "_results.mat"
 sio.savemat(results_file,results)
 
+
+
 if test_args.record:
 		recorder = rec(args, data_prep.agent_container.occupancy_grid)
 		if ( "real_world" in test_args.scenario) and not test_args.unit_testing:
@@ -373,11 +378,8 @@ if test_args.record:
 		else:
 			#recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 			#	                       trajectories,test_args)
-			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
-		    #             trajectories,test_args)
-			#print(other_agents_list)
-
-			#print(other_agents_list[0][:][0])
+			recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
+		                 trajectories,test_args)
 
 			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
 			#                       other_agents_list,
@@ -394,3 +396,13 @@ else:
 	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args)
 	print(
 		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
+
+
+
+#traj_id = random.randint(0, len(data_prep.trajectory_set) - 1)
+
+
+#batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTrajectoryAsBatch(
+#			traj_id,freeze = test_args.freeze_other_agents)
+
+#print(batch_grid[0,0,:,:])

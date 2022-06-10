@@ -84,6 +84,7 @@ class Recorder():
 			input = input_list[animation_idx]
 			grid = grid_list[animation_idx]
 
+			
 			traj = trajectories[animation_idx]
 			gt_vel = y_ground_truth_list[animation_idx]
 
@@ -97,6 +98,8 @@ class Recorder():
 
 				self.plot_local_scenario(ax_pos,input, grid, model_vel_pred[step], gt_vel, other_agents_pos, step,
 					                    rotate=False,n_samples=test_args.n_samples)
+				print(grid.shape)
+				print(grid)
 
 				ax_pos.axis("on")
 				ax_pos.set_xlabel('x [m]',fontsize=26)
@@ -106,10 +109,12 @@ class Recorder():
 				ax_pos.set_aspect('equal')
 				pl.rcParams.update(params)
 				ax_pos.set_aspect('equal')
+
 				if not os.path.exists(self.args.model_path + '/results/' + self.args.scenario+"/figs/"):
 					os.makedirs(self.args.model_path + '/results/' + self.args.scenario+"/figs/")
 				if test_args.save_figs:
 					fig_animate.savefig(self.args.model_path + '/results/' + self.args.scenario+"/figs/local_"+str(animation_idx)+"_"+str(step)+".png")
+	
 
 	def animate(self,input_list,grid_list,ped_grid_list,y_pred_list_global,y_ground_truth_list,other_agents_list,trajectories,test_args):
 
@@ -246,6 +251,7 @@ class Recorder():
 					if test_args.save_figs:
 						self.fig_animate.savefig(self.args.model_path + '/results/' + self.args.scenario+"/figs/result_"+str(animation_idx)+"_"+str(step)+".jpg")
 					self.writer.grab_frame()
+				
 
 	def animate_group_of_agents(self,trajectories,y_pred_list_global,test_args=None):
 
@@ -520,8 +526,6 @@ class Recorder():
 					x_real.append(other_agents_pos[test][:,0])
 					y_real.append(other_agents_pos[test][:,1])
 
-				print(len(x_real))
-				print(len(x_real[0]))
 				if len(x_real[0]) == 1:
 					other_agent_traj.set_data(x_real[:], y_real[:])
 				else:
@@ -550,6 +554,8 @@ class Recorder():
 					#ax_pos.plot(input[:, 0], input[:, 1], color='b', alpha=0.4, lw=1)
 					#ax_pos.plot(input[:step, 0], input[:step, 1], color='b', lw=2)
 					current_pos_.set_data(input[step, 0]/self.args.sx_pos, input[step, 1]/self.args.sy_pos)
+					
+					bottom_left_submap = input[step, 0:2] - np.array([self.args.submap_width / 2.0, self.args.submap_height / 2.0])
 					#ax_pos.add_patch(pl.Rectangle(bottom_left_submap, self.args.submap_width, self.args.submap_height, fill=None))
 					#ax_pos.plot(other_agents_pos[:,0], other_agents_pos[:,1])
 
@@ -633,6 +639,26 @@ class Recorder():
 											c = rgba2rgb(plt_colors[1] + [float(alpha)])
 											ellipses[mix_idx][pred_step].set_facecolor(c)
 											ellipses[mix_idx][pred_step].set_center((traj_pred[pred_step, 0], traj_pred[pred_step, 1]))
+									"""
+									# From animate local script
+									if self.args.output_pred_state_dim > 2:
+										# prior of 0 on the uncertainty of the pedestrian velocity
+										sigma_x = np.square(sigmax[0]) * self.args.dt * self.args.dt
+										sigma_y = np.square(sigmay[0]) * self.args.dt * self.args.dt
+
+										e1 = Ellipse(xy=(traj_pred[0, 0], traj_pred[0, 1]), width=np.sqrt(sigma_x) / 2,
+																height=np.sqrt(sigma_y) / 2, angle=0 / np.pi * 180)
+										e1.set_alpha(0.5)
+
+										for pred_step in range(1, self.args.prediction_horizon):
+											sigma_x += np.square(sigmax[pred_step]) * self.args.dt * self.args.dt
+											sigma_y += np.square(sigmay[pred_step]) * self.args.dt * self.args.dt
+
+											e1 = Ellipse(xy=(traj_pred[pred_step, 0], traj_pred[pred_step, 1]), width=np.sqrt(sigma_x) / 2,
+																	height=np.sqrt(sigma_y) / 2,
+																	angle=0 / np.pi * 180)
+											ax_pos.add_patch(e1)
+										"""
 
 					# Real trajectory
 					vel_real = np.zeros((self.args.prediction_horizon, self.args.output_dim))
@@ -647,11 +673,11 @@ class Recorder():
 
 					self.writer.grab_frame()
 
-					#if not os.path.exists(self.args.model_path + '/results/' + self.args.scenario + "/figs/"):
-					#	os.makedirs(self.args.model_path + '/results/' + self.args.scenario + "/figs/")
-					#if test_args.save_figs:
-					#	fig_animate.savefig(self.args.model_path + '/results/' + self.args.scenario + "/figs/result_" + str(
-					#		animation_idx) + "_" + str(step) + ".jpg")
+					if not os.path.exists(self.args.model_path + '/results/' + self.args.scenario + "/figs/"):
+						os.makedirs(self.args.model_path + '/results/' + self.args.scenario + "/figs/")
+					if test_args.save_figs:
+						fig_animate.savefig(self.args.model_path + '/results/' + self.args.scenario + "/figs/result_" + str(
+							animation_idx) + "_" + str(step) + ".jpg")
 
 					fig_animate.canvas.flush_events()
 
@@ -667,6 +693,7 @@ class Recorder():
 				model_vel_pred: agent predicted trajectory in global frame
 			"""
 		ax_pos_local.clear()
+		
 
 		#plot initial and goal pose
 		x_init_global_frame = batch_x[step, 0]
@@ -674,6 +701,7 @@ class Recorder():
 
 		# plot initial and goal pose
 		ax_pos_local.plot(0, 0, color='c', marker='o', label='Agent initial pos')
+		
 
 		# Local Frame Goal Position
 		x_goal = batch_x[-1, 0] - x_init_global_frame
@@ -762,14 +790,14 @@ class Recorder():
 		for id in range(other_agents_pos[step].shape[0]):  # number of agents
 			ax_pos_local.plot(other_agents_pos[step][id, 0]-x_init_global_frame
 			                 , other_agents_pos[step][id, 1]-y_init_global_frame, marker='o', color='b')
-
+		
 		# Local grid
-		""""""
+		
 		if rotate:
 			heading = math.atan2(batch_x[step, 3], batch_x[step, 2])
 			grid = sup.rotate_grid_around_center(batch_grid[step, :, :], -heading * 180 / math.pi)  # rotation in degrees
-			sup.plot_grid(ax_pos_local, np.array([0.0, 0.0]), grid, self.gridmap.resolution,
-			              np.array([self.args.submap_width, self.args.submap_height]))
+			#sup.plot_grid(ax_pos_local, np.array([0.0, 0.0]), grid, self.gridmap.resolution,
+			              #np.array([self.args.submap_width, self.args.submap_height]))
 		else:
 			"""
 			if real_vel[0,0] > 0.1:
@@ -780,8 +808,12 @@ class Recorder():
 				              np.array([self.args.submap_width, self.args.submap_height]))
 			else:
 			"""
-			sup.plot_grid(ax_pos_local, np.array([0.0, 0.0]), batch_grid[step, :, :], self.gridmap.resolution,
+			sup.plot_grid(ax_pos_local, np.array([0.0,0.0]), batch_grid[step, :, :], self.gridmap.resolution,
 		            np.array([self.args.submap_width, self.args.submap_height]))
+			#sup.plot_submap(ax_pos_local, np.array([0.0,0.0]), batch_grid[step, :, :], self.gridmap.resolution,
+		  #          np.array([self.args.submap_width, self.args.submap_height]))
+			#sup.plot_grid_roboat(ax_pos_local, np.array([0.0, 0.0]), batch_grid[step, :, :], self.gridmap.resolution,  # np.array([0.0, 0.0])
+		   #           np.array([self.args.submap_width, self.args.submap_height]))
 
 	def save_global_scenario(self,input_list,grid_list,ped_grid_list,y_pred_list_global,y_ground_truth_list,other_agents_list,rotate=False,n_samples=1,format=".pdf"):
 		if not os.path.exists(self.args.model_path + '/results/'+ self.args.scenario+"/figs"):
