@@ -311,10 +311,10 @@ class NetworkModel():
 			l2 = self.lambda_ * sum(tf.nn.l2_loss(tvar) for tvar in tvars)
 
 			# Reduce mean in all dimensions
-			#self.div_loss = []# tf.reduce_mean(div_loss_over_truncated_back_prop)
-			self.total_loss = tf.reduce_mean(loss_list, axis=0) #+args.diversity_update*self.div_loss + tf.reduce_mean(kl_loss_list, axis=0)*self.beta # Why is it not lambda (see paper), but beta and div_loss
+			self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
+			self.total_loss = tf.reduce_mean(loss_list, axis=0) + (args.diversity_update*self.div_loss + tf.reduce_mean(kl_loss_list, axis=0) )*self.beta # Added additional brackets here to test difference
 			self.reconstruction_loss = tf.reduce_mean(loss_list, axis=0)
-			#self.kl_loss = []#tf.reduce_mean(kl_loss_list, axis=0)
+			self.kl_loss = tf.reduce_mean(kl_loss_list, axis=0)
 
 			# Optimizer specification
 			# self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate)
@@ -333,8 +333,8 @@ class NetworkModel():
 
 			## Loss
 			self.loss_summary = tf.summary.scalar('loss', self.total_loss)
-			#self.kl_loss_summary = tf.summary.scalar('kl-loss', self.kl_loss)
-			#self.div_loss_summary = tf.summary.scalar('div_loss', self.div_loss)
+			self.kl_loss_summary = tf.summary.scalar('kl-loss', self.kl_loss)
+			self.div_loss_summary = tf.summary.scalar('div_loss', self.div_loss)
 			self.reconstruction_loss_summary = tf.summary.scalar('reconstruction_loss', self.reconstruction_loss)
 			tf.summary.scalar('learning_rate', self.learning_rate)
 
@@ -529,11 +529,11 @@ class NetworkModel():
 			# Assemble feed dict for training
 			feed_dict_train[self.diversity_placeholder] = batch_y_varible
 		# kl_loss, div_loss
-		_, batch_loss, recons_loss, _current_state, _current_state_lstm_grid, _current_state_lstm_ped, \
+		_, batch_loss, kl_loss, recons_loss, _current_state, _current_state_lstm_grid, _current_state_lstm_ped, \
 		_current_state_lstm_concat, \
-		_model_prediction, _summary_str, lr, beta, output_decoder, autoencoder_loss = sess.run([self.update,
+		_model_prediction, _summary_str, lr, beta, output_decoder, div_loss, autoencoder_loss = sess.run([self.update,
 		                                                                                                  self.total_loss,
-		                                                                                                  #self.kl_loss,
+		                                                                                                  self.kl_loss,
 		                                                                                                  self.reconstruction_loss,
 		                                                                                                  self.current_state,
 		                                                                                                  self.current_state_lstm_grid,
@@ -544,7 +544,7 @@ class NetworkModel():
 		                                                                                                  self.learning_rate,
 		                                                                                                  self.beta,
 		                                                                                                  self.deconv1,
-		                                                                                                  #self.div_loss,
+		                                                                                                  self.div_loss,
 		                                                                                                  self.autoencoder_loss],
 		                                                                                                 feed_dict=feed_dict_train)
 		self.cell_state_current, self.hidden_state_current = _current_state
@@ -564,7 +564,7 @@ class NetworkModel():
 		       "learning_rate": lr,
 		       "autoencoder_loss": autoencoder_loss,
 		       "log loss": batch_loss,
-		       #"kl_loss": kl_loss,
+		       "kl_loss": kl_loss,
 		       "output_decoder": output_decoder
 		       }
 

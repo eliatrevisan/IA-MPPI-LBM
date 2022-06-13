@@ -85,7 +85,7 @@ max_range_ped_grid = 5
 
 print_freq = 200
 save_freq = 500
-total_training_steps = 100000
+total_training_steps = 50000
 dt = 0.4
 
 warmstart_model = False
