@@ -12,7 +12,9 @@ ped = "6_peds_corridor/"
 roboat = "roboat/"
 mapname = "map.png"
 
+
 class Map:
+    grid = plt.imread(home+datapath+roboat + 'map.png')
     size = [1715, 881]
     origin = [-78, -40]
     resolution = 0.081
@@ -28,8 +30,13 @@ def main():
     print(roboatmap.shape)
 
     name = home + datapath + ped + mapname
+    ax = plt.subplot()
 
-    sup.create_map_from_png(name, map.resolution, map.size, map.origin, data_path=home+datapath+ped)
+    #sup.create_map_from_png(name, map.resolution, map.size, map.origin, data_path=home+datapath+ped)
+    
+    
+    sup.plot_grid_roboat(ax, map.origin, map.grid, map.resolution, map.size)
+    plt.show()
 
 if __name__ == "__main__":
     main()
