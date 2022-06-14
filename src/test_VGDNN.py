@@ -102,6 +102,8 @@ args = model_parameters["args"]
 with open(args.model_path + '/model_parameters.json', 'w') as f:
 	json.dump(args.__dict__,f)
 
+print("Training steps: ", args.total_training_steps)
+
 # change some args because we are doing inference
 # TODO: Why change these arguments, how to infer for multiple agents simultaneously?
 truncated_backprop_length = args.truncated_backprop_length
@@ -399,10 +401,3 @@ else:
 
 
 
-#traj_id = random.randint(0, len(data_prep.trajectory_set) - 1)
-
-
-#batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTrajectoryAsBatch(
-#			traj_id,freeze = test_args.freeze_other_agents)
-
-#print(batch_grid[0,0,:,:])

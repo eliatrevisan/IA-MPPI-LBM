@@ -510,9 +510,8 @@ class Recorder():
 				sigmax = np.zeros((self.args.prediction_horizon))
 				sigmay = np.zeros((self.args.prediction_horizon))
 
-				#print(other_agents_pos[0][0])
-				#print(other_agents_pos[:][0,0])
-				#print(other_agents_pos[0][:,1])
+				### 
+				# Plotting agent real trajectories
 
 				other_agent_traj.set_data(None,None)
 				other_agent_traj_.set_data(None,None)
@@ -527,7 +526,7 @@ class Recorder():
 					other_agent_traj.set_data(x_real[:], y_real[:])
 				else:
 					n_agents = len(x_real[0])
-
+ 
 					# Hard coded because maximum of two other agents
 					x_real_one = list()
 					x_real_two = list()
@@ -542,7 +541,8 @@ class Recorder():
 
 					other_agent_traj.set_data(x_real_one[:], y_real_one[:])
 					other_agent_traj_.set_data(x_real_two[:], y_real_two[:])
-				
+					
+				###
 
 
 				for step in range(input.shape[0]): # trajectory length considering data from getTrajectoryAsBatch
