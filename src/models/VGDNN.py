@@ -288,17 +288,17 @@ class NetworkModel():
 						                                 sigmax[prediction_step], sigmay[prediction_step],
 						                                 x_data, y_data, pi)
 
-						diversity_loss = self.get_log_lossfunc(mux[prediction_step], muy[prediction_step],
-						                                        sigmax[prediction_step], sigmay[prediction_step],
-						                                       x_diversity, y_diversity, pi)
+						#diversity_loss = self.get_log_lossfunc(mux[prediction_step], muy[prediction_step],
+						#                                        sigmax[prediction_step], sigmay[prediction_step],
+						#                                       x_diversity, y_diversity, pi)
 
-						div_loss_over_horizon.append(diversity_loss)
+						#div_loss_over_horizon.append(diversity_loss)
 						prediction_loss_list.append(lossfunc)
 
 					self.prediction.append(pred)
 					kl_loss = self.tf_kl_gaussgauss(enc_mu, enc_sigma, prior_mu, prior_sigma)
 					kl_loss_list.append(kl_loss)
-					div_loss_over_truncated_back_prop.append(tf.reduce_mean(div_loss_over_horizon))
+					#div_loss_over_truncated_back_prop.append(tf.reduce_mean(div_loss_over_horizon))
 					loss_list.append(tf.reduce_mean(prediction_loss_list))
 
 			self.prediction = tf.stack(self.prediction, axis=1)
@@ -311,8 +311,8 @@ class NetworkModel():
 			l2 = self.lambda_ * sum(tf.nn.l2_loss(tvar) for tvar in tvars)
 
 			# Reduce mean in all dimensions
-			self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
-			self.total_loss = tf.reduce_mean(loss_list, axis=0) + (args.diversity_update*self.div_loss + tf.reduce_mean(kl_loss_list, axis=0) )*self.beta # Added additional brackets here to test difference
+			#self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
+			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0)*self.beta # + args.diversity_update*self.div_loss
 			self.reconstruction_loss = tf.reduce_mean(loss_list, axis=0)
 			self.kl_loss = tf.reduce_mean(kl_loss_list, axis=0)
 
@@ -334,7 +334,7 @@ class NetworkModel():
 			## Loss
 			self.loss_summary = tf.summary.scalar('loss', self.total_loss)
 			self.kl_loss_summary = tf.summary.scalar('kl-loss', self.kl_loss)
-			self.div_loss_summary = tf.summary.scalar('div_loss', self.div_loss)
+			#self.div_loss_summary = tf.summary.scalar('div_loss', self.div_loss)
 			self.reconstruction_loss_summary = tf.summary.scalar('reconstruction_loss', self.reconstruction_loss)
 			tf.summary.scalar('learning_rate', self.learning_rate)
 
@@ -531,7 +531,7 @@ class NetworkModel():
 		# kl_loss, div_loss
 		_, batch_loss, kl_loss, recons_loss, _current_state, _current_state_lstm_grid, _current_state_lstm_ped, \
 		_current_state_lstm_concat, \
-		_model_prediction, _summary_str, lr, beta, output_decoder, div_loss, autoencoder_loss = sess.run([self.update,
+		_model_prediction, _summary_str, lr, beta, output_decoder, autoencoder_loss = sess.run([self.update,
 		                                                                                                  self.total_loss,
 		                                                                                                  self.kl_loss,
 		                                                                                                  self.reconstruction_loss,
@@ -544,7 +544,7 @@ class NetworkModel():
 		                                                                                                  self.learning_rate,
 		                                                                                                  self.beta,
 		                                                                                                  self.deconv1,
-		                                                                                                  self.div_loss,
+		                                                                                                  #self.div_loss,
 		                                                                                                  self.autoencoder_loss],
 		                                                                                                 feed_dict=feed_dict_train)
 		self.cell_state_current, self.hidden_state_current = _current_state

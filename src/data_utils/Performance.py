@@ -281,3 +281,44 @@ def compute_nll2(args, ground_truth,predictions):
 			cnt += 1
 		avg_list.append(avg_nll)
 	return avg_nll, avg_list
+
+def compute_ade_cv(args, trajectories, predictions):
+	ade = []
+	
+	for idx in range(0,len(trajectories)):
+		traj = trajectories[idx].pose_vec
+		pred = predictions[idx]
+
+		for step in range(0, len(pred)):
+			tr = traj[step:step+args.prediction_horizon]
+			pr = pred[step] 
+
+			sum = 0
+			#print("start")
+			for i in range(0, args.prediction_horizon):
+				squared_difference = (pr[i, 0] - tr[i,0])**2 + (pr[i, 1] - tr[i,1])**2
+				sum = sum + np.sqrt(squared_difference)
+			mse = sum / (i + 1)
+			ade.append(mse)
+
+	return np.mean(ade)
+
+def compute_fde_cv(args, trajectories, predictions):
+	fde = []
+	
+	for idx in range(0,len(trajectories)):
+		traj = trajectories[idx].pose_vec
+		pred = predictions[idx]
+		
+		for step in range(0, len(pred)):
+			#tr = traj[step:step+args.prediction_horizon]
+			tr = traj[step+args.prediction_horizon-1] # Trajectory sample at horizon
+			pr = pred[step][args.prediction_horizon-1] # Prediction at horizon
+			print(pr, tr)
+			squared_difference = (pr[0] - tr[0])**2 + (pr[1] - tr[1])**2
+			#print(pr[0], tr[0], pr[1], tr[1])
+			fde.append(np.sqrt(squared_difference))
+
+	return np.mean(fde)
+
+

@@ -37,6 +37,9 @@ else:
 	from src.data_utils.Performance import *
 	from src.data_utils.utils import *
 	from src.data_utils.Recorder import Recorder as rec
+	from src.models.CV_model import ConstantVelocity
+
+
 
 
 # Model directories
@@ -44,31 +47,33 @@ def parse_args():
 	parser = argparse.ArgumentParser(description='LSTM model training')
 
 	parser.add_argument('--model_name',
-	                    help='Path to directory that comprises the model (default="model_name").',
-	                    type=str, default="VGDNN_simple")
+											help='Path to directory that comprises the model (default="model_name").',
+											type=str, default="VGDNN_simple")
 	parser.add_argument('--num_test_sequences', help='Number of test sequences', type=int, default=10)
 	parser.add_argument('--exp_num', help='Experiment number', type=int, default=9)
 	parser.add_argument('--n_samples', help='Number of samples', type=int, default=10)
 	parser.add_argument('--scenario', help='Scenario of the dataset (default="").',
-	                    type=str, default="datasets/ewap_dataset/seq_eth")
+											type=str, default="datasets/ewap_dataset/seq_eth")
 	parser.add_argument('--record', help='Is grid rotated? (default=True).', type=sup.str2bool,
-	                    default=True)
+											default=True)
 	parser.add_argument('--save_figs', help='Save figures?', type=sup.str2bool,
-	                    default=True)
+											default=True)
 	parser.add_argument('--noise_cell_state', help='Adding noise to cell state of the agent', type=float,
-	                    default=0)
+											default=0)
 	parser.add_argument('--noise_cell_grid', help='Adding noise to cell state of the grid', type=float,
-	                    default=5)
+											default=5)
 	parser.add_argument('--real_world_data', help='real_world_data', type=sup.str2bool,
-	                    default=False)
+											default=False)
 	parser.add_argument('--update_state', help='update_state', type=sup.str2bool,
-	                    default=False)
+											default=False)
 	parser.add_argument('--gpu', help='Enable GPU training.', type=sup.str2bool,
-	                    default=False)
+											default=False)
 	parser.add_argument('--freeze_other_agents', help='FReeze other agents.', type=sup.str2bool,
-	                    default=False)
+											default=False)
 	parser.add_argument('--unit_testing', help='Run  Unit Tests.', type=sup.str2bool,
-	                    default=False)
+											default=False)
+	parser.add_argument('--constant_velocity', help='Run CV comparison', type=sup.str2bool,
+											default=False)
 	args = parser.parse_args()
 
 	return args
@@ -128,9 +133,9 @@ map_params = os.path.join(args.data_path+args.scenario, 'map.json')
 with open(map_params) as json_file:
 	data = json.load(json_file)
 map_args = {"file_name": data["file_name"],
-	          "resolution": data["resolution"],
-	          "map_size": np.array(data["map_size"]),
-            "map_center": np.array(data["map_center"])}
+						"resolution": data["resolution"],
+						"map_size": np.array(data["map_size"]),
+						"map_center": np.array(data["map_center"])}
 
 data_prep.processData(**map_args)
 if args.normalize_data:
@@ -232,14 +237,14 @@ with tf.Session(config=config) as sess:
 					batch_y_pred[:, :, 2:] = y_model_pred[:, :, 2:]
 			dict = {"batch_x": batch_x,
 							"batch_vel": batch_vel,
-			        "batch_pos": batch_pos,
-			        "batch_grid": batch_grid,
-			        "batch_ped_grid": other_agents_info,
-			        "step": step,
-			        "batch_goal": batch_goal,
-			        "state_noise": 0.0,
-			        "grid_noise": 0.0,
-			        "other_agents_pos": [other_agents_pos]
+							"batch_pos": batch_pos,
+							"batch_grid": batch_grid,
+							"batch_ped_grid": other_agents_info,
+							"step": step,
+							"batch_goal": batch_goal,
+							"state_noise": 0.0,
+							"grid_noise": 0.0,
+							"other_agents_pos": [other_agents_pos]
 			}
 			feed_dict_ = model.feed_test_dic(**dict)
 
@@ -270,15 +275,15 @@ with tf.Session(config=config) as sess:
 			# If sample more than one trajectory from the model
 			for sample_id in range(test_args.n_samples - 1):
 				dict = {"batch_x": batch_x,
-				        "batch_vel": batch_vel,
-				        "batch_pos": batch_pos,
-				        "batch_grid": batch_grid,
-				        "batch_ped_grid": other_agents_info,
-				        "step": step,
-				        "batch_goal": batch_goal,
-				        "state_noise": 0.0,
+								"batch_vel": batch_vel,
+								"batch_pos": batch_pos,
+								"batch_grid": batch_grid,
+								"batch_ped_grid": other_agents_info,
+								"step": step,
+								"batch_goal": batch_goal,
+								"state_noise": 0.0,
 								"grid_noise": 0.0
-				        }
+								}
 				feed_dict_ = model.feed_test_dic(**dict)
 				y_model_pred = model.predict(sess, feed_dict_, test_args.update_state)
 				samples.append(y_model_pred[:,0,:])
@@ -368,6 +373,12 @@ scenario = args.scenario.split('/')[-1]
 results_file = args.model_path + '/'+ scenario + "_results.mat"
 sio.savemat(results_file,results)
 
+if test_args.constant_velocity:
+	# Make constant velocity predictions
+	CVModel = ConstantVelocity(args)
+	cv_predictions = CVModel.predict(input_list)
+else:
+	cv_predictions = None
 
 
 if test_args.record:
@@ -375,29 +386,32 @@ if test_args.record:
 		if ( "real_world" in test_args.scenario) and not test_args.unit_testing:
 			print("Real data!!")
 			recorder.plot_on_video(input_list, grid_list, all_predictions, y_ground_truth_list,
-			                       other_agents_list,
-			                       trajectories,all_traj_likelihood, test_args)
+														 other_agents_list,
+														 trajectories,all_traj_likelihood, test_args)
 		else:
 			#recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 			#	                       trajectories,test_args)
-			recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
-		                 trajectories,test_args)
+			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
+			#							 trajectories,test_args)
 
 			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-			                       other_agents_list,
-			                       trajectories, all_traj_likelihood,test_args)
+														 other_agents_list,
+														 trajectories, all_traj_likelihood, cv_predictions, test_args)
 
 			print("Recorder is done!")
 else:
 	print("Performance tests")
-	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
-	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
-	diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
-	args.scenario = training_scenario
-	args.truncated_backprop_length = truncated_backprop_length
-	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args)
-	print(
-		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
-
-
+	#pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
+	#pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
+	if test_args.constant_velocity: 
+		cv_pred_error = compute_ade_cv(args, trajectories, cv_predictions)
+		cv_fde_error = compute_fde_cv(args, trajectories, cv_predictions)
+	print(cv_pred_error)
+	print(cv_fde_error)
+	#diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
+	#args.scenario = training_scenario
+	#args.truncated_backprop_length = truncated_backprop_length
+	#write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args)
+	#print(
+	#	Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
 

@@ -399,7 +399,7 @@ class Recorder():
 
 					fig_animate.canvas.flush_events()
 
-	def animate_global(self,input_list,grid_list,y_pred_list_global,y_ground_truth_list,other_agents_list,y_ground_truth_list_exp,all_traj_likelihood,test_args=None):
+	def animate_global(self,input_list,grid_list,y_pred_list_global,y_ground_truth_list,other_agents_list,y_ground_truth_list_exp,all_traj_likelihood, cv_pred_list, test_args=None ):
 
 		if not os.path.exists(self.args.model_path + '/results/' + self.args.scenario):
 			os.makedirs(self.args.model_path + '/results/' + self.args.scenario)
@@ -459,6 +459,7 @@ class Recorder():
 		current_pos_, = ax_pos.plot([], color='b', marker='o')
 		other_agent_traj, = ax_pos.plot([], color='r', marker='.', alpha=0.5, label='Real Trajectory Agent 2')
 		other_agent_traj_, = ax_pos.plot([], color='r', marker='.', alpha=0.5, label='Real Trajectory Agent 3')
+		cv_predictions, = ax_pos.plot([], color='g', marker='.', alpha=0.5, label='Constant Velocity')
 		other_agents_line_ = []
 		pred_line_list = []
 		for i in range(self.args.n_mixtures):
@@ -487,6 +488,8 @@ class Recorder():
 			for animation_idx in range(0,len(input_list)):
 				input = input_list[animation_idx] #* (1 / self.gridmap.resolution)
 				grid = grid_list[animation_idx]
+				if test_args.constant_velocity:
+					cv_pred = cv_pred_list[animation_idx]
 
 				#ax_pos.set_xlim([int(np.min(input/self.args.sx_pos))-2.0, int(np.max(input/self.args.sx_pos))+2.0])
 				#ax_pos.set_ylim([int(np.min(input/self.args.sy_pos))-2.0, int(np.max(input/self.args.sy_pos))+2.0])
@@ -551,6 +554,9 @@ class Recorder():
 					#ax_pos.plot(input[:, 0], input[:, 1], color='b', alpha=0.4, lw=1)
 					#ax_pos.plot(input[:step, 0], input[:step, 1], color='b', lw=2)
 					current_pos_.set_data(input[step, 0]/self.args.sx_pos, input[step, 1]/self.args.sy_pos)
+
+					if test_args.constant_velocity:
+						cv_predictions.set_data(cv_pred[step][:,0], cv_pred[step][:,1])
 					
 					bottom_left_submap = input[step, 0:2] - np.array([self.args.submap_width / 2.0, self.args.submap_height / 2.0])
 					#ax_pos.add_patch(pl.Rectangle(bottom_left_submap, self.args.submap_width, self.args.submap_height, fill=None))
