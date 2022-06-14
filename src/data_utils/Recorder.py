@@ -480,7 +480,7 @@ class Recorder():
 			for el in ellipse:
 				ax_pos.add_artist(el)
 
-		ax_pos.legend()
+		#ax_pos.legend()
 
 
 		with self.writer.saving(fig_animate, self.args.model_path + '/results/' + self.args.scenario+"/video.mp4", 100):
