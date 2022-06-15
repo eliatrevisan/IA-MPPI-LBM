@@ -283,6 +283,9 @@ def compute_nll2(args, ground_truth,predictions):
 	return avg_nll, avg_list
 
 def compute_ade_cv(args, trajectories, predictions):
+	"""
+	Compute Average Displacement Error for the constant velocity predictions
+	"""
 	ade = []
 	
 	for idx in range(0,len(trajectories)):
@@ -304,17 +307,23 @@ def compute_ade_cv(args, trajectories, predictions):
 	return np.mean(ade)
 
 def compute_fde_cv(args, trajectories, predictions):
+	"""
+	Compute Final Displacement Error for the constant velocity predictions
+	"""
 	fde = []
 	
 	for idx in range(0,len(trajectories)):
 		traj = trajectories[idx].pose_vec
 		pred = predictions[idx]
+
+		print("traj: ", traj)
+		print("pred: ", pred)
 		
 		for step in range(0, len(pred)):
 			#tr = traj[step:step+args.prediction_horizon]
 			tr = traj[step+args.prediction_horizon-1] # Trajectory sample at horizon
 			pr = pred[step][args.prediction_horizon-1] # Prediction at horizon
-			print(pr, tr)
+			print("pr and tr: ", pr, tr)
 			squared_difference = (pr[0] - tr[0])**2 + (pr[1] - tr[1])**2
 			#print(pr[0], tr[0], pr[1], tr[1])
 			fde.append(np.sqrt(squared_difference))

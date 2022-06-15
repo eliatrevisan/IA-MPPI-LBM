@@ -394,24 +394,24 @@ if test_args.record:
 			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 			#							 trajectories,test_args)
 
-			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-														 other_agents_list,
-														 trajectories, all_traj_likelihood, cv_predictions, test_args)
+			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
+			#											 other_agents_list,
+			#											 trajectories, all_traj_likelihood, cv_predictions, test_args)
 
 			print("Recorder is done!")
 else:
 	print("Performance tests")
-	#pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
-	#pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
+	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
+	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
 	if test_args.constant_velocity: 
 		cv_pred_error = compute_ade_cv(args, trajectories, cv_predictions)
 		cv_fde_error = compute_fde_cv(args, trajectories, cv_predictions)
-	print(cv_pred_error)
-	print(cv_fde_error)
-	#diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
-	#args.scenario = training_scenario
-	#args.truncated_backprop_length = truncated_backprop_length
-	#write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args)
-	#print(
-	#	Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
+	#print(cv_pred_error)
+	#print(cv_fde_error)
+	diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
+	args.scenario = training_scenario
+	args.truncated_backprop_length = truncated_backprop_length
+	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args)
+	print(
+		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
 
