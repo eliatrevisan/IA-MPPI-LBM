@@ -14,6 +14,14 @@ filename = "_summary.csv"
 def main():
     models, labels, results = getResults()
 
+    model_ids = []
+    for i in range(1,len(sys.argv)):
+        id = sys.argv[i]
+        model_ids.append(id)
+    
+    if len(model_ids) > 0:
+        models, results = getResultsfromArgs(models, results, model_ids)
+
     fig, ax =  plt.subplots(2)
     printResults(ax, models, results,labels)
 
@@ -21,6 +29,19 @@ def main():
     #fig.tight_layout()
 
     plt.show()
+
+def getResultsfromArgs(models, results, model_ids):
+    
+    for i in range(len(models)):
+        models[i] = models[i].split("_",1)[1]
+    idx = []
+    print(len(models), len(results))
+    for i in range(len(model_ids)):
+        idx.append(np.where(models == model_ids[i])[0][0])
+
+    print(len(models), len(results))
+    
+    return models[idx], results[idx]
 
 def getResults():
     """
@@ -65,14 +86,14 @@ def printResults(ax, models, results,labels):
     ax[0].set_ylabel('Error')
     ax[0].set_xticks(ind+barwidth)
     ax[0].set_xticklabels( models )
-    print(labels)
+    #print(labels)
 
     table = list(results[:,[1,4,5,6,7,8]])#,3,4,5,6]])
     table = np.reshape(table, (-1,6)).transpose()
     labels = labels[[3,6,7,8,9,10]]
     
-    print(labels)
-    print(table)
+    #print(labels)
+    #print(table)
 
     table = ax[1].table(cellText=table, rowLabels=labels, colLabels=models, loc='center')
     table.auto_set_font_size(False)
