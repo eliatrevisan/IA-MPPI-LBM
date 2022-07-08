@@ -10,7 +10,7 @@ class Trajectory():
     self.goal = goal            # [x,y]
     self.pose_interp = None
     self.vel_interp = None
-    self.other_agents_positions = []  # store indices of other agents trajectories for each time step of this trajectory (with wich other positions does it need to be compared at a certain time)
+    self.other_agents_positions = []  # store indices of other agents trajectories for each time step of this trajectory (with which other positions does it need to be compared at a certain time)
     self.other_agents_velocities = []
     
   def __len__(self):

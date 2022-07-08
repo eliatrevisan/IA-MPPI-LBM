@@ -2,6 +2,10 @@ import sys
 import os
 
 sys.path.append('../')
+
+# With debugger:
+#os.chdir(os.getcwd() + "/src/")
+
 import numpy as np
 import argparse
 import pylab as pl
@@ -39,8 +43,16 @@ else:
 	from src.data_utils.Recorder import Recorder as rec
 	from src.models.CV_model import ConstantVelocity
 
-
-
+"""
+exp_num = 33
+model_name = "VGDNN" 
+num_test_sequences = 100 
+scenario = "simulation/roboat" 
+record = False 
+n_samples = 1 
+unit_testing = False 
+freeze_other_agents = False
+"""
 
 # Model directories
 def parse_args():
@@ -48,9 +60,9 @@ def parse_args():
 
 	parser.add_argument('--model_name',
 											help='Path to directory that comprises the model (default="model_name").',
-											type=str, default="VGDNN_simple")
+											type=str, default="VGDNN")
 	parser.add_argument('--num_test_sequences', help='Number of test sequences', type=int, default=10)
-	parser.add_argument('--exp_num', help='Experiment number', type=int, default=9)
+	parser.add_argument('--exp_num', help='Experiment number', type=int, default=33)
 	parser.add_argument('--n_samples', help='Number of samples', type=int, default=10)
 	parser.add_argument('--scenario', help='Scenario of the dataset (default="").',
 											type=str, default="datasets/ewap_dataset/seq_eth")
@@ -212,9 +224,6 @@ with tf.Session(config=config) as sess:
 		y_ground_truth_series = np.zeros([0, args.prediction_horizon * 2])
 		y_pred_series = np.zeros([0, args.n_mixtures * args.prediction_horizon * args.output_pred_state_dim])
 
-		#for i in range(50):
-		#	print("Batch grid mean: ",np.mean(batch_grid[0,i,:,:]))
-
 		batch_y.append(batch_target)
 		model.reset_test_cells(np.ones((args.batch_size)))
 		cell_state_list= []
@@ -272,8 +281,10 @@ with tf.Session(config=config) as sess:
 			else:
 				samples.append(y_model_pred[:,0,:])
 
+			Sample = False
 			# If sample more than one trajectory from the model
 			for sample_id in range(test_args.n_samples - 1):
+				Sample = True
 				dict = {"batch_x": batch_x,
 								"batch_vel": batch_vel,
 								"batch_pos": batch_pos,
@@ -391,12 +402,12 @@ if test_args.record:
 		else:
 			#recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 			#	                       trajectories,test_args)
-			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
-			#							 trajectories,test_args)
+			recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
+										 trajectories,test_args)
 
-			#recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-			#											 other_agents_list,
-			#											 trajectories, all_traj_likelihood, cv_predictions, test_args)
+			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
+														 other_agents_list,
+														 trajectories, all_traj_likelihood, cv_predictions, test_args)
 
 			print("Recorder is done!")
 else:

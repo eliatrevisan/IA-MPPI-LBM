@@ -45,6 +45,7 @@ class NetworkModel():
 			self.sigma_bias = 0.0
 		# Training parameters
 		self.lambda_ = args.regularization_weight
+		self.kl_weight = args.kl_weight
 		self.batch_size = None
 		self.is_training = is_training
 		self.grads_clip = args.grads_clip
@@ -70,6 +71,8 @@ class NetworkModel():
 		self.dropout_placeholder = tf.placeholder(dtype=tf.float32, name='dropout')
 		self.step = tf.placeholder(dtype=tf.float32,
 		                           shape=[], name='global_step')
+		self.beta = tf.placeholder(dtype=tf.float32,
+		                           shape=[])
 		self.seq_length = tf.placeholder(tf.int32, [None])
 		# Initialize hidden states with zeros
 		self.cell_state_current = np.zeros([args.batch_size, args.rnn_state_size])
@@ -232,7 +235,7 @@ class NetworkModel():
 				self.learning_rate = tf.train.exponential_decay(self.learning_rate_init, self.step, decay_steps=10000,
 				                                                decay_rate=0.9, staircase=False)
 
-				self.beta = (tf.tanh((tf.to_float(self.step) - 20000) / 5000) + 1) / 2
+				#self.beta = (tf.tanh((tf.to_float(self.step) - 20000) / 5000) + 1) / 2	# sigmoid	
 
 				prediction_loss_list = []
 				loss_list = []
@@ -312,7 +315,7 @@ class NetworkModel():
 
 			# Reduce mean in all dimensions
 			#self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
-			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0)*self.beta # + args.diversity_update*self.div_loss
+			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0) * self.beta #* tf.to_float(self.kl_weight) # + args.diversity_update*self.div_loss
 			self.reconstruction_loss = tf.reduce_mean(loss_list, axis=0)
 			self.kl_loss = tf.reduce_mean(kl_loss_list, axis=0)
 
@@ -337,6 +340,7 @@ class NetworkModel():
 			#self.div_loss_summary = tf.summary.scalar('div_loss', self.div_loss)
 			self.reconstruction_loss_summary = tf.summary.scalar('reconstruction_loss', self.reconstruction_loss)
 			tf.summary.scalar('learning_rate', self.learning_rate)
+			tf.summary.scalar('beta', self.beta)
 
 			self.summary_writer = tf.summary.FileWriter(logdir=os.path.join(self.log_dir, 'train'), graph=tf.Session().graph)
 			self.validation_summary_writer = tf.summary.FileWriter(logdir=os.path.join(self.log_dir, 'validation'),
@@ -366,6 +370,7 @@ class NetworkModel():
 		        self.input_ped_grid_placeholder: kwargs["batch_ped_grid"],
 		        self.input_grid_placeholder: kwargs["batch_grid"],
 		        self.step: kwargs['step'],
+				self.beta: kwargs['beta'],
 		        self.seq_length: n_other_agents,
 		        self.diversity_placeholder: kwargs['batch_div'],
 		        self.output_placeholder: batch_y,
@@ -390,6 +395,7 @@ class NetworkModel():
 		        self.input_ped_grid_placeholder: np.expand_dims(kwargs["batch_ped_grid"][:, step, :], axis=1),
 		        self.input_grid_placeholder: np.expand_dims(kwargs["batch_grid"][:, step, :, :], axis=1),
 		        self.step: 0,
+				self.beta: 0,
 		        self.seq_length: n_other_agents,
 		        self.cell_state: np.random.normal(self.test_cell_state_current.copy(), 0),
 		        self.hidden_state: np.random.normal(self.test_hidden_state_current.copy(), 0),
@@ -413,6 +419,7 @@ class NetworkModel():
 		        self.output_placeholder: kwargs['batch_y'],
 		        self.seq_length: n_other_agents,
 		        self.step: 0,
+				self.beta: 0,
 		        self.cell_state: np.random.normal(self.test_cell_state_current.copy(), kwargs["state_noise"]),
 		        self.hidden_state: np.random.normal(self.test_hidden_state_current.copy(), kwargs["state_noise"]),
 		        self.cell_state_lstm_grid: np.random.normal(self.test_cell_state_current_lstm_grid.copy(), kwargs["grid_noise"]),
@@ -487,12 +494,14 @@ class NetworkModel():
 
 		# Diversity Training
 		if step > 2000 and self.args.diversity_update:
+			
 			dict = {"batch_vel": feed_dict_train[self.input_state_placeholder],
 			        "batch_grid": feed_dict_train[self.input_grid_placeholder],
 			        "batch_ped_grid": feed_dict_train[self.input_ped_grid_placeholder],
 			        "batch_y": feed_dict_train[self.output_placeholder],
 			        "batch_div": feed_dict_train[self.diversity_placeholder],
 			        "step": step,
+					"beta": feed_dict_train[self.beta],
 			        "state_noise": 0.5,
 			        "grid_noise": 0.0,
 			        "ped_noise": 0.5
@@ -947,3 +956,16 @@ class NetworkModel():
 		if summary:
 			tf.summary.histogram(name + "_activations", activations)
 		return activations
+
+	def frange_cycle_linear(self, n_iter, start=0.0, stop=1.0,  n_cycle=4, ratio=0.5):
+		L = np.ones(n_iter) * stop
+		period = n_iter/n_cycle
+		step = (stop-start)/(period*ratio) # linear schedule
+
+		for c in range(n_cycle):
+			v, i = start, 0
+			while v <= stop and (int(i+c*period) < n_iter):
+				L[int(i+c*period)] = v
+				v += step
+				i += 1
+		return L

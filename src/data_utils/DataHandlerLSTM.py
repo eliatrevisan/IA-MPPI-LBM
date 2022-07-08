@@ -912,17 +912,6 @@ class DataHandlerLSTM():
 
 			batch_grid[batch_idx, tbp_step, :, :] = grid
 
-			#for i in range(10):
-			#	ax = plt.subplot()
-			#	sup.plot_grid(ax, np.array([0.0,0.0]), batch_grid[batch_idx, tbp_step, :, :], 0.081,
-			#		np.array([60, 60])) 
-			#	plt.show()
-			
-			#print("Rotated: ", self.rotated_grid)
-			#print("Centered: ", self.centered_grid)
-
-			# batch_goal[batch_idx, tbp_step, :] = trajectory.goal
-
 			# Find positions of other pedestrians at the current timestep and order them by dstance to query agent
 			other_positions = trajectory.other_agents_positions[start_idx + tbp_step]
 			n_other_agents = other_positions.shape[0]
@@ -947,14 +936,17 @@ class DataHandlerLSTM():
 
 			if self.args.others_info == "relative":
 				for ag_id in range(min(n_other_agents,self.args.n_other_agents)):
-					rel_pos = np.array([other_poses_ordered[ag_id,0] - current_pos[0],other_poses_ordered[ag_id, 1] - current_pos[1]])*\
-								  multivariate_normal.pdf(np.linalg.norm(np.array([other_poses_ordered[ag_id,:2] - current_pos])),
-																			  mean=0.0,cov=5.0)
+					rel_pos = np.array([other_poses_ordered[ag_id,0] - current_pos[0],other_poses_ordered[ag_id, 1] - current_pos[1]])#*\
+								  #multivariate_normal.pdf(np.linalg.norm(np.array([other_poses_ordered[ag_id,:2] - current_pos])),
+																			 # mean=0.0,cov=5.0)
+
 					rel_vel = np.array([other_poses_ordered[ag_id,2] - current_vel[0],other_poses_ordered[ag_id, 3] - current_vel[1]])
+					
 					
 					pedestrian_grid[batch_idx, tbp_step, ag_id*4:ag_id*4+4] = np.concatenate([rel_pos, rel_vel])
 					#pedestrian_grid[batch_idx, tbp_step, ag_id, 4] = np.linalg.norm(rel_pos)
 					#pedestrian_grid[batch_idx, tbp_step, ag_id, 5] = np.arctan2(rel_pos[1], rel_pos[0])
+			
 
 			elif self.args.others_info == "angular_grid":
 				other_pos_local_frame = sup.positions_in_local_frame(current_pos, heading, other_positions)
@@ -962,6 +954,8 @@ class DataHandlerLSTM():
 																															max_range=self.max_range_ped_grid, min_angle=0, max_angle=2*np.pi,
 																															normalize=True)
 				pedestrian_grid[batch_idx, tbp_step, :] = radial_pedestrian_grid
+
+			#print("PED GRID: ", pedestrian_grid)
 
 			# Output values
 			for pred_step in range(self.output_sequence_length):
@@ -1118,8 +1112,8 @@ class DataHandlerLSTM():
 		else:
 			batch_vel = np.zeros([1, sequence_length, self.input_state_dim * (self.prev_horizon + 1)])
 		batch_grid = np.zeros([1, sequence_length,
-													 int(np.ceil(self.submap_width / self.agent_container.occupancy_grid.resolution)),
-													 int(np.ceil(self.submap_height / self.agent_container.occupancy_grid.resolution))])
+													int(np.ceil(self.submap_width / self.agent_container.occupancy_grid.resolution)),
+													int(np.ceil(self.submap_height / self.agent_container.occupancy_grid.resolution))])
 		
 		batch_goal = np.zeros([1, sequence_length, 2])
 		batch_y = np.zeros([1, sequence_length, self.output_state_dim * self.output_sequence_length])
@@ -1146,9 +1140,7 @@ class DataHandlerLSTM():
 		if freeze:
 			pedestrian_grid = pedestrian_grid*0.0
 
-		
-
-		return batch_x, batch_vel, batch_pos,batch_goal, batch_grid, pedestrian_grid, batch_y, batch_pos_target, other_agents_pos, traj
+		return batch_x, batch_vel, batch_pos, batch_goal, batch_grid, pedestrian_grid, batch_y, batch_pos_target, other_agents_pos, traj
 
 	def getGroupOfTrajectoriesAsBatch(self, trajectory_idx, max_sequence_length=1000, n_trajs=1):
 		"""

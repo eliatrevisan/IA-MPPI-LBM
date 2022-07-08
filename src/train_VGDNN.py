@@ -49,8 +49,8 @@ batch_size = 16 #128
 regularization_weight = 0.0001
 
 # Time parameters
-truncated_backprop_length = 10
-prediction_horizon = 10
+truncated_backprop_length = 8
+prediction_horizon = 8
 prev_horizon = 0
 
 rnn_state_size = 32
@@ -85,7 +85,7 @@ max_range_ped_grid = 5
 
 print_freq = 200
 save_freq = 500
-total_training_steps = 50000
+total_training_steps = 400000
 dt = 0.4
 
 warmstart_model = False
@@ -266,12 +266,26 @@ def parse_args():
 	parser.add_argument('--sx_pos', help='sx_pos', type=float, default=1)
 	parser.add_argument('--sy_pos', help='sy_pos', type=float, default=1)
 	parser.add_argument('--train_set', help='Percentage of the dataset used for training', type=float, default=train_set)
+	parser.add_argument('--kl_weight', help='Experimenting with additional weight for KL loss', type=float, default=1)
 	args = parser.parse_args()
 
 	return args
 
 
 args = parse_args()
+
+def frange_cycle_linear(n_iter, start=0.0, stop=1.0,  n_cycle=4, ratio=0.5):
+	L = np.ones(n_iter) * stop
+	period = n_iter/n_cycle
+	step = (stop-start)/(period*ratio) # linear schedule
+
+	for c in range(n_cycle):
+		v, i = start, 0
+		while v <= stop and (int(i+c*period) < n_iter):
+			L[int(i+c*period)] = v
+			v += step
+			i += 1
+	return L
 
 # Enable / Disable GPU
 if args.gpu:
@@ -323,6 +337,8 @@ model = NetworkModel(args)
 
 config = tf.ConfigProto()
 
+beta_list = frange_cycle_linear(args.total_training_steps)
+
 # Start Training Session
 with tf.Session(config=config) as sess:
 
@@ -368,6 +384,9 @@ with tf.Session(config=config) as sess:
 		else:
 			batch = res.get(timeout=5)
 
+		#print("ped grid: ", other_agents_pos)
+		#print("vel: ", batch_vel)
+
 		# Create dictionary to feed into the model
 		dict = {"batch_x": batch_x,
 		        "batch_vel": batch_vel,
@@ -376,6 +395,7 @@ with tf.Session(config=config) as sess:
 			      "batch_grid": batch_grid,
 			      "batch_ped_grid": batch_ped_grid,
 			      "step": step,
+				  "beta": beta_list[step],
 			      "batch_y": batch_y,
 			      "batch_pos_target": batch_pos_target,
 		        "batch_div": batch_y,
@@ -394,6 +414,7 @@ with tf.Session(config=config) as sess:
 		start_time_training = time.time()
 
 		model_output = model.train_step(sess, feed_dict_train,step)
+		
 
 		avg_training_time = time.time() - start_time_training
 		avg_loop_time = time.time() - start_time_loop
@@ -420,8 +441,8 @@ with tf.Session(config=config) as sess:
 
 			ellapsed_time = time.time() - start_time
 			# 0 = np.mean(avg_training_loss)
-			print(np.mean(avg_training_loss))
-			print(validation_loss)
+			#print(np.mean(avg_training_loss))
+			#print(validation_loss)
 			#print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
 			#      .format(epoch + 1, step, np.mean(avg_training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
 			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Epoch time: {:01.2f} sec"
@@ -463,3 +484,5 @@ with tf.Session(config=config) as sess:
 		model.summary_writer.close()
 
 sess.close()
+
+

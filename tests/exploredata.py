@@ -281,6 +281,9 @@ data_prep.processData(**map_args)
 
 #print(data_prep.trajectory_set[0]) # Output [ vessel id, trajectory_object ]
 
+print(data_prep.trajectory_set[12][1].vel_vec)
+
+"""
 right_start = []
 bottom_start = []
 left_start = []
@@ -321,3 +324,5 @@ for i in bottom_start:
 
 plt.tight_layout()
 plt.show()
+
+"""
