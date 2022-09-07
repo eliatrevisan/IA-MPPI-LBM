@@ -21,7 +21,7 @@ import matplotlib.animation as animation
 from time import sleep
 import random
 from scipy.stats import multivariate_normal
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 from matplotlib.patches import Ellipse
 
@@ -42,6 +42,8 @@ class DataHandlerLSTM():
 		self.output_state_dim = args.output_dim
 		self.submap_width = args.submap_width
 		self.submap_height = args.submap_height
+		self.submap_width_real = args.submap_span_real
+		self.submap_height_real = args.submap_span_real
 		self.submap_resolution = args.submap_resolution
 		self.centered_grid = args.centered_grid
 		self.rotated_grid = args.rotated_grid
@@ -174,12 +176,12 @@ class DataHandlerLSTM():
 						query_time = traj.time_vec[time_idx]
 						other_agents_positions = agent_container.getAgentPositionsForTimeExclude(query_time, id)
 						other_agents_velocities = agent_container.getAgentVelocitiesForTimeExclude(query_time, id)
-						"""
-						for ag_id in range(other_agents_positions.shape[0]):
-							if np.linalg.norm(traj.pose_vec[time_idx,:2]-other_agents_positions[ag_id]) < 0.6:
-								print("Trajectory discarded. Collision between the agents")
-								traj_with_collision = True
-						"""
+				#		"""
+				#		for ag_id in range(other_agents_positions.shape[0]):
+				#			if np.linalg.norm(traj.pose_vec[time_idx,:2]-other_agents_positions[ag_id]) < 0.6:
+				#				print("Trajectory discarded. Collision between the agents")
+				#				traj_with_collision = True
+				#		"""
 						# Remove ego agent
 						traj.other_agents_positions.append(other_agents_positions)
 						traj.other_agents_velocities.append(other_agents_velocities)
@@ -187,6 +189,24 @@ class DataHandlerLSTM():
 				#if id != -1:
 					#if not traj_with_collision:
 				trajectory_set.append((id, traj))
+	
+	def setOtherAgentData(self, agent_container, trajectory_set, id):
+		for traj_idx, traj in enumerate(agent_container.getAgentTrajectories(id)):
+			traj_with_collision = False
+			if len(traj) > self.min_length_trajectory:
+				#traj.updateInterpolators()
+				for time_idx in range(traj.time_vec.shape[0]):
+					if self.multi_pedestrian:
+						query_time = traj.time_vec[time_idx]
+						other_agents_positions = agent_container.getAgentPositionsForTimeExclude(query_time, id)
+						other_agents_velocities = agent_container.getAgentVelocitiesForTimeExclude(query_time, id)
+						# Remove ego agent
+						traj.other_agents_positions.append(other_agents_positions)
+						traj.other_agents_velocities.append(other_agents_velocities)
+				trajectory_set[traj_idx][1].other_agents_positions = traj.other_agents_positions
+				trajectory_set[traj_idx][1].other_agents_velocities = traj.other_agents_velocities
+				
+
 
 	def processData(self, **kwargs):
 		"""
@@ -194,7 +214,10 @@ class DataHandlerLSTM():
 		"""
 		data_pickle = self.args.data_path + self.args.scenario + "/data" + str(self.args.prediction_horizon) + "_" + str(
 			self.args.truncated_backprop_length)+ "_" + str(
-			self.args.prev_horizon) + ".pickle"
+			self.args.prev_horizon) + "_correct.pickle"
+		#data_pickle = self.args.data_path + self.args.scenario + "/data" + str(self.args.prediction_horizon) + "_" + str(
+		#	self.args.truncated_backprop_length)+ "_" + str(
+		#	self.args.prev_horizon) + "experiment3agents-norm.pickle"
 		if os.path.isfile(data_pickle):
 			self.loadTrajectoryData(data_pickle)
 		else:
@@ -204,6 +227,9 @@ class DataHandlerLSTM():
 			elif "simulation" in data_pickle:
 				print("Processing simulation data.")
 				self._process_simulation_data_(**kwargs)
+			elif "comparison" in data_pickle:
+				print("Processing comparison data")
+				self._process_comparison_data_(**kwargs)
 			else:
 				print("Processing gym data.")
 				self._process_gym_data_(**kwargs)
@@ -247,7 +273,7 @@ class DataHandlerLSTM():
 		for id in self.agent_container.getAgentIDs():
 			for traj in self.agent_container.getAgentTrajectories(id):
 				traj.subsample(int(self.args.dt * 10))
-
+		
 		# Put all the trajectories in the trajectory set and randomize
 		for id in self.agent_container.getAgentIDs():
 			print("Processing agent {} / {}".format(id, self.agent_container.getNumberOfAgents()))
@@ -271,7 +297,7 @@ class DataHandlerLSTM():
 			map_data = json.load(json_file)
 
 		grid_map = pl.imread(self.data_path+self.args.scenario + '/map.png')
-		grid_map = np.ceil(grid_map[:,:,0])
+		grid_map = np.round(grid_map[:,:,0])
 
 		#map_data = np.load(os.path.join(self.data_path+self.args.scenario, 'map.npy'), encoding='latin1', allow_pickle=True)
 		self.agent_container.occupancy_grid.gridmap = grid_map #map_data.item(0)['Map']  # occupancy values of cells
@@ -293,7 +319,7 @@ class DataHandlerLSTM():
 		self.load_map(**kwargs)
 		# Pedestrian data
 		# [id, timestep (s), timestep (ns), pos x, pos y, yaw, vel x, vel y, omega, goal x, goal y]
-		pedestrian_data = np.genfromtxt(os.path.join(self.data_path+self.args.scenario, 'total_log.csv'), delimiter=",")[1:, :]
+		pedestrian_data = np.genfromtxt(os.path.join('../',self.data_path+self.args.scenario, 'total_log.csv'), delimiter=",")[1:, :]
 
 		# Iterate through the data and fill the register
 		for sample_idx in range(pedestrian_data.shape[0]):
@@ -334,6 +360,62 @@ class DataHandlerLSTM():
 			self.addAgentTrajectoriesToSet(self.agent_container,self.trajectory_set,id)
 
 		self.compute_min_max_values()
+	
+	def _process_comparison_data_(self, **kwargs):
+		"""
+		Import the data from the log file stored in the directory of data_path.
+		This method brings all the data into a suitable format for training.
+		"""
+		self.load_map(**kwargs)
+		# Pedestrian data
+		# [id, timestep (s), timestep (ns), pos x, pos y, yaw, vel x, vel y, omega, goal x, goal y]
+		print("Extracting data from csv file")
+		pedestrian_data = np.genfromtxt(os.path.join(self.data_path+self.args.scenario, 'total_log.csv'), delimiter=",")[1:, :]
+		print("Data extracted")
+
+		# Iterate through the data and fill the register
+		for sample_idx in range(pedestrian_data.shape[0]):
+			if pedestrian_data[sample_idx, 0] != -1:
+				id = pedestrian_data[sample_idx, 0]
+				timestamp = np.round(pedestrian_data[sample_idx, 1],1)# + pedestrian_data[sample_idx, 2] * 1e-9  # time in seconds
+				pose = np.zeros([1,3])
+				vel = np.zeros([1,3])
+				pose[:,0:2] = np.true_divide(pedestrian_data[sample_idx, 3:5], np.array([self.norm_const_x, self.norm_const_y]))
+				vel[:,0:2] = np.true_divide(pedestrian_data[sample_idx, 5:7], np.array([self.norm_const_vx, self.norm_const_vy]))
+				goal = np.true_divide(pedestrian_data[sample_idx, 7:], np.array([self.norm_const_x, self.norm_const_y]))
+
+				self.agent_container.addDataSample(id, timestamp, pose, vel, goal)
+
+		# Set the initial indices for agent trajectories (which trajectory will be returned when queried)
+		self.agent_traj_idx = [0] * self.agent_container.getNumberOfAgents()
+
+		# Subsample trajectories (longer discretization time) from dt=0.1 to dt=0.4
+		print("Subsampling data..")
+		for id in self.agent_container.getAgentIDs():
+			for traj in self.agent_container.getAgentTrajectories(id):
+				traj.subsample(int(self.args.dt*10))
+		print("Sampling done.")
+
+		for id in self.agent_container.getAgentIDs():
+			for traj in self.agent_container.getAgentTrajectories(id):
+				for t_id in range(1, traj.pose_vec.shape[0]):
+					traj.vel_vec[t_id, :2] = (traj.pose_vec[t_id, :2] - traj.pose_vec[t_id-1, :2]) / self.dt
+
+		# Reconstruct interpolators since they were not pickled with the rest of the trajectory
+		for id in self.agent_container.getAgentIDs():
+			for traj_idx, traj in enumerate(self.agent_container.getAgentTrajectories(id)):
+				if len(traj) > self.min_length_trajectory:
+					traj.updateInterpolators()
+
+		# Put all the trajectories in the trajectory set and randomize
+		for id in self.agent_container.getAgentIDs():
+			print("Processing agent {} / {}".format(id, self.agent_container.getNumberOfAgents()))
+			# Adds trajectory if bigger than a minimum length and maximum size
+			self.addAgentTrajectoriesToSet(self.agent_container,self.trajectory_set,id)
+		
+		self.compute_min_max_values()
+
+		
 
 	def compute_min_max_values(self):
 		for traj_id in range(len(self.trajectory_set)):
@@ -879,8 +961,10 @@ class DataHandlerLSTM():
 			for prev_step in range(self.prev_horizon,-1,-1):
 				current_pos = np.array([trajectory.pose_vec[start_idx + tbp_step - prev_step, 0], trajectory.pose_vec[
 											start_idx + tbp_step - prev_step, 1]])
-				current_vel = np.array([trajectory.vel_vec[start_idx + tbp_step, 0], trajectory.vel_vec[
-											start_idx + tbp_step - prev_step - prev_step, 1]])
+				#current_vel = np.array([trajectory.vel_vec[start_idx + tbp_step, 0], trajectory.vel_vec[
+				#							start_idx + tbp_step - prev_step - prev_step, 1]])
+				current_vel = np.array([trajectory.vel_vec[start_idx + tbp_step - prev_step, 0], trajectory.vel_vec[
+											start_idx + tbp_step - prev_step, 1]])
 
 				if self.args.normalize_data:
 					self.normalize_pos(current_pos)
@@ -900,17 +984,12 @@ class DataHandlerLSTM():
 			heading = math.atan2(current_vel[1], current_vel[0])
 			if centered_grid:
 				grid_center = current_pos
-				grid = self.agent_container.occupancy_grid.getSubmapByCoords(grid_center[0],
-																																			 grid_center[1],
-																																			 self.submap_width, self.submap_height)
-				#grid = self.agent_container.occupancy_grid.getFrontSubmap(grid_center,
-				#																													current_vel,
-				#																													self.submap_width, self.submap_height)
-
+				grid = self.agent_container.occupancy_grid.getSubmapByCoords(grid_center[0], grid_center[1], self.submap_width_real, self.submap_height_real)
+				grid = cv2.resize(grid, (60,60)) # Resize grid to (60,60) to match autoencoder input size
 			if self.rotated_grid:
 				grid = sup.rotate_grid_around_center(grid, heading * 180 / math.pi)  # rotation in degrees
 
-			batch_grid[batch_idx, tbp_step, :, :] = grid
+			batch_grid[batch_idx, tbp_step, :, :] = grid	
 
 			# Find positions of other pedestrians at the current timestep and order them by dstance to query agent
 			other_positions = trajectory.other_agents_positions[start_idx + tbp_step]
@@ -934,14 +1013,16 @@ class DataHandlerLSTM():
 				other_poses_ordered[ag_id,5] = ag_id
 			other_poses_ordered= other_poses_ordered[other_poses_ordered[:, 4].argsort()]
 
+			# other_poses_ordered = [ x, y, vx, vy, norm distance, id]
+
 			if self.args.others_info == "relative":
 				for ag_id in range(min(n_other_agents,self.args.n_other_agents)):
-					rel_pos = np.array([other_poses_ordered[ag_id,0] - current_pos[0],other_poses_ordered[ag_id, 1] - current_pos[1]])#*\
-								  #multivariate_normal.pdf(np.linalg.norm(np.array([other_poses_ordered[ag_id,:2] - current_pos])),
-																			 # mean=0.0,cov=5.0)
+					rel_pos = np.array([other_poses_ordered[ag_id,0] - current_pos[0],other_poses_ordered[ag_id, 1] - current_pos[1]])*\
+								  multivariate_normal.pdf(np.linalg.norm(np.array([other_poses_ordered[ag_id,:2] - current_pos])),
+																			  mean=0.0,
+																			  cov=self.args.relative_covariance)
 
 					rel_vel = np.array([other_poses_ordered[ag_id,2] - current_vel[0],other_poses_ordered[ag_id, 3] - current_vel[1]])
-					
 					
 					pedestrian_grid[batch_idx, tbp_step, ag_id*4:ag_id*4+4] = np.concatenate([rel_pos, rel_vel])
 					#pedestrian_grid[batch_idx, tbp_step, ag_id, 4] = np.linalg.norm(rel_pos)
@@ -954,8 +1035,6 @@ class DataHandlerLSTM():
 																															max_range=self.max_range_ped_grid, min_angle=0, max_angle=2*np.pi,
 																															normalize=True)
 				pedestrian_grid[batch_idx, tbp_step, :] = radial_pedestrian_grid
-
-			#print("PED GRID: ", pedestrian_grid)
 
 			# Output values
 			for pred_step in range(self.output_sequence_length):
@@ -1100,9 +1179,9 @@ class DataHandlerLSTM():
 		id = self.trajectory_set[trajectory_idx][0]
 		traj = self.trajectory_set[trajectory_idx][1]
 		# TODO Why does nothing happen with this grid variable?
-		grid = self.agent_container.occupancy_grid.getSubmapByCoords(traj.pose_vec[0,0] * self.norm_const_x,
-																																 traj.pose_vec[0,1] * self.norm_const_y,
-																																 self.submap_width, self.submap_height)
+		#grid = self.agent_container.occupancy_grid.getSubmapByCoords(traj.pose_vec[0,0] * self.norm_const_x,
+		#																														 traj.pose_vec[0,1] * self.norm_const_y,
+		#																														 self.submap_width, self.submap_height)
 		sequence_length = min(max_sequence_length, traj.pose_vec.shape[0] - self.output_sequence_length-self.prev_horizon)
 		batch_x = np.zeros([1, sequence_length, (self.prev_horizon+1)*self.input_dim])
 		batch_pos_target = np.zeros([1, sequence_length, 2*self.args.prediction_horizon])
@@ -1117,7 +1196,8 @@ class DataHandlerLSTM():
 		
 		batch_goal = np.zeros([1, sequence_length, 2])
 		batch_y = np.zeros([1, sequence_length, self.output_state_dim * self.output_sequence_length])
-		batch_pos = np.zeros([1, sequence_length, self.output_state_dim * self.output_sequence_length])
+		batch_pos = np.zeros([1, sequence_length, self.output_state_dim * (self.output_sequence_length +3)]) #longer prev horizon, tests
+		#batch_pos = np.zeros([1, sequence_length, self.output_state_dim * self.output_sequence_length])
 		if self.args.others_info == "relative":
 			pedestrian_grid = np.zeros([1, sequence_length, self.pedestrian_vector_dim*self.args.n_other_agents])
 		elif "sequence" in self.args.others_info:

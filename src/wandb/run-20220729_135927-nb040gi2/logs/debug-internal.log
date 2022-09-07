@@ -1,0 +1,211 @@
+2022-07-29 13:59:28,590 INFO    MainThread:17084 [internal.py:wandb_internal():93] W&B internal server running at pid: 17084, started at: 2022-07-29 13:59:28.590494
+2022-07-29 13:59:28,592 INFO    WriterThread:17084 [datastore.py:open_for_write():75] open: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/run-nb040gi2.wandb
+2022-07-29 13:59:28,596 DEBUG   SenderThread:17084 [sender.py:send():236] send: header
+2022-07-29 13:59:28,596 DEBUG   SenderThread:17084 [sender.py:send():236] send: run
+2022-07-29 13:59:28,771 INFO    SenderThread:17084 [dir_watcher.py:__init__():216] watching files in: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files
+2022-07-29 13:59:28,771 INFO    SenderThread:17084 [sender.py:_start_run_threads():818] run started: nb040gi2 with start time 1659095967
+2022-07-29 13:59:28,772 DEBUG   SenderThread:17084 [sender.py:send():236] send: summary
+2022-07-29 13:59:28,772 INFO    SenderThread:17084 [sender.py:_save_file():952] saving file wandb-summary.json with policy end
+2022-07-29 13:59:28,773 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: check_version
+2022-07-29 13:59:28,773 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: check_version
+2022-07-29 13:59:28,803 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: run_start
+2022-07-29 13:59:28,805 DEBUG   HandlerThread:17084 [meta.py:__init__():35] meta init
+2022-07-29 13:59:28,805 DEBUG   HandlerThread:17084 [meta.py:__init__():49] meta init done
+2022-07-29 13:59:28,805 DEBUG   HandlerThread:17084 [meta.py:probe():209] probe
+2022-07-29 13:59:28,811 DEBUG   HandlerThread:17084 [meta.py:_setup_git():199] setup git
+2022-07-29 13:59:28,823 DEBUG   HandlerThread:17084 [meta.py:_setup_git():206] setup git done
+2022-07-29 13:59:28,823 DEBUG   HandlerThread:17084 [meta.py:_save_pip():53] save pip
+2022-07-29 13:59:28,824 DEBUG   HandlerThread:17084 [meta.py:_save_pip():67] save pip done
+2022-07-29 13:59:28,824 DEBUG   HandlerThread:17084 [meta.py:probe():247] probe done
+2022-07-29 13:59:28,926 DEBUG   SenderThread:17084 [sender.py:send():236] send: files
+2022-07-29 13:59:28,927 INFO    SenderThread:17084 [sender.py:_save_file():952] saving file wandb-metadata.json with policy now
+2022-07-29 13:59:28,931 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 13:59:28,931 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 13:59:29,066 DEBUG   SenderThread:17084 [sender.py:send():236] send: telemetry
+2022-07-29 13:59:29,418 INFO    Thread-11 :17084 [upload_job.py:push():138] Uploaded file /tmp/tmpuryx2z2vwandb/2ouau0d2-wandb-metadata.json
+2022-07-29 13:59:29,772 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/wandb-metadata.json
+2022-07-29 13:59:29,773 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/wandb-summary.json
+2022-07-29 13:59:29,773 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/requirements.txt
+2022-07-29 13:59:29,773 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 13:59:31,772 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 13:59:33,773 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 13:59:44,069 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 13:59:44,070 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 13:59:53,373 INFO    HandlerThread:17084 [handler.py:handle_tbrecord():723] handling tbrecord: tbrecord {
+  log_dir: "../trained_models/VGDNN/55/log/train"
+  save: true
+}
+
+2022-07-29 13:59:53,374 DEBUG   HandlerThread:17084 [config_util.py:dict_from_config_file():100] no default config file found in config-defaults.yaml
+2022-07-29 13:59:53,376 DEBUG   SenderThread:17084 [sender.py:send():236] send: tbrecord
+2022-07-29 13:59:55,782 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 13:59:57,349 DEBUG   SenderThread:17084 [sender.py:send():236] send: stats
+2022-07-29 13:59:59,236 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 13:59:59,236 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 13:59:59,784 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/config.yaml
+2022-07-29 14:00:06,637 DEBUG   SenderThread:17084 [sender.py:send():236] send: files
+2022-07-29 14:00:06,637 INFO    SenderThread:17084 [sender.py:_save_file():952] saving file train/events.out.tfevents.1659096006.GroupMachineF-2-180 with policy live
+2022-07-29 14:00:06,786 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/train/events.out.tfevents.1659096006.GroupMachineF-2-180
+2022-07-29 14:00:06,786 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/train
+2022-07-29 14:00:08,108 INFO    Thread-14 :17084 [upload_job.py:push():138] Uploaded file /tmp/tmpuryx2z2vwandb/88dx4jsq-train/events.out.tfevents.1659096006.GroupMachineF-2-180
+2022-07-29 14:00:14,416 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 14:00:14,416 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 14:00:23,629 INFO    HandlerThread:17084 [handler.py:handle_tbrecord():723] handling tbrecord: tbrecord {
+  log_dir: "../trained_models/VGDNN/55/log/validation"
+  save: true
+}
+
+2022-07-29 14:00:23,630 DEBUG   SenderThread:17084 [sender.py:send():236] send: tbrecord
+2022-07-29 14:00:23,792 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/train/events.out.tfevents.1659096006.GroupMachineF-2-180
+2022-07-29 14:00:24,792 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 14:00:27,604 DEBUG   SenderThread:17084 [sender.py:send():236] send: stats
+2022-07-29 14:00:29,589 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 14:00:29,589 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 14:00:35,645 DEBUG   SenderThread:17084 [sender.py:send():236] send: files
+2022-07-29 14:00:35,645 INFO    SenderThread:17084 [sender.py:_save_file():952] saving file validation/events.out.tfevents.1659096035.GroupMachineF-2-180 with policy live
+2022-07-29 14:00:35,796 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/validation/events.out.tfevents.1659096035.GroupMachineF-2-180
+2022-07-29 14:00:35,796 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/validation
+2022-07-29 14:00:36,506 INFO    Thread-16 :17084 [upload_job.py:push():138] Uploaded file /tmp/tmpuryx2z2vwandb/1xgui5j0-validation/events.out.tfevents.1659096035.GroupMachineF-2-180
+2022-07-29 14:00:45,274 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 14:00:45,275 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 14:00:52,802 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/validation/events.out.tfevents.1659096035.GroupMachineF-2-180
+2022-07-29 14:00:55,803 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 14:00:57,857 DEBUG   SenderThread:17084 [sender.py:send():236] send: stats
+2022-07-29 14:01:00,426 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 14:01:00,426 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 14:01:15,572 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 14:01:15,573 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 14:01:17,104 DEBUG   SenderThread:17084 [sender.py:send():236] send: telemetry
+2022-07-29 14:01:19,811 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 14:01:19,876 DEBUG   SenderThread:17084 [sender.py:send():236] send: exit
+2022-07-29 14:01:19,877 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:19,877 INFO    SenderThread:17084 [sender.py:send_exit():372] handling exit code: 1
+2022-07-29 14:01:19,877 INFO    SenderThread:17084 [sender.py:send_exit():374] handling runtime: 111
+2022-07-29 14:01:19,877 INFO    SenderThread:17084 [sender.py:_save_file():952] saving file wandb-summary.json with policy end
+2022-07-29 14:01:19,877 INFO    SenderThread:17084 [sender.py:send_exit():380] send defer
+2022-07-29 14:01:19,878 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:19,878 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:19,878 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 0
+2022-07-29 14:01:19,879 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:19,879 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 0
+2022-07-29 14:01:19,879 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 1
+2022-07-29 14:01:19,879 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:19,879 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 1
+2022-07-29 14:01:19,951 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:19,951 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 1
+2022-07-29 14:01:19,951 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 2
+2022-07-29 14:01:19,952 DEBUG   SenderThread:17084 [sender.py:send():236] send: stats
+2022-07-29 14:01:19,952 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:19,952 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 2
+2022-07-29 14:01:19,952 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:19,952 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 2
+2022-07-29 14:01:19,952 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 3
+2022-07-29 14:01:19,952 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:19,953 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 3
+2022-07-29 14:01:20,812 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/wandb-summary.json
+2022-07-29 14:01:20,812 INFO    Thread-7  :17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 14:01:26,394 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:26,395 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:26,395 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 3
+2022-07-29 14:01:26,395 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:26,395 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 4
+2022-07-29 14:01:26,396 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:26,396 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:26,396 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:26,397 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 4
+2022-07-29 14:01:26,398 DEBUG   SenderThread:17084 [sender.py:send():236] send: summary
+2022-07-29 14:01:26,398 INFO    SenderThread:17084 [sender.py:_save_file():952] saving file wandb-summary.json with policy end
+2022-07-29 14:01:26,398 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:26,398 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 4
+2022-07-29 14:01:26,398 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 5
+2022-07-29 14:01:26,399 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:26,399 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 5
+2022-07-29 14:01:26,399 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:26,399 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 5
+2022-07-29 14:01:26,499 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:26,570 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 6
+2022-07-29 14:01:26,570 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:26,571 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:26,571 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 6
+2022-07-29 14:01:26,572 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:26,572 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 6
+2022-07-29 14:01:26,572 INFO    SenderThread:17084 [dir_watcher.py:finish():353] shutting down directory watcher
+2022-07-29 14:01:26,673 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:26,815 INFO    SenderThread:17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/wandb-summary.json
+2022-07-29 14:01:26,815 INFO    SenderThread:17084 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/config.yaml
+2022-07-29 14:01:26,816 INFO    SenderThread:17084 [dir_watcher.py:finish():383] scan: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files
+2022-07-29 14:01:26,816 INFO    SenderThread:17084 [dir_watcher.py:finish():397] scan save: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log output.log
+2022-07-29 14:01:26,816 INFO    SenderThread:17084 [dir_watcher.py:finish():397] scan save: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/wandb-metadata.json wandb-metadata.json
+2022-07-29 14:01:26,816 INFO    SenderThread:17084 [dir_watcher.py:finish():397] scan save: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/wandb-summary.json wandb-summary.json
+2022-07-29 14:01:26,816 INFO    SenderThread:17084 [dir_watcher.py:finish():397] scan save: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/requirements.txt requirements.txt
+2022-07-29 14:01:26,816 INFO    SenderThread:17084 [dir_watcher.py:finish():397] scan save: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/config.yaml config.yaml
+2022-07-29 14:01:26,826 INFO    SenderThread:17084 [dir_watcher.py:finish():397] scan save: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/validation/events.out.tfevents.1659096035.GroupMachineF-2-180 validation/events.out.tfevents.1659096035.GroupMachineF-2-180
+2022-07-29 14:01:26,831 INFO    SenderThread:17084 [dir_watcher.py:finish():397] scan save: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/train/events.out.tfevents.1659096006.GroupMachineF-2-180 train/events.out.tfevents.1659096006.GroupMachineF-2-180
+2022-07-29 14:01:26,831 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 7
+2022-07-29 14:01:26,831 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:26,832 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:26,832 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 7
+2022-07-29 14:01:26,833 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:26,833 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 7
+2022-07-29 14:01:26,833 INFO    SenderThread:17084 [file_pusher.py:finish():171] shutting down file pusher
+2022-07-29 14:01:26,934 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:26,935 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,036 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,037 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,138 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,138 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,240 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,240 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,320 INFO    Thread-20 :17084 [upload_job.py:push():138] Uploaded file /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/config.yaml
+2022-07-29 14:01:27,323 INFO    Thread-19 :17084 [upload_job.py:push():138] Uploaded file /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/requirements.txt
+2022-07-29 14:01:27,323 INFO    Thread-18 :17084 [upload_job.py:push():138] Uploaded file /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/wandb-summary.json
+2022-07-29 14:01:27,342 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,342 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,371 INFO    Thread-17 :17084 [upload_job.py:push():138] Uploaded file /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/files/output.log
+2022-07-29 14:01:27,444 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,444 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,546 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,546 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,649 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,649 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,751 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,751 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,853 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,853 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:27,869 INFO    Thread-21 :17084 [upload_job.py:push():138] Uploaded file /tmp/tmpuryx2z2vwandb/18qiefzu-validation/events.out.tfevents.1659096035.GroupMachineF-2-180
+2022-07-29 14:01:27,875 INFO    Thread-22 :17084 [upload_job.py:push():138] Uploaded file /tmp/tmpuryx2z2vwandb/230pltwe-train/events.out.tfevents.1659096006.GroupMachineF-2-180
+2022-07-29 14:01:27,956 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:27,956 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:28,058 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:28,058 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:28,077 INFO    Thread-6  :17084 [sender.py:transition_state():393] send defer: 8
+2022-07-29 14:01:28,078 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:28,078 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 8
+2022-07-29 14:01:28,078 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:28,078 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 8
+2022-07-29 14:01:28,161 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:29,006 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 9
+2022-07-29 14:01:29,007 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:29,008 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:29,008 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 9
+2022-07-29 14:01:29,008 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:29,008 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 9
+2022-07-29 14:01:29,008 INFO    SenderThread:17084 [sender.py:transition_state():393] send defer: 10
+2022-07-29 14:01:29,009 DEBUG   SenderThread:17084 [sender.py:send():236] send: final
+2022-07-29 14:01:29,010 DEBUG   SenderThread:17084 [sender.py:send():236] send: footer
+2022-07-29 14:01:29,010 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: defer
+2022-07-29 14:01:29,010 INFO    HandlerThread:17084 [handler.py:handle_request_defer():163] handle defer: 10
+2022-07-29 14:01:29,010 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: defer
+2022-07-29 14:01:29,010 INFO    SenderThread:17084 [sender.py:send_request_defer():389] handle sender defer: 10
+2022-07-29 14:01:29,110 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-29 14:01:29,111 DEBUG   SenderThread:17084 [sender.py:send_request():250] send_request: poll_exit
+2022-07-29 14:01:29,111 INFO    SenderThread:17084 [file_pusher.py:join():176] waiting for file pusher
+2022-07-29 14:01:29,488 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: sampled_history
+2022-07-29 14:01:29,490 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: get_summary
+2022-07-29 14:01:29,490 DEBUG   HandlerThread:17084 [handler.py:handle_request():140] handle_request: shutdown
+2022-07-29 14:01:29,490 INFO    HandlerThread:17084 [handler.py:finish():806] shutting down handler
+2022-07-29 14:01:30,010 INFO    WriterThread:17084 [datastore.py:close():279] close: /home/stlucas/I-LSTM/src/wandb/run-20220729_135927-nb040gi2/run-nb040gi2.wandb
+2022-07-29 14:01:30,386 INFO    SenderThread:17084 [sender.py:finish():1114] shutting down sender
+2022-07-29 14:01:30,386 INFO    SenderThread:17084 [file_pusher.py:finish():171] shutting down file pusher
+2022-07-29 14:01:30,386 INFO    SenderThread:17084 [file_pusher.py:join():176] waiting for file pusher
+2022-07-29 14:01:30,389 INFO    MainThread:17084 [internal.py:handle_exit():80] Internal process exited

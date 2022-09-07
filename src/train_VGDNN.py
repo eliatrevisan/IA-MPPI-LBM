@@ -29,18 +29,19 @@ from copy import deepcopy
 from multiprocessing.pool import ThreadPool
 import colorama
 from colorama import Fore, Style
+import wandb
 
 #os.environ['TF_ENABLE_AUTO_MIXED_PRECISION'] = '1'
 
 pretrained_convnet_path = "../trained_models/autoencoder_with_ped"
 
-data_path = '../data/2_agents_swap/trajs/'
-scenario = 'GA3C-CADRL-10-py27'
-data_path = '../data/cyberzoo_experiments/'
-scenario = 'all_trajectories'
+#data_path = '../data/2_agents_swap/trajs/'
+#scenario = 'GA3C-CADRL-10-py27'
+#data_path = '../data/cyberzoo_experiments/'
+#scenario = 'all_trajectories'
 exp_num = 6
 data_path = '../data/'
-scenario = '20_ped_with_obstacles/short_few_obstacles'
+scenario = 'simulation/roboat'
 
 # Hyperparameters
 n_epochs = 0
@@ -71,6 +72,7 @@ n_mixtures = 1  # USE ZERO FOR MSE MODEL
 grads_clip = 1.0
 n_other_agents = 18
 tensorboard_logging = True
+wandb_logging = True
 
 # Model parameters
 input_dim = 4  # [vx, vy]
@@ -85,7 +87,7 @@ max_range_ped_grid = 5
 
 print_freq = 200
 save_freq = 500
-total_training_steps = 400000
+total_training_steps = 50000
 dt = 0.4
 
 warmstart_model = False
@@ -105,6 +107,8 @@ regulate_log_loss = False
 submap_resolution = 0.081
 submap_width = 4.86
 submap_height = 4.86
+submap_span_real = 10
+relative_covariance = 10.0
 diversity_update = False
 predict_positions = False
 warm_start_convnet = True
@@ -230,8 +234,9 @@ def parse_args():
 	                    default=centered_grid)
 	parser.add_argument('--sigma_bias', help='Percentage of the dataset used for trainning', type=float,
 	                    default=0)
-	parser.add_argument('--submap_width', help='width of occupancy grid', type=int, default=submap_width)
-	parser.add_argument('--submap_height', help='height of occupancy grid', type=int, default=submap_height)
+	parser.add_argument('--submap_width', help='width of occupancy grid (For initialization of arrays)', type=int, default=submap_width)
+	parser.add_argument('--submap_height', help='height of occupancy grid (for initiatization of arrays)', type=int, default=submap_height)
+	parser.add_argument('--submap_span_real', help='span of submap occupancy grid', type=int, default=submap_span_real)
 	parser.add_argument('--submap_resolution', help='Map resolution.', type=float,
 	                    default=submap_resolution)
 	parser.add_argument('--min_buffer_size', help='Minimum buffer size (default=1000).', type=int, default=1000)
@@ -267,13 +272,15 @@ def parse_args():
 	parser.add_argument('--sy_pos', help='sy_pos', type=float, default=1)
 	parser.add_argument('--train_set', help='Percentage of the dataset used for training', type=float, default=train_set)
 	parser.add_argument('--kl_weight', help='Experimenting with additional weight for KL loss', type=float, default=1)
+	parser.add_argument('--relative_covariance', help='Changing covariance of relative positions', type=float, default=relative_covariance)
 	args = parser.parse_args()
 
 	return args
 
-
 args = parse_args()
 
+
+# Cyclical KL Annealing weight
 def frange_cycle_linear(n_iter, start=0.0, stop=1.0,  n_cycle=4, ratio=0.5):
 	L = np.ones(n_iter) * stop
 	period = n_iter/n_cycle
@@ -293,6 +300,28 @@ if args.gpu:
 else:
 	os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 	import tensorflow as tf
+"""
+# Initialize wandb logging
+wandb.init(project="SocialVRNN", entity="walterj", config=tf.flags.FLAGS, sync_tensorboard=True)
+wandb.config = {
+  "learning_rate": learning_rate_init,
+  "epochs": n_epochs,
+  "experiment number": exp_num,
+  "batch_size": batch_size,
+  "training steps": total_training_steps,
+  "truncated backpropagation steps": truncated_backprop_length,
+  "previous horizon": prev_horizon,
+  "prediction horizon": prediction_horizon,
+  "gradient clipping": grads_clip,
+  "dt": dt,
+  "regularization weight": regularization_weight,
+  "resolution": submap_resolution,
+  "submap_width": submap_width,
+  "submap_height": submap_height,
+  "submap_width_real": submap_span_real,
+  "submap_height_real": submap_span_real
+}
+"""
 
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -438,15 +467,16 @@ with tf.Session(config=config) as sess:
 			feed_dict_validation = model.feed_val_dic(**validation_dict)
 
 			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_train)
+			#validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
 
 			ellapsed_time = time.time() - start_time
 			# 0 = np.mean(avg_training_loss)
 			#print(np.mean(avg_training_loss))
 			#print(validation_loss)
-			#print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
-			#      .format(epoch + 1, step, np.mean(avg_training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
-			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Epoch time: {:01.2f} sec"
-			      .format(epoch + 1, step, ellapsed_time)+Style.RESET_ALL)
+			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
+			      .format(epoch + 1, step, np.mean(avg_training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
+			#print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Epoch time: {:01.2f} sec"
+			#      .format(epoch + 1, step, ellapsed_time)+Style.RESET_ALL)
 
 			if tensorboard_logging:
 				model.summary_writer.add_summary(model_output["summary"], step)
@@ -479,6 +509,8 @@ with tf.Session(config=config) as sess:
 	model.full_saver.save(sess, full_path)
 	print('Saved final model under "{}"'.format(full_path))
 
+	#if wandb_logging:
+	#	wandb.tensorflow.log(tf.summary.merge_all())
 
 	if tensorboard_logging:
 		model.summary_writer.close()

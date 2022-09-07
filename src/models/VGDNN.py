@@ -290,17 +290,18 @@ class NetworkModel():
 						lossfunc = self.get_log_lossfunc(mux[prediction_step], muy[prediction_step],
 						                                 sigmax[prediction_step], sigmay[prediction_step],
 						                                 x_data, y_data, pi)
-
+						#
 						#diversity_loss = self.get_log_lossfunc(mux[prediction_step], muy[prediction_step],
 						#                                        sigmax[prediction_step], sigmay[prediction_step],
 						#                                       x_diversity, y_diversity, pi)
-
+						#
 						#div_loss_over_horizon.append(diversity_loss)
 						prediction_loss_list.append(lossfunc)
 
 					self.prediction.append(pred)
 					kl_loss = self.tf_kl_gaussgauss(enc_mu, enc_sigma, prior_mu, prior_sigma)
 					kl_loss_list.append(kl_loss)
+					#
 					#div_loss_over_truncated_back_prop.append(tf.reduce_mean(div_loss_over_horizon))
 					loss_list.append(tf.reduce_mean(prediction_loss_list))
 
@@ -315,7 +316,7 @@ class NetworkModel():
 
 			# Reduce mean in all dimensions
 			#self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
-			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0) * self.beta #* tf.to_float(self.kl_weight) # + args.diversity_update*self.div_loss
+			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0) * self.beta #+ args.diversity_update*self.div_loss
 			self.reconstruction_loss = tf.reduce_mean(loss_list, axis=0)
 			self.kl_loss = tf.reduce_mean(kl_loss_list, axis=0)
 
@@ -383,7 +384,26 @@ class NetworkModel():
 		        self.cell_state_lstm_concat: self.cell_state_current_lstm_concat,
 		        self.hidden_state_lstm_concat: self.hidden_state_current_lstm_concat,
 		        }
+	
+	def feed_pred_dic(self, **kwargs):
+		step = kwargs["step"]
+		n_other_agents = np.zeros([self.args.batch_size])
 
+		return {self.input_state_placeholder: np.expand_dims(kwargs["batch_vel"], axis=1),
+		        self.input_ped_grid_placeholder: np.expand_dims(kwargs["batch_ped_grid"], axis=1),
+		        self.input_grid_placeholder: np.expand_dims(kwargs["batch_grid"], axis=1),
+		        self.step: 0,
+				self.beta: 0,
+		        self.seq_length: n_other_agents,
+		        self.cell_state: self.test_cell_state_current,
+		        self.hidden_state: self.test_hidden_state_current,
+		        self.cell_state_lstm_grid: self.test_cell_state_current_lstm_grid,
+		        self.hidden_state_lstm_grid: self.test_hidden_state_current_lstm_grid,
+		        self.cell_state_lstm_ped: self.test_cell_state_current_lstm_ped,
+		        self.hidden_state_lstm_ped: self.test_hidden_state_current_lstm_ped,
+		        self.cell_state_lstm_concat: self.test_cell_state_current_lstm_concat,
+		        self.hidden_state_lstm_concat: self.test_hidden_state_current_lstm_concat,
+		        }
 
 	def feed_test_dic(self, **kwargs):
 		step = kwargs["step"]
@@ -594,7 +614,7 @@ class NetworkModel():
 		                                              self.current_state_lstm_concat,
 		                                              self.prediction,
 		                                              self.deconv1,
-                                                  self.likelihood],
+                                                  	  self.likelihood],
 		                                             feed_dict=feed_dict_train)
 		if update_state:
 			self.test_cell_state_current, self.test_hidden_state_current = _current_state

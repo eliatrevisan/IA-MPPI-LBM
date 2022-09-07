@@ -273,3 +273,4 @@ def plotGrid(grid, ax, color='k', alpha=1.0):
   ax.plot(plot_values_ped[:, 0], plot_values_ped[:, 1], marker='o', color='r', lw=0)
   ax.set_xlim([0, grid.shape[0]])
   ax.set_ylim([0, grid.shape[1]])
+

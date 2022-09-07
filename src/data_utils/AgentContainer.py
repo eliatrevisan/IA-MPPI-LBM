@@ -101,7 +101,7 @@ class AgentContainer():
   
   def getAgentVelocitiesForTimeExclude(self, query_time, agent_id):
     """
-    Get all agent positions for certain time.
+    Get all agent velocities for certain time.
     query_time: time where the entries should be queried
     agent_id: id to exclude
     """

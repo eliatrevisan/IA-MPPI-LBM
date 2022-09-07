@@ -1,0 +1,38 @@
+Loading data from: '../data/comparison/data10_8_8_correct.pickle'
+Input list length: 8
+Output list length: 8
+Single input shape: (?, 18)
+Single output shape: (?, 20)
+Length occ grid series: 8
+Dim out fc_grid_dec (conv2_flat_out): (?, 392)
+Dim out conv3 reshape (conv3_out): (?, 7, 7, 8)
+Dim out deconv3 (conv2_out): (?, 15, 15, 32)
+Dim out deconv2 (conv1_out): (?, 30, 30, 64)
+Dim out deconv1 (image input): (?, 60, 60, 1)
+Loading convnet parameters from "../trained_models/autoencoder_with_ped"
+Restoring convnet ../trained_models/autoencoder_with_ped/final-model.ckpt
+[34mEpoch 1, Steps: 200, Train loss: 1.00, Validation loss: 1.12, Epoch time: 40.64 sec
+[96mStep 200: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 1, Steps: 400, Train loss: 1.00, Validation loss: -0.47, Epoch time: 80.43 sec
+[96mStep 400: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 2, Steps: 600, Train loss: 1.00, Validation loss: -0.63, Epoch time: 116.66 sec
+[96mStep 600: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 2, Steps: 800, Train loss: 1.00, Validation loss: -0.39, Epoch time: 153.65 sec
+[34mEpoch 3, Steps: 1000, Train loss: 1.00, Validation loss: -1.19, Epoch time: 179.56 sec
+[96mStep 1000: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 3, Steps: 1200, Train loss: 1.00, Validation loss: -0.51, Epoch time: 216.52 sec
+[34mEpoch 4, Steps: 1400, Train loss: 1.00, Validation loss: -1.50, Epoch time: 242.51 sec
+[96mStep 1400: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 4, Steps: 1600, Train loss: 1.00, Validation loss: -1.61, Epoch time: 278.53 sec
+[96mStep 1600: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 5, Steps: 1800, Train loss: 1.00, Validation loss: -1.27, Epoch time: 314.74 sec
+[34mEpoch 5, Steps: 2000, Train loss: 1.00, Validation loss: -1.20, Epoch time: 340.22 sec
+[34mEpoch 6, Steps: 2200, Train loss: 1.00, Validation loss: -1.01, Epoch time: 373.28 sec
+[34mEpoch 6, Steps: 2400, Train loss: 1.00, Validation loss: -1.82, Epoch time: 406.34 sec
+[96mStep 2400: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 6, Steps: 2600, Train loss: 1.00, Validation loss: -1.98, Epoch time: 451.18 sec
+[96mStep 2600: Saving model under ../trained_models/VGDNN/52/model_ckpt
+[34mEpoch 7, Steps: 2800, Train loss: 1.00, Validation loss: -1.52, Epoch time: 497.23 sec
+[34mEpoch 7, Steps: 3000, Train loss: 1.00, Validation loss: -1.66, Epoch time: 532.74 sec
+[34mEpoch 8, Steps: 3200, Train loss: 1.00, Validation loss: -1.67, Epoch time: 566.79 sec
+[34mEpoch 8, Steps: 3400, Train loss: 1.00, Validation loss: -1.66, Epoch time: 602.01 sec

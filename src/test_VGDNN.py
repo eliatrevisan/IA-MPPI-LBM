@@ -244,6 +244,7 @@ with tf.Session(config=config) as sess:
 				else:
 					batch_y_pred = deepcopy(batch_vel)
 					batch_y_pred[:, :, 2:] = y_model_pred[:, :, 2:]
+			"""
 			dict = {"batch_x": batch_x,
 							"batch_vel": batch_vel,
 							"batch_pos": batch_pos,
@@ -255,7 +256,21 @@ with tf.Session(config=config) as sess:
 							"grid_noise": 0.0,
 							"other_agents_pos": [other_agents_pos]
 			}
+		
 			feed_dict_ = model.feed_test_dic(**dict)
+			"""
+
+			dict = {
+							"batch_vel": batch_vel,
+							"batch_grid": batch_grid,
+							"batch_ped_grid": other_agents_info,
+							"step": step,
+							"other_agents_pos": [other_agents_pos]
+			}
+
+			feed_dict_ = model.feed_test_dic(
+                **dict
+            )
 
 			# Append to logging series
 			x_input_series = np.append(x_input_series, batch_x[:, step, :], axis=0)
@@ -281,10 +296,10 @@ with tf.Session(config=config) as sess:
 			else:
 				samples.append(y_model_pred[:,0,:])
 
-			Sample = False
+			test = False
 			# If sample more than one trajectory from the model
 			for sample_id in range(test_args.n_samples - 1):
-				Sample = True
+				test = True
 				dict = {"batch_x": batch_x,
 								"batch_vel": batch_vel,
 								"batch_pos": batch_pos,
@@ -299,10 +314,6 @@ with tf.Session(config=config) as sess:
 				y_model_pred = model.predict(sess, feed_dict_, test_args.update_state)
 				samples.append(y_model_pred[:,0,:])
 
-			#plot_batch(batch_x, batch_grid, other_agents_info, y_model_pred, other_agents_pos, map_args)
-			#fig, ax = plt.subplots()
-			#sup.plot_grid(ax, map_args["map_center"], map_args["file_name"], map_args['resolution'], map_args['map_size'])
-			#plt.show()
 			traj_likelihood.append(likelihood)
 			predictions.append(samples)
 
@@ -417,8 +428,8 @@ else:
 	if test_args.constant_velocity: 
 		cv_pred_error = compute_ade_cv(args, trajectories, cv_predictions)
 		cv_fde_error = compute_fde_cv(args, trajectories, cv_predictions)
-	#print(cv_pred_error)
-	#print(cv_fde_error)
+		print(
+		Fore.LIGHTBLUE_EX + "\nConstant Velocity: MSE: {:01.2f}, FDE: {:01.2f}".format(np.mean(cv_pred_error), np.mean(cv_fde_error))+Style.RESET_ALL)
 	diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
 	args.scenario = training_scenario
 	args.truncated_backprop_length = truncated_backprop_length

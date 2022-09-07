@@ -38,39 +38,6 @@ class OccupancyGrid():
 		# Projecting index on map if out of bounds
 		idx_x = max(0, min(idx_x, self.map_size[0] / self.resolution))
 		idx_y = max(0, min(idx_y, self.map_size[1] / self.resolution))
-	 
-		"""
-
-		print("Actual indices: ", idx_x, idx_y)
-		submap = []
-		submap = self.getFrontSubmapByIndices(idx_y, idx_x, 60,60)[0]
-
-		fig, (ax1, ax2) = plt.subplots(1,2)
-		
-		print("Submap shape 1: ", submap.shape)
-		sup.plot_grid_roboat(ax1, self.center, self.gridmap, self.resolution,
-									self.map_size)
-		ax1.plot(pos_x, pos_y, marker="o", markersize=5) 
-		#sup.plot_grid(ax2, np.array([0.0]), submap, self.resolution, np.array([60,60]))
-		
-		#rect = patches.Rectangle((pos_x,pos_y),4.86,4.86, edgecolor='r', facecolor="none")
-		#ax1.add_patch(rect)
-		
-		print("Submap shape 2: ", submap.shape)
-		
-		ax2.imshow(submap, cmap='gray_r')
-		#ax2.axis("on")
-		#ax2.set_xlabel('x [m]',fontsize=26)
-		#ax2.set_ylabel('y [m]',fontsize=26)
-		#ax2.set_xlim([-6.0, 6.0])
-		#ax2.set_ylim([-6.0, 6.0])
-		#ax2.set_aspect('equal')
-	
-		plt.show()
-
-		print("Submap shape 3: ", submap.shape)
-		
-		"""
 
 		return idx_x, idx_y
 		
@@ -103,24 +70,13 @@ class OccupancyGrid():
 		debug_info["end_x"] = end_idx_x
 		debug_info["end_y"] = end_idx_y
 
-		#print(self.gridmap.shape[0], self.gridmap.shape[1])
-		#print("")
-		#print(start_idx_x, end_idx_x)
-		#print(start_idx_y, end_idx_y)
-
-		#print("Extracted submap (startx, endx, starty, endy): ",start_idx_x, end_idx_x, start_idx_y, end_idx_y)
-
-		#self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y] = 0.5
-
 		#print("Shape in func: ", self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y].shape)
-
-		#self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y]
 
 		submap = self.gridmap[start_idx_x:end_idx_x, start_idx_y:end_idx_y]
 
-		submap_rotated = list(zip(*submap[::-1]))
+		#submap_rotated = list(zip(*submap[::-1]))
 		
-		return submap_rotated, debug_info
+		return submap, debug_info
 		
 	def getSubmapByCoords(self, center_pos_x, center_pos_y, size_x, size_y):
 		"""

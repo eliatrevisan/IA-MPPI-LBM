@@ -297,10 +297,10 @@ def compute_ade_cv(args, trajectories, predictions):
 			pr = pred[step] 
 
 			sum = 0
-			#print("start")
 			for i in range(0, args.prediction_horizon):
-				squared_difference = (pr[i, 0] - tr[i,0])**2 + (pr[i, 1] - tr[i,1])**2
-				sum = sum + np.sqrt(squared_difference)
+				#squared_difference = (pr[i, 0] - tr[i,0])**2 + (pr[i, 1] - tr[i,1])**2
+				#sum = sum + np.sqrt(squared_difference)
+				sum += np.linalg.norm(tr[i, :2] - pr[i, :])/args.prediction_horizon
 			mse = sum / (i + 1)
 			ade.append(mse)
 
@@ -315,18 +315,15 @@ def compute_fde_cv(args, trajectories, predictions):
 	for idx in range(0,len(trajectories)):
 		traj = trajectories[idx].pose_vec
 		pred = predictions[idx]
-
-		print("traj: ", traj)
-		print("pred: ", pred)
 		
 		for step in range(0, len(pred)):
 			#tr = traj[step:step+args.prediction_horizon]
 			tr = traj[step+args.prediction_horizon-1] # Trajectory sample at horizon
 			pr = pred[step][args.prediction_horizon-1] # Prediction at horizon
-			print("pr and tr: ", pr, tr)
-			squared_difference = (pr[0] - tr[0])**2 + (pr[1] - tr[1])**2
-			#print(pr[0], tr[0], pr[1], tr[1])
-			fde.append(np.sqrt(squared_difference))
+			error = np.linalg.norm(tr[:2]-pr[:])
+			#fde.append(np.sqrt(error))
+			fde.append(error)
+		#fde = fde / (step +1)
 
 	return np.mean(fde)
 

@@ -1,0 +1,34 @@
+Loading data from: '../data/comparison/data10_8_8_correct.pickle'
+Input list length: 8
+Output list length: 8
+Single input shape: (?, 18)
+Single output shape: (?, 20)
+Length occ grid series: 8
+Dim out fc_grid_dec (conv2_flat_out): (?, 392)
+Dim out conv3 reshape (conv3_out): (?, 7, 7, 8)
+Dim out deconv3 (conv2_out): (?, 15, 15, 32)
+Dim out deconv2 (conv1_out): (?, 30, 30, 64)
+Dim out deconv1 (image input): (?, 60, 60, 1)
+Loading convnet parameters from "../trained_models/autoencoder_with_ped"
+Restoring convnet ../trained_models/autoencoder_with_ped/final-model.ckpt
+[34mEpoch 1, Steps: 3800, Train loss: 1.00, Validation loss: 1.00, Epoch time: 44.10 sec
+Traceback (most recent call last):
+  File "train_VGDNN.py", line 487, in <module>
+    wandb.tensorflow.log(tf.summary.merge_all())
+  File "/home/stlucas/.local/lib/python3.6/site-packages/wandb/integration/tensorboard/log.py", line 357, in log
+    _log(tf_summary_str_or_pb, namespace=namespace, step=step)
+  File "/home/stlucas/.local/lib/python3.6/site-packages/wandb/integration/tensorboard/log.py", line 305, in _log
+    log_dict = tf_summary_to_dict(tf_summary_str_or_pb, namespace)
+  File "/home/stlucas/.local/lib/python3.6/site-packages/wandb/integration/tensorboard/log.py", line 91, in tf_summary_to_dict
+    summary_pb = [Summary() for _ in range(len(tf_summary_str_or_pb))]
+TypeError: object of type 'Tensor' has no len()
+Traceback (most recent call last):
+  File "train_VGDNN.py", line 487, in <module>
+    wandb.tensorflow.log(tf.summary.merge_all())
+  File "/home/stlucas/.local/lib/python3.6/site-packages/wandb/integration/tensorboard/log.py", line 357, in log
+    _log(tf_summary_str_or_pb, namespace=namespace, step=step)
+  File "/home/stlucas/.local/lib/python3.6/site-packages/wandb/integration/tensorboard/log.py", line 305, in _log
+    log_dict = tf_summary_to_dict(tf_summary_str_or_pb, namespace)
+  File "/home/stlucas/.local/lib/python3.6/site-packages/wandb/integration/tensorboard/log.py", line 91, in tf_summary_to_dict
+    summary_pb = [Summary() for _ in range(len(tf_summary_str_or_pb))]
+TypeError: object of type 'Tensor' has no len()

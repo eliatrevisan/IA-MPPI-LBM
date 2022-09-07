@@ -27,5 +27,7 @@
 #python3 train_VGDNN.py --exp_num 100 --model_name VGDNN --n_mixtures 3 --output_pred_state_dim 4 --scenario simulation/roboat --gpu false --prev_horizon 8 --prediction_horizon 12 --dt 0.4 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update true;
 #python3 test_VGDNN.py --exp_num 30 --model_name VGDNN --constant_velocity true --num_test_sequences 12 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
-python3 test_VGDNN.py --exp_num 33 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario simulation/roboat --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 compare_VGDNN.py --exp_num 33 --model_name VGDNN --constant_velocity false --num_test_sequences 1 --scenario simulation/roboat --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
 
+python3 compare_VGDNN.py --exp_num 43 --model_name VGDNN --constant_velocity false --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 compare_VGDNN.py --exp_num 44 --model_name VGDNN --constant_velocity false --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
