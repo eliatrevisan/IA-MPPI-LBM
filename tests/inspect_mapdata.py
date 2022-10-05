@@ -4,6 +4,8 @@ import os
 import sys
 sys.path.append('../')
 import src.data_utils.Support as sup
+import src.data_utils.AgentContainer as ag_cont
+import cv2
 
 
 home = os.path.expanduser("~")
@@ -18,6 +20,8 @@ class Map:
     size = [1715, 881]
     origin = [-78, -40]
     resolution = 0.081
+    submap_width = 9.72*2
+    submap_height = 9.72*2
 
 def main():
 
@@ -25,17 +29,23 @@ def main():
     roboatmap = plt.imread(home + datapath + roboat + mapname)
 
     map = Map()
-
-    print(pedmap.shape)
-    print(roboatmap.shape)
+    agcont = ag_cont.AgentContainer()
+    agent_pos = [1.0, 1.0]
+    agcont.occupancy_grid.resolution = map.resolution
+    agcont.occupancy_grid.gridmap = map.grid
+    agcont.occupancy_grid.map_size = map.size
 
     name = home + datapath + ped + mapname
-    ax = plt.subplot()
 
-    #sup.create_map_from_png(name, map.resolution, map.size, map.origin, data_path=home+datapath+ped)
-    
-    
-    sup.plot_grid_roboat(ax, map.origin, map.grid, map.resolution, map.size)
+    grid = agcont.occupancy_grid.getSubmapByCoords(agent_pos[0], agent_pos[1], map.submap_width, map.submap_height)
+
+    print(grid.shape[0], grid.shape[1])
+
+    fig, ax = plt.subplots(1,3)
+    sup.plot_grid_roboat(ax[0], map.origin, map.grid, map.resolution, map.size)
+    ax[0].plot(agent_pos[0], agent_pos[1], marker='.', markersize=10)
+    ax[1].imshow(grid)
+    ax[2].imshow( cv2.resize(grid, (60,60)) )
     plt.show()
 
 if __name__ == "__main__":

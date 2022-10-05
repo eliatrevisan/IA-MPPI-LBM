@@ -470,9 +470,7 @@ with tf.Session(config=config) as sess:
 			#validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
 
 			ellapsed_time = time.time() - start_time
-			# 0 = np.mean(avg_training_loss)
-			#print(np.mean(avg_training_loss))
-			#print(validation_loss)
+
 			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
 			      .format(epoch + 1, step, np.mean(avg_training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
 			#print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Epoch time: {:01.2f} sec"

@@ -100,4 +100,4 @@ def getFileNames():
 
 
 if __name__ == "__main__":
-    main()
+    main()datafile

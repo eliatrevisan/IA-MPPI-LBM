@@ -54,6 +54,9 @@ unit_testing = False
 freeze_other_agents = False
 """
 
+from random import seed
+seed(1)
+
 # Model directories
 def parse_args():
 	parser = argparse.ArgumentParser(description='LSTM model training')
@@ -433,7 +436,7 @@ else:
 	diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
 	args.scenario = training_scenario
 	args.truncated_backprop_length = truncated_backprop_length
-	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args)
+	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args, cv_pred_error, cv_fde_error)
 	print(
 		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
 

@@ -57,18 +57,18 @@ def write_summary(training_loss, args):
 					 args.learning_rate_init, args.grads_clip, args.n_mixtures])
 
 
-def write_results_summary(mse, fde, avg_div, args, test_args):
+def write_results_summary(mse, fde, avg_div, args, test_args, cvmse, cvfde):
 	if not os.path.isfile(test_args.model_name + "_summary.csv"):
 		with open(test_args.model_name + "_summary.csv", 'w') as csvfile:
 			# Write header
 			writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
 			writer.writerow(["Model name", "Dataset", "Ped Info Size",
 			                 "Batch size", "MSE", "FDE","Diversity",
-			                 "dt", "Prediction Horizon", "Previous Steps", "tbpt","Test Dataset","Others Info"])
+			                 "dt", "Prediction Horizon", "Previous Steps", "tbpt","Test Dataset","Others Info", "CV-MSE", "CV-FDE"])
 			writer.writerow(
 				[args.model_name+ "_" + str(args.exp_num), args.scenario, args.pedestrian_vector_dim, args.batch_size,
 				 mse, fde,avg_div, args.dt,
-				 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length,test_args.scenario,args.others_info])
+				 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length,test_args.scenario,args.others_info, cvmse, cvfde])
 
 	else:
 		with open(test_args.model_name + "_summary.csv", 'r') as readFile:

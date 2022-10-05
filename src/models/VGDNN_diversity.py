@@ -194,24 +194,24 @@ class NetworkModel():
 															   self.cell_outputs_series_lstm_ped):
 					
 					# Implement the diversity described in the paper
-					sigma_div = 1.0
-					lstm_out_sampled = tfd.MultivariateNormalDiag(
-						loc=lstm_out,
-						scale_identity_multiplier=[0.2]
+					#sigma_div = 1.0
+					#lst#m_out_sampled = tfd.MultivariateNormalDiag(
+						#loc=lstm_out,
+						#scale_identity_multiplier=[0.2]
 						#scale_diag=sigma_div
-					).sample()
-					grid_feature_sampled = tfd.MultivariateNormalDiag(
-						loc=grid_feature,
-						scale_identity_multiplier=[0.2]
+					#).sample()
+					#grid_feature_sampled = tfd.MultivariateNormalDiag(
+						#loc=grid_feature,
+						#scale_identity_multiplier=[0.2]
 						#scale_diag=sigma_div
-					).sample()
+					#).sample()
 					#ped_feature_sampled = tfd.MultivariateNormalDiag(
 					#	loc=ped_feature,
 						#scale_diag=sigma_div
 					#).sample()
 					
 					concat_lstm.append(
-						tf.concat([lstm_out_sampled, grid_feature_sampled, ped_feature], axis=1, name="concatenate_lstm_out_with_grid_and_ped"))
+						tf.concat([lstm_out, grid_feature, ped_feature], axis=1, name="concatenate_lstm_out_with_grid_and_ped"))
 
 					# Concatenated LSTM layer
 					with tf.variable_scope('generation_model') as scope:
@@ -335,7 +335,7 @@ class NetworkModel():
 
 			# Reduce mean in all dimensions
 			self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
-			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0)*self.beta + args.diversity_update*self.div_loss*0.2
+			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0)*self.beta + args.diversity_update*self.div_loss
 			self.reconstruction_loss = tf.reduce_mean(loss_list, axis=0)
 			self.kl_loss = tf.reduce_mean(kl_loss_list, axis=0)
 

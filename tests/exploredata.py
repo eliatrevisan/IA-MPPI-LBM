@@ -28,9 +28,9 @@ batch_size = 16
 regularization_weight = 0.0001
 
 # Time parameters
-truncated_backprop_length = 8
-prediction_horizon = 12
-prev_horizon = 8
+truncated_backprop_length = 15
+prediction_horizon = 15
+prev_horizon = 15
 
 rnn_state_size = 32
 rnn_state_size_lstm_grid = 256
