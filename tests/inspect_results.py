@@ -1,62 +1,42 @@
-import scipy.io
-import sys
-sys.path.append('../')
+
 import os
 import matplotlib.pyplot as plt
-from src.data_utils.plot_utils import *
-import src.data_utils.Support as sup
-from src.data_utils.Recorder import Recorder as rec
+import numpy as np
+
 
 home = os.path.expanduser("~")
-filepath = "/I-LSTM/trained_models/VGDNN/"
-exp_num = "1/"
-name = "roboat_results.mat"
+#filepath = "/I-LSTM/data/roboat/"
+filepath = "/roboat_data/"
 
-class Map:
-    size = [1715, 881]
-    data = plt.imread(home + '/I-LSTM/data/simulation/roboat/map.png')
-    origin = [-78, -40, 0.0]
-    resolution = 0.081
+def print_results(scenario):
+    data = getDataFromFile(scenario)
+    print("Scenario: ", scenario)
+    # Total number of identical agents
+    print(data.shape)
+    print(data[0,:])
 
-def plot_map(map, ax):
-    ax.imshow(map.data,
-               extent = (map.origin[0], map.origin[0] + map.size[0] * map.resolution,
-                         map.origin[1], map.origin[1] + map.size[1] * map.resolution),
-               cmap='gray_r')
-    ax.set_facecolor('#262626')
-    ax.set_xlabel('x [m]')
-    ax.set_ylabel('y [m]')
-    #ax.yaxis.set_label_coords(-0.08, .5)
-    #ax.xaxis.set_label_coords(0.5, -0.09)
+    print("Unique Agents: ", len(np.unique(data[:,0])))
 
-mat = scipy.io.loadmat(home + filepath + exp_num + name)
-"""
-print(mat['predictions'][0][0][0])
-print("2")
-print(mat['predictions'][0][0][1])
-print("2")
-print(mat['predictions'][0][0][2])
-print("2")
-print(len(mat['predictions'][0][0]))
+    print("Unique time steps: ", len(np.unique(data[:,1])))
 
-"""
+def getDataFromFile(scenario):
+    """
+    Return the data contained in csv file
+    """
+    data = np.genfromtxt(home + filepath + scenario + "/total_log_open_crossing.csv", delimiter=",")[11:-10,:]
+    return data
 
-print(mat['__version__'])
+def main():
+    #scenario = "herengracht"
+    #print_results(scenario)
+    #scenario = "prinsengracht"
+    #print_results(scenario)
+    #scenario = "bloemgracht"
+    #print_results(scenario)
+    scenario = "all_data"
+    print_results(scenario)
 
 
 
-#sup.path_from_vel(initial_pos=np.array([0,0]), pred_vel=mat['predictions'][0][0]  , dt=0.4)
-
-#sup.path_from_vel(initial_pos=np.array([0,0]),
-#    pred_vel=pred_vel_global_frame, dt=self.args.dt)
-
-#rec.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
-#                       other_agents_list,
-#                       trajectories, all_traj_likelihood,test_args)
-
-map = Map()
-
-fig, ax = plt.subplots()
-ax.plot(mat['trajectories'][0][0][0][0][1][:,0], mat['trajectories'][0][0][0][0][1][:,1])
-plot_map(map, ax)
-#plt.show()
+if __name__ == "__main__":
+    main()

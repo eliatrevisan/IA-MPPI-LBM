@@ -71,10 +71,10 @@ def write_results_summary(mse, fde, avg_div, args, test_args, cvmse, cvfde):
 				 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length,test_args.scenario,args.others_info, cvmse, cvfde])
 
 	else:
-		with open(test_args.model_name + "_summary.csv", 'r') as readFile:
+		with open(test_args.model_name + "_roboat_summary.csv", 'r') as readFile:
 			reader = csv.reader(readFile)
 			lines = list(reader)
-		with open(test_args.model_name + "_summary.csv", 'w') as csvfile:
+		with open(test_args.model_name + "_roboat_summary.csv", 'w') as csvfile:
 			writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
 			if len(lines) > 3000:#args.exp_num + 1:
 				for i in range(len(lines)):
@@ -82,7 +82,7 @@ def write_results_summary(mse, fde, avg_div, args, test_args, cvmse, cvfde):
 						writer.writerow(
 							[args.model_name + "_" + str(args.exp_num), args.scenario, args.pedestrian_vector_dim, args.batch_size,
 							 mse, fde, avg_div,args.dt,
-							 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length, test_args.scenario,args.others_info])
+							 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length, test_args.scenario,args.others_info, cvmse, cvfde])
 					else:
 						writer.writerow(lines[i])
 			else:
@@ -90,7 +90,7 @@ def write_results_summary(mse, fde, avg_div, args, test_args, cvmse, cvfde):
 				writer.writerow(
 					[args.model_name + "_" + str(args.exp_num), args.scenario, args.pedestrian_vector_dim, args.batch_size,
 					 mse, fde,avg_div, args.dt,
-					 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length, test_args.scenario,args.others_info])
+					 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length, test_args.scenario,args.others_info, cvmse, cvfde])
 
 def write_keras_results_summary(loss, args):
 	if not os.path.isfile(args.model_name + "_summary.csv"):

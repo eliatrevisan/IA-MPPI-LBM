@@ -25,7 +25,7 @@ from scipy.stats import multivariate_normal
 
 from matplotlib.patches import Ellipse
 
-class DataHandlerLSTM():
+class DataHandlerRoboat():
 	"""
 	Data handler for training an LSTM pedestrian prediction model
 	"""
@@ -40,12 +40,9 @@ class DataHandlerLSTM():
 		self.input_dim = args.input_dim
 		self.input_state_dim = args.input_state_dim
 		self.output_state_dim = args.output_dim
-		#self.submap_width = args.submap_width
-		#self.submap_height = args.submap_height
 		self.submap_size = args.submap_size
 		self.submap_width_real = args.submap_span_real
 		self.submap_height_real = args.submap_span_real
-		#self.submap_resolution = args.submap_resolution
 		self.centered_grid = args.centered_grid
 		self.rotated_grid = args.rotated_grid
 		self.multi_pedestrian = True
@@ -91,8 +88,17 @@ class DataHandlerLSTM():
 		self.trajectory_set = []
 		self.test_trajectory_set = []
 		self.test_ids = []
+		# HARDCODED, 4 datasets
+		#self.data_idx = [0,0,0,0]
+		#self.val_data_idx = [0,0,0,0]
 		self.data_idx = 0
 		self.val_data_idx = 0
+
+		self.data_idx_log = []
+		self.data_val_log = []
+		self.datahandlers = []
+		self.traj_set_idx = []
+		self.val_traj_idx = []
 
 		# Patch for updating the grid around a pedestrian position
 		self.pedestrian_patch = None
@@ -274,6 +280,8 @@ class DataHandlerLSTM():
 				pose[:,0:2] = np.true_divide(pedestrian_data[sample_idx, 3:5], np.array([self.norm_const_x, self.norm_const_y]))
 				vel[:,0:2] = np.true_divide(pedestrian_data[sample_idx, 5:7], np.array([self.norm_const_vx, self.norm_const_vy]))
 				goal = np.true_divide(pedestrian_data[sample_idx, 7:], np.array([self.norm_const_x, self.norm_const_y]))
+
+				
 
 				self.agent_container.addDataSample(id, timestamp, pose, vel, goal)
 
@@ -703,7 +711,7 @@ class DataHandlerLSTM():
 		random_traj_idx = np.random.randint(0, len(self.agent_container.agent_data[agent_id].trajectories))
 		return self.agent_container.agent_data[agent_id].trajectories[random_traj_idx]
 
-	def fillBatch(self, agent_id, batch_idx, start_idx, truncated_backprop_length, batch_x, batch_vel,batch_pos,batch_grid, pedestrian_grid, batch_goal, batch_y, trajectory,batch_pos_target, centered_grid=False, testing = False):
+	def fillBatch(self, dh, agent_id, batch_idx, start_idx, truncated_backprop_length, batch_x, batch_vel,batch_pos,batch_grid, pedestrian_grid, batch_goal, batch_y, trajectory,batch_pos_target, centered_grid=False, testing = False):
 		"""
 		Fill the data batches of batch_idx with data for all truncated backpropagation steps.
 		"""
@@ -739,7 +747,7 @@ class DataHandlerLSTM():
 			heading = math.atan2(current_vel[1], current_vel[0])
 			if centered_grid:
 				grid_center = current_pos
-				grid = self.agent_container.occupancy_grid.getSubmapByCoords(grid_center[0], grid_center[1], self.submap_width_real, self.submap_height_real)
+				grid = dh.agent_container.occupancy_grid.getSubmapByCoords(grid_center[0], grid_center[1], self.submap_width_real, self.submap_height_real)
 				grid = cv2.resize(grid, (60,60)) # Resize grid to (60,60) to match autoencoder input size
 			if self.rotated_grid:
 				grid = sup.rotate_grid_around_center(grid, heading * 180 / math.pi)  # rotation in degrees
@@ -816,7 +824,20 @@ class DataHandlerLSTM():
 
 		return other_agents_pos
 
-	def getBatch(self):
+	def CombineTrajectorySets(self, dpreps):
+		
+		n = len(dpreps)
+		for dh in range(n):
+			for t in range(len(dpreps[dh].trajectory_set)):
+				self.trajectory_set.append( dpreps[dh].trajectory_set[t])
+				self.datahandlers.append(dh)
+		# Shuffle
+		c = list(zip(self.trajectory_set, self.datahandlers))
+		random.shuffle(c)
+		self.trajectory_set, self.datahandlers = zip(*c)
+		print("Sucessfuly combined datasets")
+	
+	def getRoboatBatch(self, dpreps):
 		"""
 		Get the next batch of training data.
 		"""
@@ -826,15 +847,18 @@ class DataHandlerLSTM():
 		if len(self.batch_sequences) == 0:
 			for b in range(0,min(self.batch_size,int(len(self.trajectory_set)*self.train_set))):
 				id, trajectory = self.trajectory_set[self.data_idx]
+				self.traj_set_idx.append(self.data_idx)
 				self.data_idx += 1
 				self.batch_sequences.append(trajectory)
 				self.batch_ids.append(id)
+				 
 		# If batch sequences are filled and can be used or need to be updated.
 		other_agents_pos = []
 		new_epoch = False
 		for ii, traj in enumerate(self.batch_sequences):
 			if self.sequence_idx[ii] + self.tbpl + self.output_sequence_length + 1 >= len(traj): # Make sure trajs are long enough
 				id, trajectory = self.trajectory_set[self.data_idx]
+				self.traj_set_idx[ii] = self.data_idx
 				self.data_idx = (self.data_idx + 1) % int(len(self.trajectory_set)*self.train_set)
 				if self.data_idx == 0:
 					new_epoch = True
@@ -847,22 +871,26 @@ class DataHandlerLSTM():
 
 		# Fill the batch
 		other_agents_pos = []
+		dhs = []
 		# Th second argument is needed such that when the dataset is too small the code does not break
 		for ii in range(0,min(self.batch_size,len(self.trajectory_set)-len(self.trajectory_set)%self.batch_size)):
 			traj = self.batch_sequences[ii]
 			agent_id = self.batch_ids[ii]
-			other_agents_pos.append(self.fillBatch(agent_id, ii, int(self.sequence_idx[ii]), self.tbpl, self.batch_x, self.batch_vel, self.batch_pos,self.batch_grid, self.pedestrian_grid, self.batch_goal, self.batch_y, traj,self.batch_pos_target, centered_grid=self.centered_grid))
+			dh = self.datahandlers[self.traj_set_idx[ii]]
+			other_agents_pos.append(self.fillBatch(dpreps[dh], agent_id, ii, int(self.sequence_idx[ii]), self.tbpl, self.batch_x, self.batch_vel, self.batch_pos,self.batch_grid, self.pedestrian_grid, self.batch_goal, self.batch_y, traj,self.batch_pos_target, centered_grid=self.centered_grid))
 			self.sequence_idx[ii] += self.tbpl
-
+			dhs.append(dh)
+		
+		
 		if self.args.rotated_grid:
 			_, self.batch_y = sup.rotate_batch_to_local_frame(self.batch_y,self.batch_x)
 			self.batch_x, self.batch_pos_target = sup.rotate_batch_to_local_frame(self.batch_pos_target, self.batch_x)
 
 		return deepcopy(self.batch_x), deepcopy(self.batch_vel), deepcopy(self.batch_pos), deepcopy(self.batch_goal), \
 						deepcopy(self.batch_grid), deepcopy(self.pedestrian_grid), deepcopy(self.batch_y), deepcopy(self.batch_pos_target), \
-						deepcopy(other_agents_pos), new_epoch
+						deepcopy(other_agents_pos), new_epoch, [self.batch_ids, dh]
 
-	def getTestBatch(self):
+	def getRoboatValidationBatch(self, dpreps):
 		"""
 		Get the next batch for model validation
 		"""
@@ -874,6 +902,7 @@ class DataHandlerLSTM():
 		if len(self.val_batch_sequences) == 0:
 			for b in range(0,self.batch_size):
 				id, trajectory = self.trajectory_set[self.val_data_idx]
+				self.val_traj_idx.append(self.val_data_idx)
 				self.val_data_idx += 1
 				self.val_batch_sequences.append(trajectory)
 				self.val_batch_ids.append(id)
@@ -885,6 +914,7 @@ class DataHandlerLSTM():
 		for ii, traj in enumerate(self.val_batch_sequences):
 			if self.val_sequence_idx[ii] + self.tbpl + self.output_sequence_length + 1 >= len(traj):
 				id, trajectory = self.trajectory_set[self.val_data_idx]
+				self.val_traj_idx[ii] = self.val_data_idx
 				self.val_data_idx = (self.val_data_idx + 1) % int(len(self.trajectory_set)*(1-self.train_set)-1) + int(len(self.trajectory_set)*self.train_set)
 				self.val_batch_sequences[ii] = trajectory
 				self.val_batch_ids[ii] = id
@@ -895,11 +925,166 @@ class DataHandlerLSTM():
 
 		# Fill the batch
 		other_agents_pos = []
+		dhs = []
 		# Th second argument is needed such that when the dataset is too small the code does not break
 		for ii in range(0,min(self.batch_size,len(self.trajectory_set)-len(self.trajectory_set)%self.batch_size)):
 			traj = self.val_batch_sequences[ii]
 			agent_id = self.val_batch_ids[ii]
-			other_agents_pos.append(self.fillBatch(agent_id, ii, int(self.val_sequence_idx[ii]), self.tbpl, self.val_batch_x,
+			dh = self.datahandlers[self.val_traj_idx[ii]]
+			other_agents_pos.append(self.fillBatch(dpreps[dh], agent_id, ii, int(self.val_sequence_idx[ii]), self.tbpl, self.val_batch_x,
+									self.val_batch_vel, self.val_batch_pos,self.val_batch_grid, self.val_pedestrian_grid, self.val_batch_goal,
+									self.val_batch_y, traj,self.val_batch_pos_target, centered_grid=self.centered_grid))
+			self.val_sequence_idx[ii] += self.tbpl
+			dhs.append(dh)
+
+		if self.args.rotated_grid:
+			_, self.val_batch_y = sup.rotate_batch_to_local_frame(self.val_batch_y,self.val_batch_x)
+			self.val_batch_x, self.val_batch_pos_target = sup.rotate_batch_to_local_frame(self.val_batch_pos_target, self.val_batch_x)
+
+		# Create dictionary to feed into the model
+		dict = {"batch_x": self.val_batch_x,
+				"batch_vel": self.val_batch_vel,
+				"batch_pos": self.val_batch_pos,
+				"batch_goal": self.val_batch_goal,
+				"batch_grid": self.val_batch_grid,
+				"batch_ped_grid": self.val_pedestrian_grid,
+				"batch_y": self.val_batch_y,
+				"batch_div": self.val_batch_y,
+				"batch_pos_target": self.val_batch_pos_target,
+				"state_noise": 0.0,
+				"grid_noise": 0.0,
+				"ped_noise":0.0,
+				"other_agents_pos": other_agents_pos
+				}
+
+		return dict, [self.val_batch_ids, dhs]	
+
+
+	def getBatch(self, dpreps):
+		"""
+		Get the next batch of training data.
+		"""
+		# Update sequences
+		# If batch sequences are empty and need to be filled
+		trajectory=[]
+		
+		# Number of datahandlers
+		n_dhs = len(dpreps)
+
+		# Determine the (random) order of dataset to get traj from. Re
+		dhs = np.random.choice(n_dhs, self.batch_size)
+		
+		# Select traj from random dataset and fill the trajectory_set
+		if len(self.batch_sequences) == 0:
+			for b in range(0,self.batch_size):
+				# Choose dataset to pick traj from
+				id, trajectory = dpreps[dhs[b]].trajectory_set[self.data_idx[dhs[b]]]
+				self.data_idx_log.append(self.data_idx[dhs[b]])
+				self.data_idx[dhs[b]] += 1
+				self.batch_sequences.append(trajectory)
+				self.batch_ids.append(id)
+
+		# Right now, new epoch when one of the datasets has reached end of trajectory_set.
+		# TODO: make sure new epoch when ALL data is taken
+
+		# If batch sequences are filled and can be used or need to be updated.
+		other_agents_pos = []
+		new_epoch = False
+		for ii, traj in enumerate(self.batch_sequences):
+			if self.sequence_idx[ii] + self.tbpl + self.output_sequence_length + 1 >= len(traj): 
+				id, trajectory =  dpreps[dhs[ii]].trajectory_set[self.data_idx[dhs[ii]]]
+				self.data_idx_log[ii] = self.data_idx[dhs[ii]]
+				self.data_idx[dhs[ii]] = (self.data_idx[dhs[ii]] + 1) % int(len(dpreps[dhs[ii]].trajectory_set)*self.train_set)
+				if self.data_idx[dhs[ii]] == 0:
+					# Make sure they're all set to zero when one dataset was fully passed through network
+					for id in range(n_dhs):
+						self.data_idx[id] = 0
+					new_epoch = True
+				self.batch_sequences[ii] = trajectory
+				self.batch_ids[ii] = id
+				self.sequence_idx[ii] = self.args.prev_horizon
+				self.sequence_reset[ii] = 1
+				
+			else:
+				self.sequence_reset[ii] = 0
+
+		# Fill the batch
+		other_agents_pos = []
+		# Th second argument is needed such that when the dataset is too small the code does not break
+		for ii in range(0,self.batch_size):
+			traj = self.batch_sequences[ii]
+			agent_id = self.batch_ids[ii]
+			other_agents_pos.append(self.fillBatch(dpreps[dhs[ii]], agent_id, ii, int(self.sequence_idx[ii]), self.tbpl, self.batch_x, self.batch_vel, self.batch_pos,self.batch_grid, self.pedestrian_grid, self.batch_goal, self.batch_y, traj,self.batch_pos_target, centered_grid=self.centered_grid))
+			self.sequence_idx[ii] += self.tbpl
+
+		if self.args.rotated_grid:
+			_, self.batch_y = sup.rotate_batch_to_local_frame(self.batch_y,self.batch_x)
+			self.batch_x, self.batch_pos_target = sup.rotate_batch_to_local_frame(self.batch_pos_target, self.batch_x)
+
+		return deepcopy(self.batch_x), deepcopy(self.batch_vel), deepcopy(self.batch_pos), deepcopy(self.batch_goal), \
+						deepcopy(self.batch_grid), deepcopy(self.pedestrian_grid), deepcopy(self.batch_y), deepcopy(self.batch_pos_target), \
+						deepcopy(other_agents_pos), new_epoch, [dhs, self.data_idx_log]
+
+	def getTestBatch(self, dpreps):
+		"""
+		Get the next batch for model validation
+		"""
+		# Number of datahandlers
+		n_dhs = len(dpreps)
+
+		# Determine the (random) order of dataset to get traj from. Re
+		dhs = np.random.choice(n_dhs, self.batch_size)
+
+		## HARDCODED, amount of trajectories of smallest dataset.
+		# Should later make sure ALL data is used
+		self.total_len_small = int(len(dpreps[0].trajectory_set)*self.train_set)
+
+		# Update sequences
+		# If batch sequences are empty and need to be filled
+
+		#self.val_data_idx = max(self.val_data_idx, self.total_len_small)
+		
+		#self.data_len = []
+		#for i in range(n_dhs):
+		#	self.data_len.append(int(len(dpreps[i].trajectory_set)*self.train_set))
+
+		for i in range(n_dhs):
+			self.val_data_idx[i] = max( self.val_data_idx[i], int(len(dpreps[i].trajectory_set)*self.train_set) ) 
+		
+		
+		trajectory=[]
+		if len(self.val_batch_sequences) == 0:
+			for b in range(0,self.batch_size):
+				id, trajectory = dpreps[dhs[b]].trajectory_set[self.val_data_idx[dhs[b]]]
+				self.data_val_log.append(self.val_data_idx[dhs[b]])
+				self.val_data_idx[dhs[b]] += 1
+				self.val_batch_sequences.append(trajectory)
+				self.val_batch_ids.append(id)
+				if self.val_data_idx[dhs[b]] == len(dpreps[dhs[b]].trajectory_set):
+					self.val_data_idx[dhs[b]] = int (len(dpreps[dhs[b]].trajectory_set) * self.train_set)
+
+		# If batch sequences are filled and can be used or need to be updated.
+		other_agents_pos = []
+		for ii, traj in enumerate(self.val_batch_sequences):
+			if self.val_sequence_idx[ii] + self.tbpl + self.output_sequence_length + 1 >= len(traj):
+				id, trajectory = dpreps[dhs[ii]].trajectory_set[self.val_data_idx[dhs[ii]]]
+				self.data_val_log[ii] = self.val_data_idx[dhs[ii]]
+				self.val_data_idx[dhs[ii]] = (self.val_data_idx[dhs[ii]] + 1) % int(len(dpreps[dhs[ii]].trajectory_set)*(1-self.train_set)-1) + int(len(dpreps[dhs[ii]].trajectory_set)*self.train_set) 
+				self.val_batch_sequences[ii] = trajectory
+				self.val_batch_ids[ii] = id
+				self.val_sequence_idx[ii] = self.args.prev_horizon
+				self.val_sequence_reset[ii] = 1
+
+			else:
+				self.val_sequence_reset[ii] = 0
+
+		# Fill the batch
+		other_agents_pos = []
+		# Th second argument is needed such that when the dataset is too small the code does not break
+		for ii in range(0, self.batch_size):
+			traj = self.val_batch_sequences[ii]
+			agent_id = self.val_batch_ids[ii]
+			other_agents_pos.append(self.fillBatch(dpreps[dhs[ii]], agent_id, ii, int(self.val_sequence_idx[ii]), self.tbpl, self.val_batch_x,
 									self.val_batch_vel, self.val_batch_pos,self.val_batch_grid, self.val_pedestrian_grid, self.val_batch_goal,
 									self.val_batch_y, traj,self.val_batch_pos_target, centered_grid=self.centered_grid))
 			self.val_sequence_idx[ii] += self.tbpl
@@ -924,7 +1109,64 @@ class DataHandlerLSTM():
 				"other_agents_pos": other_agents_pos
 				}
 
+		return dict, [dhs, self.data_val_log]
+
+	def getPredefinedBatch(self, dpreps, log):
+
+		dset = log[0]
+		traj_idx = log[1]
+
+		self.val_batch_sequences = []
+
+		trajectory=[]
+		if len(self.val_batch_sequences) == 0:
+			for b in range(0,self.batch_size):
+				id, trajectory = dpreps[dset[b]].trajectory_set[traj_idx[dset[b]]]
+				self.val_batch_sequences.append(trajectory)
+				self.val_batch_ids.append(id)
+		"""
+		# If batch sequences are filled and can be used or need to be updated.
+		other_agents_pos = []
+		for ii, traj in enumerate(self.val_batch_sequences):
+			if self.val_sequence_idx[ii] + self.tbpl + self.output_sequence_length + 1 >= len(traj):
+				id, trajectory = dpreps[dhs[ii]].trajectory_set[self.val_data_idx[dhs[ii]]]
+				self.val_data_idx[dhs[ii]] = (self.val_data_idx[dhs[ii]] + 1) % int(len(dpreps[dhs[ii]].trajectory_set)*(1-self.train_set)-1) + int(len(dpreps[dhs[ii]].trajectory_set)*self.train_set) 
+				self.val_batch_sequences[ii] = trajectory
+				self.val_batch_ids[ii] = id
+				self.val_sequence_idx[ii] = self.args.prev_horizon
+				self.val_sequence_reset[ii] = 1
+			else:
+				self.val_sequence_reset[ii] = 0
+		"""
+		# Fill the batch
+		other_agents_pos = []
+		# Th second argument is needed such that when the dataset is too small the code does not break
+		for ii in range(0, self.batch_size):
+			traj = self.val_batch_sequences[ii]
+			agent_id = self.val_batch_ids[ii]
+			other_agents_pos.append(self.fillBatch(dpreps[dset[ii]], agent_id, ii, int(self.val_sequence_idx[ii]), self.tbpl, self.val_batch_x,
+									self.val_batch_vel, self.val_batch_pos,self.val_batch_grid, self.val_pedestrian_grid, self.val_batch_goal,
+									self.val_batch_y, traj,self.val_batch_pos_target, centered_grid=self.centered_grid))
+			self.val_sequence_idx[ii] += self.tbpl
+
+		# Create dictionary
+		dict = {"batch_x": self.val_batch_x,
+				"batch_vel": self.val_batch_vel,
+				"batch_pos": self.val_batch_pos,
+				"batch_goal": self.val_batch_goal,
+				"batch_grid": self.val_batch_grid,
+				"batch_ped_grid": self.val_pedestrian_grid,
+				"batch_y": self.val_batch_y,
+				"batch_div": self.val_batch_y,
+				"batch_pos_target": self.val_batch_pos_target,
+				"state_noise": 0.0,
+				"grid_noise": 0.0,
+				"ped_noise":0.0,
+				"other_agents_pos": other_agents_pos
+				}
+
 		return dict
+
 
 	def getTrajectoryAsBatch(self, trajectory_idx, max_sequence_length=1000, freeze = False):
 		"""

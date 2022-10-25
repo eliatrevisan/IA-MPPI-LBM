@@ -77,11 +77,70 @@ python3 test_VGDNN.py --exp_num 164 --constant_velocity true --model_name VGDNN 
 python3 test_VGDNN.py --exp_num 165 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 python3 test_VGDNN.py --exp_num 166 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 '
+#python3 test_VGDNN.py --exp_num 203 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 203 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 203 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
-python3 test_VGDNN.py --exp_num 60 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 61 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 62 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 63 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 64 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 65 --constant_velocity true --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 compare_VGDNN.py --exp_num 210 --model_name VGDNN --num_test_sequences 10 --scenario bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+#python3 test_VGDNN.py --exp_num 210 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 210 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 210 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+#python3 test_VGDNN.py --exp_num 243 --model_name VGDNN --num_test_sequences 10 --scenario test_amstel --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 243 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+#python3 test_VGDNN.py --exp_num 243 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 244 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 245 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 247 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 248 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+#python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+
+python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+
+
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 246 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+
+
 

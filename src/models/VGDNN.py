@@ -50,8 +50,8 @@ class NetworkModel():
 		self.is_training = is_training
 		self.grads_clip = args.grads_clip
 		self.regularization_weight = args.regularization_weight
-		self.grid_width = int(args.submap_width / args.submap_resolution)
-		self.grid_height = int(args.submap_height / args.submap_resolution)
+		self.grid_width = int(args.submap_size)
+		self.grid_height = int(args.submap_size)
 		# Specify placeholders
 		self.input_state_placeholder = tf.placeholder(dtype=tf.float32,
 		                                              shape=[self.batch_size, self.truncated_backprop_length,
@@ -235,7 +235,7 @@ class NetworkModel():
 				self.learning_rate = tf.train.exponential_decay(self.learning_rate_init, self.step, decay_steps=10000,
 				                                                decay_rate=0.9, staircase=False)
 
-				#self.beta = (tf.tanh((tf.to_float(self.step) - 20000) / 5000) + 1) / 2	# sigmoid	
+				self.KLWEIGHT = (tf.tanh((tf.to_float(self.step) - 20000) / 5000) + 1) / 2	# sigmoid	
 
 				prediction_loss_list = []
 				loss_list = []
@@ -342,6 +342,7 @@ class NetworkModel():
 			self.reconstruction_loss_summary = tf.summary.scalar('reconstruction_loss', self.reconstruction_loss)
 			tf.summary.scalar('learning_rate', self.learning_rate)
 			tf.summary.scalar('beta', self.beta)
+			tf.summary.scalar('klweight', self.KLWEIGHT)
 
 			self.summary_writer = tf.summary.FileWriter(logdir=os.path.join(self.log_dir, 'train'), graph=tf.Session().graph)
 			self.validation_summary_writer = tf.summary.FileWriter(logdir=os.path.join(self.log_dir, 'validation'),
@@ -491,9 +492,10 @@ class NetworkModel():
 		self.test_cell_state_current_lstm_concat = self.cell_state_current_lstm_concat.copy()
 		self.test_hidden_state_current_lstm_concat = self.hidden_state_current_lstm_concat.copy()
 
-	def validation_step(self, sess, feed_dict_validation,update = True):
-		batch_loss, _model_prediction,_current_state, _current_state_lstm_grid, _current_state_lstm_ped, \
-		_current_state_lstm_concat, summary = sess.run([self.reconstruction_loss,
+	def validation_step(self, sess, feed_dict_validation, update = True):
+		# Added total loss (Walter)
+		batch_loss, reconstr_loss, _model_prediction,_current_state, _current_state_lstm_grid, _current_state_lstm_ped, \
+		_current_state_lstm_concat, summary = sess.run([self.total_loss, self.reconstruction_loss,
 		                                                self.prediction,
 		                                                                    self.current_state,
 		                                                                    self.current_state_lstm_grid,
@@ -522,9 +524,9 @@ class NetworkModel():
 			        "batch_div": feed_dict_train[self.diversity_placeholder],
 			        "step": step,
 					"beta": feed_dict_train[self.beta],
-			        "state_noise": 0.5,
+			        "state_noise": 0.2,
 			        "grid_noise": 0.0,
-			        "ped_noise": 0.5
+			        "ped_noise": 0.2
 			        }
 			self.update_test_hidden_state()
 			feed_test_dic = self.feed_val_dic(n_other_agent=feed_dict_train[self.seq_length],**dict)
@@ -557,6 +559,7 @@ class NetworkModel():
 
 			# Assemble feed dict for training
 			feed_dict_train[self.diversity_placeholder] = batch_y_varible
+
 		# kl_loss, div_loss
 		_, batch_loss, kl_loss, recons_loss, _current_state, _current_state_lstm_grid, _current_state_lstm_ped, \
 		_current_state_lstm_concat, \

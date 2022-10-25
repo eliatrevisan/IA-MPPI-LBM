@@ -204,7 +204,7 @@ with tf.Session(config=config) as sess:
 		x_input_series = np.zeros([0, (args.prev_horizon + 1) * args.input_dim])
 		goal_input_series = np.zeros([0, 2])
 		grid_input_series = np.zeros(
-			[0, int(args.submap_width / args.submap_resolution), int(args.submap_height / args.submap_resolution)])
+			[0, int(args.submap_size), int(args.submap_size)])
 		if args.others_info == "relative":
 			ped_grid_series = np.zeros([0, args.n_other_agents,args.pedestrian_vector_dim])
 		elif "sequence" in args.others_info:
@@ -244,7 +244,7 @@ with tf.Session(config=config) as sess:
 							"batch_grid": batch_grid,
 							"batch_ped_grid": other_agents_info,
 							"step": step,
-							"other_agents_pos": [other_agents_pos]
+							#"other_agents_pos": [other_agents_pos]
 			}
 
 			feed_dict_ = model.feed_test_dic(
@@ -364,10 +364,10 @@ sess.close()
 
 # Save input information for comparison
 
-#dict["predictions"] = all_predictions
-#dict["batch_x"] = batch_x
-#with open('experiment3agents-test-norm-51.pkl', 'wb') as f:
-#    pkl.dump(dict, f)
+dict["predictions"] = all_predictions
+dict["batch_x"] = batch_x
+with open('comparison3.pkl', 'wb') as f:
+    pkl.dump(dict, f)
 
 
 # Save data in Matlab format for post-processing
@@ -399,8 +399,8 @@ if test_args.record:
 		else:
 			#recorder.plot_on_image(input_list, grid_list, all_predictions, y_ground_truth_list, other_agents_list,
 			#	                       trajectories,test_args)
-			recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
-										 trajectories,test_args)
+			#recorder.animate_local(input_list, grid_list, ped_grid_list, all_predictions, y_ground_truth_list, other_agents_list,
+			#							 trajectories,test_args)
 
 			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
 														 other_agents_list,

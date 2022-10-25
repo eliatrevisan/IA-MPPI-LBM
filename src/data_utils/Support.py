@@ -111,9 +111,9 @@ def rotate_batch_to_local_frame(batch_y, batch_x):
   return bx , by
 
 def plot_submap(ax, origin, grid, resolution, submap_size):
-    ax.imshow(grid,
-      extent = (origin[0], origin[0] + submap_size[0] * resolution,
-                         origin[1], origin[1] + submap_size[1] * resolution))
+    ax.imshow(grid, cmap='gray_r')
+
+                    
     pl.show()
     
 
@@ -142,6 +142,10 @@ def plot_grid_roboat(ax, origin, grid, resolution, size):
     ax.set_ylabel('y [m]')
     ax.yaxis.set_label_coords(-0.08, .5)
     ax.xaxis.set_label_coords(0.5, -0.09)
+
+    if resolution == 0.4378: # Amstel
+      ax.set_xlim((-280,-230))
+      ax.set_ylim((-25,25))
 
 def create_map_from_png(file_name,resolution,map_size,map_center,data_path='../data',):
   # Create grid for SF model

@@ -1,3 +1,4 @@
+from copyreg import add_extension
 import os
 import numpy as np
 import math
@@ -128,6 +129,68 @@ def compute_trajectory_fde(args,ground_truth, predictions):
 
 						traj_pred = sup.path_from_vel(initial_pos=np.array([0,0]),pred_vel=vel_pred, dt=args.dt)
 						error[mix_idx] = np.linalg.norm(real_traj_global_frame[-1, :] - traj_pred[-1, :])
+					min_error[sample_id] = min(error)
+				avg_fde = (min(min_error)+ avg_fde*cnt)/(cnt+1)
+				cnt +=1
+			avg_fde_list.append(avg_fde)
+	return avg_fde, avg_fde_list
+
+def compute_rolling_trajectory_fde(args, horizon, ground_truth, predictions):
+	"""
+		inputs:
+			args: model parameters
+			ground_truth: list of groudn truth velocities in absolute frame
+			predictions: list of predicted velocities 		"""
+	avg_fde = 0
+	cnt = 0
+	avg_fde_list = []
+	real_traj_global_frame = np.zeros((args.prediction_horizon, args.output_dim))
+	for pred, gt in zip(predictions, ground_truth):
+		avg_fde = 0
+		cnt = 0
+		# compute average per trajectory
+		for t in range(len(pred)):
+			# real trajectory global frame
+			real_vel_global_frame = gt.vel_vec[t+args.prev_horizon+1:t+args.prediction_horizon+args.prev_horizon+1,:2]
+			real_traj_global_frame = sup.path_from_vel(initial_pos=np.array([0, 0]), pred_vel=real_vel_global_frame,
+			                                           dt=args.dt)
+			vel_pred = np.zeros((args.prediction_horizon, args.output_dim))
+			error = 0
+			pred_t = pred[t][0]
+			if args.n_mixtures<=1:
+				# plot predicted trajectory global frame
+				for sample_id in range(1):
+					for i in range(args.prediction_horizon):
+						idx = i * args.output_pred_state_dim
+						idy = i * args.output_pred_state_dim + 1
+						mu_x = pred_t[sample_id, idx]
+						mu_y = pred_t[sample_id, idy]
+						vel_pred[i, :] = [mu_x, mu_y]
+
+				pred_vel_global_frame = vel_pred
+				traj_pred = sup.path_from_vel(initial_pos=np.array([0, 0]),pred_vel=np.squeeze(pred_vel_global_frame), dt=args.dt)
+				error = np.linalg.norm(real_traj_global_frame[horizon, :] - traj_pred[horizon, :])
+				avg_fde = (avg_fde*cnt+error)/(cnt+1)
+				cnt += 1
+			else:
+				min_error = np.zeros((pred_t.shape[0]))
+				for sample_id in range(pred_t.shape[0]):
+					error = np.zeros((args.n_mixtures))
+					for mix_idx in range(args.n_mixtures):
+						# plot predicted trajectory global frame
+						for i in range(args.prediction_horizon):
+							idx = i * args.output_pred_state_dim * args.n_mixtures + mix_idx
+							idy = i * args.output_pred_state_dim * args.n_mixtures + mix_idx + args.n_mixtures
+							if args.normalize_data:
+								mu_x = pred_t[sample_id,idx] / args.sx_vel + args.min_vel_x
+								mu_y = pred_t[sample_id,idy] / args.sy_vel + args.min_vel_y
+							else:
+								mu_x = pred_t[sample_id,idx]
+								mu_y = pred_t[sample_id,idy]
+							vel_pred[i,:] = [mu_x, mu_y]
+
+						traj_pred = sup.path_from_vel(initial_pos=np.array([0,0]),pred_vel=vel_pred, dt=args.dt)
+						error[mix_idx] = np.linalg.norm(real_traj_global_frame[horizon, :] - traj_pred[horizon, :])
 					min_error[sample_id] = min(error)
 				avg_fde = (min(min_error)+ avg_fde*cnt)/(cnt+1)
 				cnt +=1
@@ -282,7 +345,8 @@ def compute_nll2(args, ground_truth,predictions):
 		avg_list.append(avg_nll)
 	return avg_nll, avg_list
 
-def compute_ade_cv(args, trajectories, predictions):
+
+def compute_ade(args, trajectories, predictions):
 	"""
 	Compute Average Displacement Error for the constant velocity predictions
 	"""
@@ -293,38 +357,45 @@ def compute_ade_cv(args, trajectories, predictions):
 		pred = predictions[idx]
 
 		for step in range(0, len(pred)):
-			tr = traj[step:step+args.prediction_horizon]
+			tr = traj[step+args.prev_horizon+1:step+args.prev_horizon+args.prediction_horizon+1]
 			pr = pred[step] 
 
 			sum = 0
 			for i in range(0, args.prediction_horizon):
-				#squared_difference = (pr[i, 0] - tr[i,0])**2 + (pr[i, 1] - tr[i,1])**2
-				#sum = sum + np.sqrt(squared_difference)
 				sum += np.linalg.norm(tr[i, :2] - pr[i, :])/args.prediction_horizon
-			mse = sum / (i + 1)
+			mse = sum #/ (i + 1)
 			ade.append(mse)
-
 	return np.mean(ade)
 
-def compute_fde_cv(args, trajectories, predictions):
-	"""
-	Compute Final Displacement Error for the constant velocity predictions
-	"""
+def compute_fde(args, trajectories, predictions):
+	# Calculate Final Displacement Error for the CV predictions
 	fde = []
+	for idx in range(0, len(trajectories)):
+		traj = trajectories[idx].pose_vec
+		pred = predictions[idx]
+		for step in range(0, len(pred)):
+			tr = traj[step + args.prev_horizon + args.prediction_horizon] # Trajectory sample at horizon
+			pr = pred[step][args.prediction_horizon-1] # Prediction at horizon
+			error = np.linalg.norm(tr[:2]-pr[:])
+			fde.append(error)
+	return np.mean(fde)
+
+def compute_rolling_fde(args, trajectories, predictions):
+	res = []
 	
 	for idx in range(0,len(trajectories)):
 		traj = trajectories[idx].pose_vec
 		pred = predictions[idx]
-		
-		for step in range(0, len(pred)):
-			#tr = traj[step:step+args.prediction_horizon]
-			tr = traj[step+args.prediction_horizon-1] # Trajectory sample at horizon
-			pr = pred[step][args.prediction_horizon-1] # Prediction at horizon
-			error = np.linalg.norm(tr[:2]-pr[:])
-			#fde.append(np.sqrt(error))
-			fde.append(error)
-		#fde = fde / (step +1)
 
-	return np.mean(fde)
+		for step in range(0, len(pred)):
+
+			fde = []
+			for p in range(0, args.prediction_horizon):
+				tr = traj[step + args.prev_horizon + p + 1] # Trajectory sample at horizon
+				pr = pred[step][p] # Prediction at horizon
+				error = np.linalg.norm(tr[:2]-pr[:])
+				fde.append(error)
+			res.append(fde)
+	return np.mean(res, axis=0)
 
 

@@ -1,5 +1,7 @@
+from cProfile import label
 import sys
 import os
+from turtle import home
 
 sys.path.append('../')
 
@@ -55,7 +57,7 @@ freeze_other_agents = False
 """
 
 from random import seed
-#seed(2)
+seed(5)
 
 # Model directories
 def parse_args():
@@ -140,6 +142,8 @@ data_prep = dhlstm.DataHandlerLSTM(args)
 # Only used to create a map from png
 # Load Map Parameters
 map_params = os.path.join(args.data_path+args.scenario, 'map.json')
+#home = os.path.expanduser('~')
+#map_params = home + "/I-LSTM/data/roboat/bloemgracht/" + 'map.json'
 with open(map_params) as json_file:
 	data = json.load(json_file)
 map_args = {"file_name": data["file_name"],
@@ -194,13 +198,14 @@ with tf.Session(config=config) as sess:
 	for exp_id in range(np.minimum(test_args.num_test_sequences,len(data_prep.trajectory_set)-1)):
 		predictions = []
 		traj_likelihood = []
-
 		# sample a trajectory id for testing
-		traj_id = random.randint(0, len(data_prep.trajectory_set) - 1)
-		
+		traj_id = 2670 #random.randint(0, len(data_prep.trajectory_set) - 1)
 
 		batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTrajectoryAsBatch(
-			traj_id,freeze = test_args.freeze_other_agents)  
+			traj_id,freeze = test_args.freeze_other_agents)  # trajectory_set random.randint(0, len(data_prep.dataset) - 1)
+		
+		#batch_x, batch_vel, batch_pos,batch_goal, batch_grid, other_agents_info, batch_target,batch_end_pos, other_agents_pos, traj = data_prep.getTestTrajectoryAsBatch(
+		#	traj_id,freeze = test_args.freeze_other_agents)
 		
 		trajectories.append(traj)
 		x_input_series = np.zeros([0, (args.prev_horizon + 1) * args.input_dim])
@@ -267,6 +272,24 @@ with tf.Session(config=config) as sess:
 			feed_dict_ = model.feed_test_dic(
                 **dict
             )
+			ag1 = []
+			ag2 = []
+			ag3 = []
+			for i in range(len(other_agents_pos)):
+				ag1.append(other_agents_pos[i][0][:2])
+				ag2.append(other_agents_pos[i][1][:2])
+				ag3.append(other_agents_pos[i][2][:2])
+			ag1 = np.array(ag1)
+			ag2 = np.array(ag2)
+			ag3 = np.array(ag3)
+			
+			fig, ax = plt.subplots()
+			sup.plot_grid_roboat(ax, data_prep.agent_container.occupancy_grid.center ,data_prep.agent_container.occupancy_grid.gridmap, data_prep.agent_container.occupancy_grid.resolution, data_prep.agent_container.occupancy_grid.map_size)
+			ax.plot(ag1[:,0],ag1[:,1], label='1')
+			ax.plot(ag2[:,0], ag2[:,1], label='2')
+			ax.plot(ag3[:,0], ag3[:,1], label='3')
+			plt.legend()
+			plt.show()
 
 			# Append to logging series
 			x_input_series = np.append(x_input_series, batch_x[:, step, :], axis=0)
@@ -292,8 +315,10 @@ with tf.Session(config=config) as sess:
 			else:
 				samples.append(y_model_pred[:,0,:])
 
+			test = False
 			# If sample more than one trajectory from the model
 			for sample_id in range(test_args.n_samples - 1):
+				test = True
 				dict = {"batch_x": batch_x,
 								"batch_vel": batch_vel,
 								"batch_pos": batch_pos,
@@ -413,48 +438,15 @@ if test_args.record:
 			recorder.animate_global(input_list, grid_list, all_predictions, y_ground_truth_list,
 														 other_agents_list,
 														 trajectories, all_traj_likelihood, cv_predictions, test_args)
-			#cv_fde_error = compute_fde(args, trajectories, cv_predictions)
-			#cv_ade_error = compute_ade(args, trajectories, cv_predictions)
-
-			#print(" ADE: ", cv_ade_error, " FDE: ", cv_fde_error)
-
-			cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
-	
-			fde_roll = []
-			for horizon in range(0,args.prediction_horizon):
-				pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
-				fde_roll.append(pred_fde)
-				print("Step: ", horizon, " FDE: ", pred_fde)
-
-			print("CV: ", cv_fde)
-			print("SVRNN: ", fde_roll)
 
 			print("Recorder is done!")
 else:
 	print("Performance tests")
-
-	cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
-	
-	fde_roll = []
-	for horizon in range(0,args.prediction_horizon):
-		pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
-		fde_roll.append(pred_fde)
-		print("Step: ", horizon, " FDE: ", pred_fde)
-
-	print("CV: ", cv_fde)
-	print("SVRNN: ", fde_roll)
-
-	#pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
-	#print("FDE: ", pred_fde)
-
-	"""
 	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
 	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
 	if test_args.constant_velocity: 
-		#cv_pred_error = compute_ade_cv(args, trajectories, cv_predictions)
-		#cv_fde_error = compute_fde_cv(args, trajectories, cv_predictions)
-		cv_fde_error = compute_fde(args, trajectories, cv_predictions)
-		cv_pred_error = compute_ade(args, trajectories, cv_predictions)
+		cv_pred_error = compute_ade_cv(args, trajectories, cv_predictions)
+		cv_fde_error = compute_fde_cv(args, trajectories, cv_predictions)
 		print(
 		Fore.LIGHTBLUE_EX + "\nConstant Velocity: MSE: {:01.2f}, FDE: {:01.2f}".format(np.mean(cv_pred_error), np.mean(cv_fde_error))+Style.RESET_ALL)
 	diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
@@ -463,4 +455,4 @@ else:
 	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args, cv_pred_error, cv_fde_error)
 	print(
 		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
-	"""	
+

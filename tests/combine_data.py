@@ -4,7 +4,7 @@ import numpy as np
 
 
 home = os.path.expanduser("~")
-directory = "/data/"
+directory = "/I-LSTM/data/roboat/compare/"
 
 def main():
     
@@ -13,6 +13,7 @@ def main():
     agents = 0
     two = 0
     three = 0
+    four = 0
     timestamp = 0
 
     for file in names:
@@ -26,8 +27,10 @@ def main():
             two += 1
         elif n_agents == 3:
             three += 1
+        elif n_agents == 4:
+            four += 1
 
-        content = reindex_agents(content, agents)
+        content = reindex_agents(content, agents,file)
         content = reindex_timestamp(content, timestamp)
         agents = agents + n_agents
         timestamp = last_timestep(content)
@@ -54,14 +57,14 @@ def save_to_file(data):
     """
     fields = ['id', 'timestep_s', 'timestep_ns', 'pos_x', 'pox_y','vel_x', 'vel_y', 'goal_x', 'goal_y' ]
 
-    with open(home + directory + 'datafile.csv', 'w+') as f:
+    with open(home + directory + 'total_log.csv', 'w+') as f:
         write = csv.writer(f)
         write.writerow(fields)
         for i in range(len(data)):
             write.writerows(data[i])
 
 
-def reindex_agents(data, agents):
+def reindex_agents(data, agents,file):
     """
     Reindex the roboat ID's
     """
@@ -72,6 +75,11 @@ def reindex_agents(data, agents):
             data[i][0] = agents + 2
         elif data[i][0] == 2:
             data[i][0] = agents + 3
+        elif data[i][0] == 3:
+            data[i][0] = agents + 4
+        else:
+            print("Wrong agent ID")
+            print("Filename: ", file)
     return data
 
 def reindex_timestamp(data, timestamp):
@@ -100,4 +108,4 @@ def getFileNames():
 
 
 if __name__ == "__main__":
-    main()datafile
+    main()

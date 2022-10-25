@@ -33,14 +33,9 @@ from colorama import Fore, Style
 #os.environ['TF_ENABLE_AUTO_MIXED_PRECISION'] = '1'
 
 pretrained_convnet_path = "../trained_models/autoencoder_with_ped"
-
-#data_path = '../data/2_agents_swap/trajs/'
-#scenario = 'GA3C-CADRL-10-py27'
-#data_path = '../data/cyberzoo_experiments/'
-#scenario = 'all_trajectories'
 exp_num = 6
-data_path = '../data/'
-scenario = 'simulation/roboat'
+data_path = '../data/roboat/'
+scenario = 'herengracht'
 
 # Hyperparameters
 n_epochs = 0
@@ -102,10 +97,11 @@ normalize_data = False
 real_world_data = False
 regulate_log_loss = False
 # Map parameters
-submap_resolution = 0.081
-submap_width = 4.86
-submap_height = 4.86
-submap_span_real = 10
+#submap_resolution = 0.081
+#submap_width = 4.86
+#submap_height = 4.86
+submap_size = 60 # In pixels
+submap_span_real = 10 # In Map coordinates
 relative_covariance = 10.0
 diversity_update = False
 predict_positions = False
@@ -119,143 +115,144 @@ def parse_args():
 	parser = argparse.ArgumentParser(description='LSTM model training')
 
 	parser.add_argument('--model_name',
-	                    help='Path to directory that comprises the model (default="model_name").',
-	                    type=str, default= "RNN")
+						help='Path to directory that comprises the model (default="model_name").',
+						type=str, default= "RNN")
 	parser.add_argument('--model_path',
-	                    help='Path to directory to save the model (default=""../trained_models/"+model_name").',
-	                    type=str, default='../trained_models/')
+						help='Path to directory to save the model (default=""../trained_models/"+model_name").',
+						type=str, default='../trained_models/')
 	parser.add_argument('--pretrained_convnet_path',
-	                    help='Path to directory that comprises the pre-trained convnet model (default=" ").',
-	                    type=str, default=pretrained_convnet_path)
+						help='Path to directory that comprises the pre-trained convnet model (default=" ").',
+						type=str, default=pretrained_convnet_path)
 	parser.add_argument('--log_dir',
-	                    help='Path to the log directory of the model (default=""../trained_models/"+model_name").',
-	                    type=str, default="\log")
+						help='Path to the log directory of the model (default=""../trained_models/"+model_name").',
+						type=str, default="\log")
 	parser.add_argument('--scenario', help='Scenario of the dataset (default="").',
-	                    type=str, default=scenario)
+						type=str, default=scenario)
 	parser.add_argument('--real_world_data', help='Real world dataset (default=True).', type=sup.str2bool,
-	                    default=real_world_data)
+						default=real_world_data)
 	parser.add_argument('--data_path', help='Path to directory that saves pickle data (default=" ").', type=str,
-	                    default=data_path)
+						default=data_path)
 	parser.add_argument('--dataset', help='Dataset pkl file', type=str,
-	                    default= scenario + '.pkl')
+						default= scenario + '.pkl')
 	parser.add_argument('--data_handler', help='Datahandler class needed to load the data', type=str,
-	                    default='LSTM')
+						default='LSTM')
 	parser.add_argument('--warmstart_model', help='Restore from pretained model (default=False).', type=bool,
-	                    default=warmstart_model)
+						default=warmstart_model)
 	parser.add_argument('--warm_start_convnet', help='Restore from pretained convnet model (default=False).', type=bool,
-	                    default=warm_start_convnet)
+						default=warm_start_convnet)
 	parser.add_argument('--dt', help='Data samplig time (default=0.3).', type=float,
-	                    default=dt)
+						default=dt)
 	parser.add_argument('--n_epochs', help='Number of epochs (default=10000).', type=int, default=n_epochs)
 	parser.add_argument('--total_training_steps', help='Number of training steps (default=20000).', type=int, default=total_training_steps)
 	parser.add_argument('--batch_size', help='Batch size for training (default=32).', type=int, default=batch_size)
 	parser.add_argument('--regularization_weight', help='Weight scaling of regularizer (default=0.01).', type=float,
-	                    default=regularization_weight)
+						default=regularization_weight)
 	parser.add_argument('--keep_prob', help='Dropout (default=0.8).', type=float,
-	                    default=keep_prob)
+						default=keep_prob)
 	parser.add_argument('--learning_rate_init', help='Initial learning rate (default=0.005).', type=float,
-	                    default=learning_rate_init)
+						default=learning_rate_init)
 	parser.add_argument('--beta_rate_init', help='Initial beta rate (default=0.005).', type=float,
-	                    default=beta_rate_init)
+						default=beta_rate_init)
 	parser.add_argument('--dropout', help='Enable Dropout', type=sup.str2bool,
-	                    default=dropout)
+						default=dropout)
 	parser.add_argument('--grads_clip', help='Gridient clipping (default=10.0).', type=float,
-	                    default=grads_clip)
+						default=grads_clip)
 	parser.add_argument('--truncated_backprop_length', help='Backpropagation length during training (default=5).',
-	                    type=int, default=truncated_backprop_length)
+						type=int, default=truncated_backprop_length)
 	parser.add_argument('--prediction_horizon', help='Length of predicted sequences (default=10).', type=int,
-	                    default=prediction_horizon)
+						default=prediction_horizon)
 	parser.add_argument('--prev_horizon', help='Previous seq length.', type=int,
-	                    default=prev_horizon)
+						default=prev_horizon)
 	parser.add_argument('--rnn_state_size', help='Number of RNN / LSTM units (default=16).', type=int,
-	                    default=rnn_state_size)
+						default=rnn_state_size)
 	parser.add_argument('--rnn_state_size_lstm_ped',
-	                    help='Number of RNN / LSTM units of the grid lstm layer (default=32).',
-	                    type=int, default=rnn_state_size_lstm_ped)
+						help='Number of RNN / LSTM units of the grid lstm layer (default=32).',
+						type=int, default=rnn_state_size_lstm_ped)
 	parser.add_argument('--rnn_state_ped_size',
-	                    help='Number of RNN / LSTM units of the grid lstm layer (default=32).',
-	                    type=int, default=rnn_state_ped_size)
+						help='Number of RNN / LSTM units of the grid lstm layer (default=32).',
+						type=int, default=rnn_state_ped_size)
 	parser.add_argument('--rnn_state_size_lstm_grid',
-	                    help='Number of RNN / LSTM units of the grid lstm layer (default=32).',
-	                    type=int, default=rnn_state_size_lstm_grid)
+						help='Number of RNN / LSTM units of the grid lstm layer (default=32).',
+						type=int, default=rnn_state_size_lstm_grid)
 	parser.add_argument('--rnn_state_size_lstm_concat',
-	                    help='Number of RNN / LSTM units of the concatenation lstm layer (default=32).',
-	                    type=int, default=rnn_state_size_lstm_concat)
+						help='Number of RNN / LSTM units of the concatenation lstm layer (default=32).',
+						type=int, default=rnn_state_size_lstm_concat)
 	parser.add_argument('--prior_size', help='prior_size',
-	                    type=int, default=prior_size)
+						type=int, default=prior_size)
 	parser.add_argument('--latent_space_size', help='latent_space_size',
-	                    type=int, default=latent_space_size)
+						type=int, default=latent_space_size)
 	parser.add_argument('--x_dim', help='x_dim',
-	                    type=int, default=x_dim)
+						type=int, default=x_dim)
 	parser.add_argument('--fc_hidden_unit_size',
-	                    help='Number of fully connected layer units after LSTM layer (default=64).',
-	                    type=int, default=fc_hidden_unit_size)
+						help='Number of fully connected layer units after LSTM layer (default=64).',
+						type=int, default=fc_hidden_unit_size)
 	parser.add_argument('--input_state_dim', help='Input state dimension (default=).', type=int,
-	                    default=input_state_dim)
+						default=input_state_dim)
 	parser.add_argument('--input_dim', help='Input state dimension (default=).', type=float,
-	                    default=input_dim)
+						default=input_dim)
 	parser.add_argument('--output_dim', help='Output state dimension (default=).', type=float,
-	                    default=output_dim)
+						default=output_dim)
 	parser.add_argument('--goal_size', help='Goal dimension (default=).', type=int,
-	                    default=2)
+						default=2)
 	parser.add_argument('--output_pred_state_dim', help='Output prediction state dimension (default=).', type=int,
-	                    default=output_pred_state_dim)
+						default=output_pred_state_dim)
 	parser.add_argument('--cmd_vector_dim', help='Command control dimension.', type=int,
-	                    default=cmd_vector_dim)
+						default=cmd_vector_dim)
 	parser.add_argument('--n_mixtures', help='Number of modes (default=).', type=int,
-	                    default=n_mixtures)
+						default=n_mixtures)
 	parser.add_argument('--pedestrian_vector_dim', help='Number of angular grid sectors (default=72).', type=int,
-	                    default=pedestrian_vector_dim)
+						default=pedestrian_vector_dim)
 	parser.add_argument('--pedestrian_vector_state_dim', help='Number of angular grid sectors (default=2).', type=int,
-	                    default=pedestrian_vector_state_dim)
+						default=pedestrian_vector_state_dim)
 	parser.add_argument('--max_range_ped_grid', help='Maximum pedestrian distance (default=2).', type=float,
-	                    default=max_range_ped_grid)
+						default=max_range_ped_grid)
 	parser.add_argument('--pedestrian_radius', help='Pedestrian radius (default=0.3).', type=float,
-	                    default=pedestrian_radius)
+						default=pedestrian_radius)
 	parser.add_argument('--n_other_agents', help='Number of other agents incorporated in the network.', type=int,
-	                    default=n_other_agents)
+						default=n_other_agents)
 	parser.add_argument('--debug_plotting', help='Plotting for debugging (default=False).', type=sup.str2bool, default=debug_plotting)
 	parser.add_argument('--print_freq', help='Print frequency of training info (default=100).', type=int,
-	                    default=print_freq)
+						default=print_freq)
 	parser.add_argument('--save_freq', help='Save frequency of the temporary model during training. (default=20k).',
-	                    type=int, default=save_freq)
+						type=int, default=save_freq)
 	parser.add_argument('--exp_num', help='Experiment number', type=int, default=exp_num)
 	parser.add_argument('--noise', help='Likelihood? (default=True).', type=sup.str2bool,
-	                    default=False)
+						default=False)
 	parser.add_argument('--agents_on_grid', help='Likelihood? (default=True).', type=sup.str2bool,
-	                    default=agents_on_grid)
+						default=agents_on_grid)
 	parser.add_argument('--normalize_data', help='Normalize? (default=False).', type=sup.str2bool,
-	                    default=normalize_data)
+						default=normalize_data)
 	parser.add_argument('--rotated_grid', help='Rotate grid? (default=False).', type=sup.str2bool,
-	                    default=rotated_grid)
+						default=rotated_grid)
 	parser.add_argument('--centered_grid', help='Center grid? (default=False).', type=sup.str2bool,
-	                    default=centered_grid)
+						default=centered_grid)
 	parser.add_argument('--sigma_bias', help='Percentage of the dataset used for trainning', type=float,
-	                    default=0)
-	parser.add_argument('--submap_width', help='width of occupancy grid (For initialization of arrays)', type=int, default=submap_width)
-	parser.add_argument('--submap_height', help='height of occupancy grid (for initiatization of arrays)', type=int, default=submap_height)
+						default=0)
+	#parser.add_argument('--submap_width', help='width of occupancy grid (For initialization of arrays)', type=int, default=submap_width)
+	#parser.add_argument('--submap_height', help='height of occupancy grid (for initiatization of arrays)', type=int, default=submap_height)
+	parser.add_argument('--submap_size', help='size of submap in pixels (60)', type=int, default=submap_size)
 	parser.add_argument('--submap_span_real', help='span of submap occupancy grid', type=int, default=submap_span_real)
-	parser.add_argument('--submap_resolution', help='Map resolution.', type=float,
-	                    default=submap_resolution)
+	#parser.add_argument('--submap_resolution', help='Map resolution.', type=float,
+	#                    default=submap_resolution)
 	parser.add_argument('--min_buffer_size', help='Minimum buffer size (default=1000).', type=int, default=1000)
 	parser.add_argument('--max_buffer_size', help='Maximum buffer size (default=100k).', type=int, default=100000)
 	parser.add_argument('--max_trajectories', help='maximum number of trajectories to be recorded', type=int, default=30)
 	parser.add_argument('--end_to_end', help='End to end trainning.', type=sup.str2bool,
-	                    default=False)
+						default=False)
 	parser.add_argument('--predict_positions', help='predict_positions.', type=sup.str2bool,
-	                    default=predict_positions)
+						default=predict_positions)
 	parser.add_argument('--gpu', help='Enable GPU training.', type=sup.str2bool,
-	                    default=False)
+						default=False)
 	parser.add_argument('--sequence_info', help='Use relative info for other agents.', type=sup.str2bool,
-	                    default=False)
+						default=False)
 	parser.add_argument('--others_info', help='Use relative info for other agents.', type=str,
-	                    default="none")
+						default="none")
 	parser.add_argument('--regulate_log_loss', help='Enable GPU training.', type=sup.str2bool,
-	                    default=regulate_log_loss)
+						default=regulate_log_loss)
 	parser.add_argument('--diversity_update', help='diversity_update', type=sup.str2bool,
-	                    default=diversity_update)
+						default=diversity_update)
 	parser.add_argument('--topics_config', help='yaml file containg subscription topics (default=" ").', type=str,
-	                    default='../config/topics.yaml')
+						default='../config/topics.yaml')
 	parser.add_argument('--min_pos_x', help='min_pos_x', type=float, default=-1)
 	parser.add_argument('--min_pos_y', help='min_pos_y', type=float, default=-1)
 	parser.add_argument('--max_pos_x', help='max_pos_x', type=float, default=1)
@@ -322,16 +319,44 @@ param_file.close()
 with open(args.model_path + '/model_parameters.json', 'w') as f:
 	json.dump(args.__dict__,f)
 
-# Create Datahandler class
+# Specify the number of datasets / scenarios 
+n_scenarios = 3
+
+# Create Datahandler class for Herengracht experiment
+original_scenario = args.scenario
 data_prep = dhlstm.DataHandlerLSTM(args)
-# Only used to create a map from png
-# Make sure this parameters are correct otherwise it will fail training and plotting the results
 map_args = {"file_name": 'map.png',
-	            "resolution": 0.081,
-	            "map_size": np.array([1715,881]),
-				"map_center": np.array([-78,-40])} # THIS IS HARDCODED FOR SOME REASON AND NOT EXTRACTED FROM MAP.JSON ?
-# Load dataset
+				"resolution": 0.081,
+				"map_size": np.array([1715,881]),
+				"map_center": np.array([-78,-40])}
 data_prep.processData(**map_args)
+
+# Create Datahandler class for Prinsengracht scenario
+args.scenario = "prinsengracht"
+data_prep_2 = dhlstm.DataHandlerLSTM(args)
+map_args = {"file_name": 'map.png',
+				"resolution": 0.091,
+				"map_size": np.array([816,816]),
+				"map_center": np.array([-37.1, -37.1])} 
+data_prep_2.processData(**map_args)
+
+args.scenario = "bloemgracht"
+data_prep_3 = dhlstm.DataHandlerLSTM(args)
+map_args = {"file_name": 'map.png',
+				"resolution": 0.22,
+				"map_size": np.array([1469,928]),
+				"map_center": np.array([-161.59,-102.08])} 
+data_prep_3.processData(**map_args)
+
+args.scenario = "open_crossing"
+data_prep_4 = dhlstm.DataHandlerLSTM(args)
+map_args = {"file_name": 'map.png',
+				"resolution": 0.6,
+				"map_size": np.array([100,100]),
+				"map_center": np.array([-30,-30])} 
+#data_prep_4.processData(**map_args)
+
+args.scenario = original_scenario
 
 # Import Deep Learning model
 module = importlib.import_module("src.models."+args.model_name)
@@ -380,92 +405,95 @@ with tf.Session(config=config) as sess:
 	best_loss = float('inf')
 	avg_training_loss = np.ones(100)
 
+	dataset = random.randint(0,n_scenarios-1)
+	print("Dataset: ", dataset)
+
 	for step in range(initial_step,args.total_training_steps):
 		start_time_loop = time.time()
 
 		# Get Next Batch of Data
 		if res == None:
-			batch_x, batch_vel, batch_pos,batch_goal,batch_grid, batch_ped_grid, batch_y,batch_pos_target, other_agents_pos, new_epoch = data_prep.getBatch()
+			if dataset == 0:
+				batch_x, batch_vel, batch_pos,batch_goal,batch_grid, batch_ped_grid, batch_y,batch_pos_target, other_agents_pos, new_epoch = data_prep.getBatch()
+			if dataset == 1:
+				batch_x, batch_vel, batch_pos,batch_goal,batch_grid, batch_ped_grid, batch_y,batch_pos_target, other_agents_pos, new_epoch = data_prep_2.getBatch()
+			if dataset == 2:
+				batch_x, batch_vel, batch_pos,batch_goal,batch_grid, batch_ped_grid, batch_y,batch_pos_target, other_agents_pos, new_epoch = data_prep_3.getBatch()
+			if dataset == 3:
+				batch_x, batch_vel, batch_pos,batch_goal,batch_grid, batch_ped_grid, batch_y,batch_pos_target, other_agents_pos, new_epoch = data_prep_4.getBatch()
 		else:
 			batch = res.get(timeout=5)
 
-		#print("ped grid: ", other_agents_pos)
-		#print("vel: ", batch_vel)
 
 		# Create dictionary to feed into the model
 		dict = {"batch_x": batch_x,
-		        "batch_vel": batch_vel,
-		        "batch_pos": batch_pos,
-		        "batch_goal": batch_goal,
-			      "batch_grid": batch_grid,
-			      "batch_ped_grid": batch_ped_grid,
-			      "step": step,
+				"batch_vel": batch_vel,
+				"batch_pos": batch_pos,
+				"batch_goal": batch_goal,
+				  "batch_grid": batch_grid,
+				  "batch_ped_grid": batch_ped_grid,
+				  "step": step,
 				  "beta": beta_list[step],
-			      "batch_y": batch_y,
-			      "batch_pos_target": batch_pos_target,
-		        "batch_div": batch_y,
-		        "other_agents_pos": other_agents_pos
-			      }
+				  "batch_y": batch_y,
+				  "batch_pos_target": batch_pos_target,
+				"batch_div": batch_y,
+				"other_agents_pos": other_agents_pos
+				  }
 
 		feed_dict_train = model.feed_dic(**dict)
 
-		#res = pool.apply_async(data_prep.getBatch)
-
-		epoch += new_epoch
+		# Here was new epoch before....
 
 		# Initialize the new sequences with a hidden state of zeros, the continuing sequences get assigned the previous hidden state
-		model.reset_cells(data_prep.sequence_reset)
+		if dataset == 0:
+			model.reset_cells(data_prep.sequence_reset)
+		if dataset == 1:
+			model.reset_cells(data_prep_2.sequence_reset)
+		if dataset == 2:
+			model.reset_cells(data_prep_3.sequence_reset)
+		if dataset == 3:
+			model.reset_cells(data_prep_4.sequence_reset)
 
 		start_time_training = time.time()
 
-		model_output = model.train_step(sess, feed_dict_train,step)
-		
+		model_output = model.train_step(sess, feed_dict_train, step)
 
 		avg_training_time = time.time() - start_time_training
 		avg_loop_time = time.time() - start_time_loop
 
 		training_loss.append(model_output["batch_loss"])
 
-		#if step == 1 :
-			#avg_training_loss *= model_output["batch_loss"]
-		#else:
-			#avg_training_loss = np.roll(avg_training_loss,shift=1)
-			#avg_training_loss[0] = model_output["batch_loss"]
-
 		# Print training info
 		if step % print_freq == 0:
-
-			# Get batch to compute validation loss
-			validation_dict = data_prep.getTestBatch()
-
-			model.reset_test_cells(data_prep.val_sequence_reset)
+			
+			if dataset == 0:
+				validation_dict = data_prep.getTestBatch()
+				model.reset_test_cells(data_prep.val_sequence_reset)
+			if dataset == 1:
+				validation_dict = data_prep_2.getTestBatch()
+				model.reset_test_cells(data_prep_2.val_sequence_reset)
+			if dataset == 2:
+				validation_dict = data_prep_3.getTestBatch()
+				model.reset_test_cells(data_prep_3.val_sequence_reset)
+			if dataset == 3:
+				validation_dict = data_prep_4.getTestBatch()
+				model.reset_test_cells(data_prep_4.val_sequence_reset)
 
 			feed_dict_validation = model.feed_val_dic(**validation_dict)
 
-			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_train)
-			#validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
+			#validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_train)
+			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
 
 			ellapsed_time = time.time() - start_time
 
 			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
-			      .format(epoch + 1, step, np.mean(avg_training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
-			#print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Epoch time: {:01.2f} sec"
-			#      .format(epoch + 1, step, ellapsed_time)+Style.RESET_ALL)
+				  .format(epoch + 1, step, np.mean(training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
 
 			if tensorboard_logging:
 				model.summary_writer.add_summary(model_output["summary"], step)
 				model.summary_writer.flush()
 				model.validation_summary_writer.add_summary(validation_summary, step)
 				model.validation_summary_writer.flush()
-
-			# Plot Global and Local Scenarios to validate datasets
-			if args.debug_plotting:
-				for seq_index in range(args.batch_size):
-					for t in range(args.truncated_backprop_length):
-						data_prep.plot_global_scenario(batch_grid, batch_x, batch_y, batch_goal, other_agents_pos,
-						                     model_output["model_predictions"], t, seq_index)
-						data_prep.plot_local_scenario(batch_grid, batch_x, batch_y, batch_goal, other_agents_pos,
-						                    model_output["model_predictions"], t, seq_index)
 
 			with open(args.model_path + "/tf_log", 'a') as f:
 				f.write(str(step) + '\n')
@@ -475,8 +503,15 @@ with tf.Session(config=config) as sess:
 				model.full_saver.save(sess, save_path, global_step=step)
 				best_loss = curr_loss
 				print(Fore.LIGHTCYAN_EX+'Step {}: Saving model under {}'.format(step, save_path))
-
-		step = step + 1
+		
+		# Change this back to the top to test what happens...
+		if new_epoch:
+			dataset = random.randint(0,n_scenarios-1)
+			epoch += 1
+			print("dataset: ", dataset)
+		
+		# Makes no sense in a for loop...probably a mistake from bruno because he used a while loop before?
+		#step = step + 1
 
 	write_summary(training_loss[-1], args)
 	full_path = args.model_path + '/final-model.ckpt'
