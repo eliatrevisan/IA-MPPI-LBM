@@ -152,6 +152,8 @@ def compute_rolling_trajectory_fde(args, horizon, ground_truth, predictions):
 		for t in range(len(pred)):
 			# real trajectory global frame
 			real_vel_global_frame = gt.vel_vec[t+args.prev_horizon+1:t+args.prediction_horizon+args.prev_horizon+1,:2]
+			#real_traj_global_frame = sup.path_from_vel(initial_pos=np.array([0, 0]), pred_vel=real_vel_global_frame,
+			#                                           dt=args.dt)
 			real_traj_global_frame = sup.path_from_vel(initial_pos=np.array([0, 0]), pred_vel=real_vel_global_frame,
 			                                           dt=args.dt)
 			vel_pred = np.zeros((args.prediction_horizon, args.output_dim))
@@ -190,7 +192,7 @@ def compute_rolling_trajectory_fde(args, horizon, ground_truth, predictions):
 							vel_pred[i,:] = [mu_x, mu_y]
 
 						traj_pred = sup.path_from_vel(initial_pos=np.array([0,0]),pred_vel=vel_pred, dt=args.dt)
-						error[mix_idx] = np.linalg.norm(real_traj_global_frame[-1, :] - traj_pred[-1, :])
+						error[mix_idx] = np.linalg.norm(real_traj_global_frame[horizon, :] - traj_pred[horizon, :])
 					min_error[sample_id] = min(error)
 				avg_fde = (min(min_error)+ avg_fde*cnt)/(cnt+1)
 				cnt +=1

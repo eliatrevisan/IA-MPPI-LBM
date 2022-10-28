@@ -434,17 +434,22 @@ else:
 	print("Performance tests")
 	
 
-	# cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
+	cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
 	
-	# fde_roll = []
-	# for horizon in range(0,args.prediction_horizon):
-	# 	pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
-	# 	fde_roll.append(pred_fde)
-	# 	print("Step: ", horizon, " FDE: ", pred_fde)
+	fde_roll = []
+	for horizon in range(0,args.prediction_horizon):
+		pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
+		fde_roll.append(np.mean(pred_error_summary_lstm_fde))
 
-	# print("CV: ", cv_fde)
-	# print("SVRNN: ", fde_roll)
+	print("CV: ", cv_fde)
+	print("SVRNN: ", fde_roll)
 
+	fig, ax = plt.subplots()
+	x = [1,2,3,4,5,6,7,8,9,10,11,12]
+	ax.plot(x, cv_fde, label="CV")
+	ax.plot(x, fde_roll, label="SVRNN")
+	plt.legend()
+	plt.show()
 	
 	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
 	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
@@ -458,7 +463,7 @@ else:
 	diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
 	args.scenario = training_scenario
 	args.truncated_backprop_length = truncated_backprop_length
-	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args, cv_pred_error, cv_fde_error)
+	#write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args, cv_pred_error, cv_fde_error)
 	print(
 		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
 	
