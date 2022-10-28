@@ -388,11 +388,11 @@ class NetworkModel():
 	
 	def feed_pred_dic(self, **kwargs):
 		step = kwargs["step"]
-		n_other_agents = np.zeros([self.args.batch_size])
+		n_other_agents = np.ones([self.args.batch_size])
 
-		return {self.input_state_placeholder: np.expand_dims(kwargs["batch_vel"], axis=1),
-		        self.input_ped_grid_placeholder: np.expand_dims(kwargs["batch_ped_grid"], axis=1),
-		        self.input_grid_placeholder: np.expand_dims(kwargs["batch_grid"], axis=1),
+		return {self.input_state_placeholder: np.expand_dims(kwargs["batch_vel"][:, step, :], axis=1),
+		        self.input_ped_grid_placeholder: np.expand_dims(kwargs["batch_ped_grid"][:, step, :], axis=1),
+		        self.input_grid_placeholder: np.expand_dims(kwargs["batch_grid"][:, step, :], axis=1),
 		        self.step: 0,
 				self.beta: 0,
 		        self.seq_length: n_other_agents,
@@ -412,6 +412,7 @@ class NetworkModel():
 		#print(kwargs.keys())
 		for i, other in enumerate(kwargs['other_agents_pos']):
 			n_other_agents[i] = len(other)
+		#print("SEQLEN INPUT: ", n_other_agents)
 		return {self.input_state_placeholder: np.expand_dims(kwargs["batch_vel"][:, step, :], axis=1),
 		        self.input_ped_grid_placeholder: np.expand_dims(kwargs["batch_ped_grid"][:, step, :], axis=1),
 		        self.input_grid_placeholder: np.expand_dims(kwargs["batch_grid"][:, step, :, :], axis=1),
@@ -510,7 +511,7 @@ class NetworkModel():
 			self.test_cell_state_current_lstm_ped, self.test_hidden_state_current_lstm_ped = _current_state_lstm_ped
 			self.test_cell_state_current_lstm_concat, self.test_hidden_state_current_lstm_concat = _current_state_lstm_concat
 
-		return batch_loss, summary, _model_prediction
+		return reconstr_loss, summary, _model_prediction
 
 	def train_step(self, sess, feed_dict_train, step=0):
 

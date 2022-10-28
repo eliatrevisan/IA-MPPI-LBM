@@ -55,7 +55,7 @@ freeze_other_agents = False
 """
 
 from random import seed
-#seed(2)
+seed(1)
 
 # Model directories
 def parse_args():
@@ -418,36 +418,34 @@ if test_args.record:
 
 			#print(" ADE: ", cv_ade_error, " FDE: ", cv_fde_error)
 
-			cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
+			# cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
 	
-			fde_roll = []
-			for horizon in range(0,args.prediction_horizon):
-				pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
-				fde_roll.append(pred_fde)
-				print("Step: ", horizon, " FDE: ", pred_fde)
+			# fde_roll = []
+			# for horizon in range(0,args.prediction_horizon):
+			# 	pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
+			# 	fde_roll.append(pred_fde)
+			# 	print("Step: ", horizon, " FDE: ", pred_fde)
 
-			print("CV: ", cv_fde)
-			print("SVRNN: ", fde_roll)
+			# print("CV: ", cv_fde)
+			# print("SVRNN: ", fde_roll)
 
 			print("Recorder is done!")
 else:
 	print("Performance tests")
-
-	cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
 	
-	fde_roll = []
-	for horizon in range(0,args.prediction_horizon):
-		pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
-		fde_roll.append(pred_fde)
-		print("Step: ", horizon, " FDE: ", pred_fde)
 
-	print("CV: ", cv_fde)
-	print("SVRNN: ", fde_roll)
+	# cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
+	
+	# fde_roll = []
+	# for horizon in range(0,args.prediction_horizon):
+	# 	pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
+	# 	fde_roll.append(pred_fde)
+	# 	print("Step: ", horizon, " FDE: ", pred_fde)
 
-	#pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
-	#print("FDE: ", pred_fde)
+	# print("CV: ", cv_fde)
+	# print("SVRNN: ", fde_roll)
 
-	"""
+	
 	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
 	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
 	if test_args.constant_velocity: 
@@ -463,4 +461,4 @@ else:
 	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args, cv_pred_error, cv_fde_error)
 	print(
 		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
-	"""	
+	

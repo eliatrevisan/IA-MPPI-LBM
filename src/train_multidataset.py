@@ -5,7 +5,7 @@ import numpy as np
 import argparse
 import pylab as pl
 if sys.version_info[0] < 3:
-	print("Using Python " + str(sys.version_info[0]))
+	print("Using Python " + str(sys.version_info[0])) 
 	sys.path.append('../src/data_utils')
 	sys.path.append('../src/models')
 	import DataHandler as dh

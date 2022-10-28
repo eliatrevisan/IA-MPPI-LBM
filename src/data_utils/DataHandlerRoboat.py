@@ -825,7 +825,7 @@ class DataHandlerRoboat():
 		return other_agents_pos
 
 	def CombineTrajectorySets(self, dpreps):
-		
+		print("Combining data into Roboat DataHandler...")
 		n = len(dpreps)
 		for dh in range(n):
 			for t in range(len(dpreps[dh].trajectory_set)):
@@ -835,7 +835,34 @@ class DataHandlerRoboat():
 		c = list(zip(self.trajectory_set, self.datahandlers))
 		random.shuffle(c)
 		self.trajectory_set, self.datahandlers = zip(*c)
-		print("Sucessfuly combined datasets")
+		print("Sucessfully combined datasets")
+
+	def RemoveStops(self):
+		print("Remove stopping trajectories...")
+		for t in range(0, len(self.trajectory_set)):
+			id, traj = self.trajectory_set[t]
+			idx = 1
+			while idx < len(traj):	# In other words, check for stopping, but only in the last 10 time steps 
+				if np.linalg.norm(traj.pose_vec[-1-idx,:] - traj.pose_vec[-1,:]) < 1.0:
+					idx += 1
+				else:
+					if idx == 1:
+						break
+					else: 
+						traj.pose_vec = traj.pose_vec[:-1-(idx-1)]
+						traj.other_agents_positions = traj.other_agents_positions[:-1-(idx-1)]
+						traj.other_agents_velocities = traj.other_agents_velocities[:-1-(idx-1)]
+						traj.time_vec = traj.time_vec[:-1-(idx-1)]
+						traj.vel_vec = traj.vel_vec[:-1-(idx-1)]
+						
+						#if len(traj.pose_vec) < (self.tbpl + self.output_sequence_length + self.prev_horizon):
+							# Remove the trajectory if its too short as a result of deleting time steps
+							#print(self.tbpl + self.output_sequence_length + self.prev_horizon, len(traj.pose_vec))
+							#self.trajectory_set = self.trajectory_set[:t] + self.trajectory_set[t+1:]
+
+						break
+		self.trajectory_set = tuple(item for item in self.trajectory_set if len(item[1].pose_vec) >= (self.tbpl + self.output_sequence_length + self.prev_horizon))
+		print("Done.")
 	
 	def getRoboatBatch(self, dpreps):
 		"""

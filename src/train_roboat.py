@@ -37,6 +37,7 @@ pretrained_convnet_path = "../trained_models/autoencoder_with_ped"
 exp_num = 6
 data_path = '../data/roboat/'
 scenario = 'herengracht'
+no_stopping = True
 
 # Hyperparameters
 n_epochs = 0
@@ -363,6 +364,25 @@ args.scenario = original_scenario
 dpreps = [data_prep, data_prep_2, data_prep_3, data_prep_4]
 data_roboat = dhroboat.DataHandlerRoboat(args)
 
+# Combine trajectory sets
+data_roboat.CombineTrajectorySets(dpreps)
+
+min = 100
+print(len(data_roboat.trajectory_set))
+for i in range(len(data_roboat.trajectory_set)):
+	if len(data_roboat.trajectory_set[i][1].pose_vec) < min:
+		min = len(data_roboat.trajectory_set[i][1].pose_vec)
+print(min)
+# Remove end of trajectories if at goal, and trajectories that are too short
+if no_stopping:
+	data_roboat.RemoveStops()
+
+min = 100
+print(len(data_roboat.trajectory_set))
+for i in range(len(data_roboat.trajectory_set)):
+	if len(data_roboat.trajectory_set[i][1].pose_vec) < min:
+		min = len(data_roboat.trajectory_set[i][1].pose_vec)
+print(min)
 # Import Deep Learning model
 module = importlib.import_module("src.models."+args.model_name)
 globals().update(module.__dict__)
@@ -410,9 +430,6 @@ with tf.Session(config=config) as sess:
 	best_loss = float('inf')
 	avg_training_loss = np.ones(100)
 
-	print("Combining data into Roboat DataHandler...")
-	data_roboat.CombineTrajectorySets(dpreps)
-	print("Done")
 
 	for step in range(initial_step,args.total_training_steps):
 		start_time_loop = time.time()
@@ -462,6 +479,7 @@ with tf.Session(config=config) as sess:
 
 			feed_dict_validation = model.feed_val_dic(**validation_dict)
 			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
+			#validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_train)
 
 			ellapsed_time = time.time() - start_time
 

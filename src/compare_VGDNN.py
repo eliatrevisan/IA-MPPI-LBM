@@ -244,7 +244,7 @@ with tf.Session(config=config) as sess:
 							"batch_grid": batch_grid,
 							"batch_ped_grid": other_agents_info,
 							"step": step,
-							#"other_agents_pos": [other_agents_pos]
+							"other_agents_pos": [other_agents_pos]
 			}
 
 			feed_dict_ = model.feed_test_dic(
@@ -366,8 +366,8 @@ sess.close()
 
 dict["predictions"] = all_predictions
 dict["batch_x"] = batch_x
-with open('comparison3.pkl', 'wb') as f:
-    pkl.dump(dict, f)
+#with open('comparison4.pkl', 'wb') as f:
+#    pkl.dump(dict, f)
 
 
 # Save data in Matlab format for post-processing
@@ -387,7 +387,7 @@ if test_args.constant_velocity:
 	cv_predictions = CVModel.predict(input_list)
 else:
 	cv_predictions = None
-
+"""
 
 if test_args.record:
 		recorder = rec(args, data_prep.agent_container.occupancy_grid)
@@ -423,3 +423,4 @@ else:
 	print(
 		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
 
+"""

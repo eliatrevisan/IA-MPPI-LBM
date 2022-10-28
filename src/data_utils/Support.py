@@ -146,6 +146,10 @@ def plot_grid_roboat(ax, origin, grid, resolution, size):
     if resolution == 0.4378: # Amstel
       ax.set_xlim((-280,-230))
       ax.set_ylim((-25,25))
+    
+    if resolution == 0.22: # Bloemgracht
+      ax.set_xlim((-20,50))
+      ax.set_ylim((-40,30))
 
 def create_map_from_png(file_name,resolution,map_size,map_center,data_path='../data',):
   # Create grid for SF model

@@ -190,7 +190,7 @@ def compute_rolling_trajectory_fde(args, horizon, ground_truth, predictions):
 							vel_pred[i,:] = [mu_x, mu_y]
 
 						traj_pred = sup.path_from_vel(initial_pos=np.array([0,0]),pred_vel=vel_pred, dt=args.dt)
-						error[mix_idx] = np.linalg.norm(real_traj_global_frame[horizon, :] - traj_pred[horizon, :])
+						error[mix_idx] = np.linalg.norm(real_traj_global_frame[-1, :] - traj_pred[-1, :])
 					min_error[sample_id] = min(error)
 				avg_fde = (min(min_error)+ avg_fde*cnt)/(cnt+1)
 				cnt +=1

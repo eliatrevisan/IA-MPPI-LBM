@@ -486,7 +486,8 @@ with tf.Session(config=config) as sess:
 
 			feed_dict_validation = model.feed_val_dic(**validation_dict)
 
-			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
+			#validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
+			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_train)
 			ellapsed_time = time.time() - start_time
 
 			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
@@ -518,7 +519,7 @@ with tf.Session(config=config) as sess:
 				best_loss = curr_loss
 				print(Fore.LIGHTCYAN_EX+'Step {}: Saving model under {}'.format(step, save_path))
 
-		step = step + 1
+		#step = step + 1
 
 	write_summary(training_loss[-1], args)
 	full_path = args.model_path + '/final-model.ckpt'

@@ -147,48 +147,142 @@ python3 train_VGDNN.py --exp_num 166 --model_name VGDNN --total_training_steps 5
 python3 test_VGDNN.py --exp_num 166 --model_name VGDNN --num_test_sequences 100 --scenario comparison --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 '
 
-# Testing with combined trajectory_set and log
-python3 train_roboat.py --exp_num 251 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --regularization_weight 0.0005 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 10 --relative_covariance 10.0;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# # Testing with combined trajectory_set and log
+# python3 train_roboat.py --exp_num 251 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --regularization_weight 0.0005 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 10 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 251 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
 
-# Testing with combined trajectory_set and log
-python3 train_roboat.py --exp_num 249 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --regularization_weight 0.01 --dropout True --keep_prob 0.8 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 20 --relative_covariance 10.0;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# # Testing with combined trajectory_set and log
+# python3 train_roboat.py --exp_num 249 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --regularization_weight 0.01 --dropout True --keep_prob 0.8 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 20 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 249 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
-# Testing with combined trajectory_set and log
-python3 train_roboat.py --exp_num 250 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --regularization_weight 0.001 --dropout True --keep_prob 0.8 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 20 --relative_covariance 10.0;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# # Testing with combined trajectory_set and log
+# python3 train_roboat.py --exp_num 250 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --regularization_weight 0.001 --dropout True --keep_prob 0.8 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 20 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 250 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
-# Testing with combined trajectory_set and log
-python3 train_roboat.py --exp_num 252 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --dropout True --keep_prob 0.8 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 20 --relative_covariance 10.0;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
-python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# # Testing with combined trajectory_set and log
+# python3 train_roboat.py --exp_num 252 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --dropout True --keep_prob 0.8 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 20 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 252 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
 
+
+# python3 train_roboat.py --exp_num 261 --model_name VGDNN --total_training_steps 100000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 14 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 261 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 train_roboat.py --exp_num 262 --model_name VGDNN --total_training_steps 200000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 14 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 262 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+
+# # feeddictval
+# #python3 train_roboat.py --exp_num 275 --model_name VGDNN --total_training_steps 50000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 14 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --num_test_sequences 10 --scenario test_amstel --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 275 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+#python3 train_roboat.py --exp_num 277 --model_name VGDNN --total_training_steps 40000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 14 --relative_covariance 10.0;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --num_test_sequences 10 --scenario test_amstel --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+#python3 test_VGDNN.py --exp_num 277 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 train_roboat.py --exp_num 279 --model_name VGDNN --total_training_steps 40000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 15 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --num_test_sequences 10 --scenario test_amstel --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 279 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 train_roboat.py --exp_num 280 --model_name VGDNN --total_training_steps 40000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 12 --relative_covariance 10.0;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --num_test_sequences 10 --scenario test_amstel --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 280 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+# python3 train_roboat.py --exp_num 281 --model_name VGDNN --total_training_steps 40000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 14 --relative_covariance 12.0;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --num_test_sequences 10 --scenario test_amstel --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+# python3 test_VGDNN.py --exp_num 281 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+
+python3 train_roboat.py --exp_num 284 --model_name VGDNN --total_training_steps 40000 --n_mixtures 3 --output_pred_state_dim 4 --scenario herengracht --gpu true --prev_horizon 8 --prediction_horizon 12 --dt 0.8 --truncated_backprop_length 8 --others_info relative --pedestrian_vector_dim 4 --batch_size 16 --diversity_update false --submap_span_real 14 --relative_covariance 10.0;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --num_test_sequences 10 --scenario test_herengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_herengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --num_test_sequences 10 --scenario test_prinsengracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_prinsengracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --num_test_sequences 10 --scenario test_bloemgracht --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_bloemgracht --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --num_test_sequences 10 --scenario test_open_crossing --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_open_crossing --record false --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --num_test_sequences 10 --scenario test_amstel --record true --n_samples 1 --unit_testing false --freeze_other_agents false;
+python3 test_VGDNN.py --exp_num 284 --model_name VGDNN --constant_velocity true --num_test_sequences 100 --scenario test_amstel --record false --n_samples 1 --unit_testing false --freeze_other_agents false;

@@ -4,7 +4,7 @@ import numpy as np
 
 
 home = os.path.expanduser("~")
-directory = "/I-LSTM/data/roboat/compare/"
+directory = "/compareinputs/combine/"
 
 def main():
     
