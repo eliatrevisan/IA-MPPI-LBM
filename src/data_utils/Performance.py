@@ -197,7 +197,8 @@ def compute_rolling_trajectory_fde(args, horizon, ground_truth, predictions):
 				avg_fde = (min(min_error)+ avg_fde*cnt)/(cnt+1)
 				cnt +=1
 			avg_fde_list.append(avg_fde)
-	return avg_fde, avg_fde_list
+			std = np.std(avg_fde_list)
+	return avg_fde, avg_fde_list, std
 
 def compute_2_wasserstein(args, predictions):
 	"""
@@ -398,6 +399,6 @@ def compute_rolling_fde(args, trajectories, predictions):
 				error = np.linalg.norm(tr[:2]-pr[:])
 				fde.append(error)
 			res.append(fde)
-	return np.mean(res, axis=0)
+	return np.mean(res, axis=0), np.std(res, axis=0)
 
 

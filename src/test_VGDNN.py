@@ -325,6 +325,7 @@ with tf.Session(config=config) as sess:
 
 			time = np.arange(0, len(cell_state_list), 1)
 			R= np.array(cell_state_list)
+			print(R)
 			ax.clear()
 			X, Y = np.meshgrid(x_state,time)
 			surf = ax.plot_surface(X, Y, R,cmap=cm.coolwarm)
@@ -336,22 +337,23 @@ with tf.Session(config=config) as sess:
 			if not os.path.exists(save_img_to_file):
 				os.makedirs(save_img_to_file)
 			pl.savefig(save_img_to_file+"/cell_state" + str(exp_id) + '.png')
+			pl.show()
 			pl.close()
 
-			fig = pl.figure()
-			ax = pl.axes(projection="3d")
-			time = np.arange(0, len(cell_ped_list), 1)
-			R= np.array(cell_ped_list)
-			#print(R)
-			ax.clear()
-			X, Y = np.meshgrid(x_ped,time)
-			surf = ax.plot_surface(X, Y, R,cmap=cm.coolwarm)
-			ax.view_init(elev=90,azim=90)
-			ax.set_xlabel("Time [s]")
-			ax.set_xlabel("Features")
-			fig.colorbar(surf)
-			pl.savefig(save_img_to_file+"/cell_ped" + str(exp_id) + '.png')
-			pl.close()
+			# fig = pl.figure()
+			# ax = pl.axes(projection="3d")
+			# time = np.arange(0, len(cell_ped_list), 1)
+			# R= np.array(cell_ped_list)
+			# print(R)
+			# ax.clear()
+			# X, Y = np.meshgrid(x_ped,time)
+			# surf = ax.plot_surface(X, Y, R,cmap=cm.coolwarm)
+			# ax.view_init(elev=90,azim=90)
+			# ax.set_xlabel("Time [s]")
+			# ax.set_xlabel("Features")
+			# fig.colorbar(surf)
+			# pl.savefig(save_img_to_file+"/cell_ped" + str(exp_id) + '.png')
+			# pl.close()
 
 			fig = pl.figure()
 			ax = pl.axes(projection="3d")
@@ -365,6 +367,7 @@ with tf.Session(config=config) as sess:
 			ax.set_xlabel("Features")
 			fig.colorbar(surf)
 			pl.savefig(save_img_to_file+"/cell_concat" + str(exp_id) + '.png')
+			pl.show()
 			pl.close()
 
 		all_predictions.append(predictions)
@@ -434,22 +437,34 @@ else:
 	print("Performance tests")
 	
 
-	cv_fde = compute_rolling_fde(args, trajectories, cv_predictions)
+	cv_fde, cv_std = compute_rolling_fde(args, trajectories, cv_predictions)
 	
 	fde_roll = []
+	std_roll = []
 	for horizon in range(0,args.prediction_horizon):
-		pred_fde, pred_error_summary_lstm_fde = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
+		pred_fde, pred_error_summary_lstm_fde, std = compute_rolling_trajectory_fde(args, horizon, trajectories, all_predictions)
 		fde_roll.append(np.mean(pred_error_summary_lstm_fde))
+		std_roll.append(std)
 
 	print("CV: ", cv_fde)
 	print("SVRNN: ", fde_roll)
 
-	fig, ax = plt.subplots()
+	# 30% of STD, just like in bruno's paper, but why?
+	std_roll = np.array(std_roll)*0.3
+	cv_std = cv_std * 0.3
+
+	fig, ax = plt.subplots(figsize=(4,3))
 	x = [1,2,3,4,5,6,7,8,9,10,11,12]
-	ax.plot(x, cv_fde, label="CV")
-	ax.plot(x, fde_roll, label="SVRNN")
+	ax.set_title("Prinsengracht")
+	ax.plot(x, cv_fde, label="CV", color="b")
+	ax.plot(x, fde_roll, label="SVRNN", color="r")
+	ax.fill_between(x, cv_fde+cv_std, cv_fde-cv_std, color="b", alpha=0.2)
+	ax.fill_between(x, fde_roll+std_roll, fde_roll-std_roll, color="r", alpha=0.2)
+	ax.set_xlabel("Timestep")
+	ax.set_ylabel("Displacement Error [m]")
+	plt.tight_layout()
 	plt.legend()
-	plt.show()
+	#plt.show()
 	
 	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
 	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
@@ -463,7 +478,7 @@ else:
 	diversity, diversity_summary = compute_2_wasserstein(args, all_predictions)
 	args.scenario = training_scenario
 	args.truncated_backprop_length = truncated_backprop_length
-	#write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args, cv_pred_error, cv_fde_error)
+	write_results_summary(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde), np.mean(diversity_summary), args, test_args, cv_pred_error, cv_fde_error)
 	print(
 		Fore.LIGHTBLUE_EX + "\nMSE: {:01.2f}, FDE: {:01.2f}, DIVERSITY: {:01.2f}".format(np.mean(pred_error_summary_lstm), np.mean(pred_error_summary_lstm_fde),np.mean(diversity_summary))+Style.RESET_ALL)
 	

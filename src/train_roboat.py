@@ -47,18 +47,33 @@ regularization_weight = 0.0001
 
 # Time parameters
 truncated_backprop_length = 8
-prediction_horizon = 8
-prev_horizon = 0
+prediction_horizon = 12
+prev_horizon = 8
+
+# Model params
+# rnn_state_size = 32
+# rnn_state_size_lstm_grid = 256
+# rnn_state_size_lstm_ped = 128
+# rnn_state_ped_size = 16
+# rnn_state_size_lstm_concat = 512
+# prior_size = 512
+# latent_space_size = 256
+# x_dim = 512
+# fc_hidden_unit_size = 256
 
 rnn_state_size = 32
 rnn_state_size_lstm_grid = 256
-rnn_state_size_lstm_ped = 128
-rnn_state_ped_size = 16
+rnn_state_size_lstm_ped = 128 # If change, change hardcoded output value in VGDNN.py to same value!
 rnn_state_size_lstm_concat = 512
-prior_size = 512
 latent_space_size = 256
-x_dim = 512
-fc_hidden_unit_size = 256
+
+# Not used
+rnn_state_ped_size = 1
+prior_size = 1
+x_dim = 1
+fc_hidden_unit_size = 1
+
+# Regularization and training params
 learning_rate_init = 0.001
 beta_rate_init = 0.01
 keep_prob = 1.0

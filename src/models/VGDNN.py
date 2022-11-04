@@ -316,13 +316,14 @@ class NetworkModel():
 
 			# Reduce mean in all dimensions
 			#self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
-			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0) * self.beta #+ args.diversity_update*self.div_loss
+			self.total_loss = tf.reduce_mean(loss_list, axis=0) + tf.reduce_mean(kl_loss_list, axis=0) * self.KLWEIGHT # + l2 #* self.beta#+ args.diversity_update*self.div_loss
 			self.reconstruction_loss = tf.reduce_mean(loss_list, axis=0)
 			self.kl_loss = tf.reduce_mean(kl_loss_list, axis=0)
 
 			# Optimizer specification
-			# self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate)
-			self.optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate)
+			self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate)
+			#self.optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate)
+			
 			# Compute gradients
 			train_vars = tf.trainable_variables()
 			self.gradients = tf.gradients(self.total_loss, train_vars)
@@ -511,7 +512,7 @@ class NetworkModel():
 			self.test_cell_state_current_lstm_ped, self.test_hidden_state_current_lstm_ped = _current_state_lstm_ped
 			self.test_cell_state_current_lstm_concat, self.test_hidden_state_current_lstm_concat = _current_state_lstm_concat
 
-		return reconstr_loss, summary, _model_prediction
+		return batch_loss, summary, _model_prediction
 
 	def train_step(self, sess, feed_dict_train, step=0):
 
@@ -821,7 +822,7 @@ class NetworkModel():
 
 					fc_final = self.fc_layer(conv3_flat, fc_grid_weights, fc_grid_biases)
 
-					tf.summary.histogram("fc_activations", fc_final)
+					#tf.summary.histogram("fc_activations", fc_final)
 					fc_grid_dec_biases = self.get_bias_variable(shape=[conv3_flat.get_shape()[1]],
 					                                            name="fc_grid_decode_biases", trainable=True)
 					fc_grid_dec = self.fc_layer(fc_final, tf.transpose(fc_grid_weights), fc_grid_dec_biases)
@@ -884,8 +885,8 @@ class NetworkModel():
 			# fc_feature_vector.append(self.fc_layer(grid_batch, weights=self.W_pedestrian_grid, biases=self.b_pedestrian_grid,activation = tf.nn.relu, name="fc_ped"))
 			fc_feature_vector.append(
 				self.fc_layer(grid_batch, weights=self.W_pedestrian_grid, biases=self.b_pedestrian_grid, name="fc_ped"))
-			if idx == 0:
-				tf.summary.histogram("fc_ped_activations", fc_feature_vector)
+			#if idx == 0:
+				#tf.summary.histogram("fc_ped_activations", fc_feature_vector)
 		#       fc_feature_vector.append(grid_batch)
 		return fc_feature_vector
 
@@ -920,8 +921,8 @@ class NetworkModel():
 		                                                                                 uniform=False, seed=None,
 		                                                                                 dtype=tf.float32),
 		                      trainable=trainable)
-		if summary:
-			tf.summary.histogram(name, var)
+		#if summary:
+		#	tf.summary.histogram(name, var)
 		return var
 
 
@@ -930,8 +931,8 @@ class NetworkModel():
 		Get weight variable with specific initializer.
 		"""
 		var = tf.Variable(tf.truncated_normal(shape, stddev=0.1), dtype=tf.float32, name=name)
-		if summary:
-			tf.summary.histogram(name, var)
+		#if summary:
+		#	tf.summary.histogram(name, var)
 		return var
 
 
@@ -940,8 +941,8 @@ class NetworkModel():
 		Get bias variable with specific initializer.
 		"""
 		var = tf.Variable(tf.truncated_normal(shape, mean=0.1, stddev=0.1), dtype=tf.float32, name=name)
-		if summary:
-			tf.summary.histogram(name, var)
+		#if summary:
+		#	tf.summary.histogram(name, var)
 		return var
 
 
@@ -952,8 +953,8 @@ class NetworkModel():
 		conv = tf.nn.conv2d(input, filter=weights, strides=[1, conv_stride_length, conv_stride_length, 1], padding=padding,
 		                    name=name)
 		activations = tf.nn.relu(conv + biases)
-		if summary:
-			tf.summary.histogram(name, activations)
+		#if summary:
+		#	tf.summary.histogram(name, activations)
 		return activations
 
 
@@ -977,8 +978,8 @@ class NetworkModel():
 			activations = affine_result
 		else:
 			activations = activation(affine_result)
-		if summary:
-			tf.summary.histogram(name + "_activations", activations)
+		#if summary:
+		#	tf.summary.histogram(name + "_activations", activations)
 		return activations
 
 	def frange_cycle_linear(self, n_iter, start=0.0, stop=1.0,  n_cycle=4, ratio=0.5):
