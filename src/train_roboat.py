@@ -33,9 +33,9 @@ from colorama import Fore, Style
 
 #os.environ['TF_ENABLE_AUTO_MIXED_PRECISION'] = '1'
 
-pretrained_convnet_path = "../trained_models/autoencoder_with_ped"
+pretrained_convnet_path = "../trained_models/autoencoder"
 exp_num = 6
-data_path = '../data/roboat/'
+data_path = '../data/roboat_dt4/'
 scenario = 'herengracht'
 no_stopping = True
 
@@ -62,10 +62,10 @@ prev_horizon = 8
 # fc_hidden_unit_size = 256
 
 rnn_state_size = 32
-rnn_state_size_lstm_grid = 256
-rnn_state_size_lstm_ped = 128 # If change, change hardcoded output value in VGDNN.py to same value!
-rnn_state_size_lstm_concat = 512
-latent_space_size = 256
+rnn_state_size_lstm_grid = 64
+rnn_state_size_lstm_ped = 64 # If change, change hardcoded output value in VGDNN.py to same value!
+rnn_state_size_lstm_concat = 128
+latent_space_size = 0
 
 # Not used
 rnn_state_ped_size = 1
@@ -102,7 +102,7 @@ dt = 0.4
 
 warmstart_model = False
 pretrained_convnet = False
-pretained_encoder = False
+pretained_encoder = True
 multipath = False
 real_world_data = False
 end_to_end = True
@@ -496,10 +496,12 @@ with tf.Session(config=config) as sess:
 			validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_validation)
 			#validation_loss, validation_summary, validation_predictions = model.validation_step(sess, feed_dict_train)
 
+			autoencoder_loss = model_output["autoencoder_loss"]
+
 			ellapsed_time = time.time() - start_time
 
-			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, Epoch time: {:01.2f} sec"
-				  .format(epoch + 1, step, np.mean(training_loss), validation_loss, ellapsed_time)+Style.RESET_ALL)
+			print(Fore.BLUE + "\n\nEpoch {:d}, Steps: {:d}, Train loss: {:01.2f}, Validation loss: {:01.2f}, AutoEncoder Loss: {:01.2f},  Epoch time: {:01.2f} sec"
+				  .format(epoch + 1, step, np.mean(training_loss), validation_loss, autoencoder_loss, ellapsed_time)+Style.RESET_ALL)
 
 			if tensorboard_logging:
 				model.summary_writer.add_summary(model_output["summary"], step)

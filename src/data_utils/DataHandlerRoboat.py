@@ -280,9 +280,6 @@ class DataHandlerRoboat():
 				pose[:,0:2] = np.true_divide(pedestrian_data[sample_idx, 3:5], np.array([self.norm_const_x, self.norm_const_y]))
 				vel[:,0:2] = np.true_divide(pedestrian_data[sample_idx, 5:7], np.array([self.norm_const_vx, self.norm_const_vy]))
 				goal = np.true_divide(pedestrian_data[sample_idx, 7:], np.array([self.norm_const_x, self.norm_const_y]))
-
-				
-
 				self.agent_container.addDataSample(id, timestamp, pose, vel, goal)
 
 		# Set the initial indices for agent trajectories (which trajectory will be returned when queried)
