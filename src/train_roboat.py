@@ -35,7 +35,7 @@ from colorama import Fore, Style
 
 pretrained_convnet_path = "../trained_models/autoencoder"
 exp_num = 6
-data_path = '../data/roboat/'
+data_path = '../data/roboat_dt4/'
 scenario = 'herengracht'
 no_stopping = True
 
@@ -63,7 +63,7 @@ prev_horizon = 8
 
 rnn_state_size = 32
 rnn_state_size_lstm_grid = 64
-rnn_state_size_lstm_ped = 64 # If change, change hardcoded output value in VGDNN.py to same value!
+rnn_state_size_lstm_ped = 64 
 rnn_state_size_lstm_concat = 128
 latent_space_size = 0
 
