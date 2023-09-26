@@ -832,7 +832,7 @@ class DataHandlerRoboat():
 		c = list(zip(self.trajectory_set, self.datahandlers))
 		random.shuffle(c)
 		self.trajectory_set, self.datahandlers = zip(*c)
-		print("Sucessfully combined datasets")
+		print("Sucessfully combined datasets!")
 
 	def RemoveStops(self):
 		print("Remove stopping trajectories...")
@@ -859,7 +859,7 @@ class DataHandlerRoboat():
 
 						break
 		self.trajectory_set = tuple(item for item in self.trajectory_set if len(item[1].pose_vec) >= (self.tbpl + self.output_sequence_length + self.prev_horizon))
-		print("Done.")
+		print("Done!")
 	
 	def getRoboatBatch(self, dpreps):
 		"""

@@ -455,7 +455,7 @@ else:
 
 	fig, ax = plt.subplots(figsize=(4,3))
 	x = [1,2,3,4,5,6,7,8,9,10,11,12]
-	ax.set_title("Prinsengracht")
+	ax.set_title("Herengracht")
 	ax.plot(x, cv_fde, label="CV", color="b")
 	ax.plot(x, fde_roll, label="SVRNN", color="r")
 	ax.fill_between(x, cv_fde+cv_std, cv_fde-cv_std, color="b", alpha=0.2)
@@ -464,7 +464,7 @@ else:
 	ax.set_ylabel("Displacement Error [m]")
 	plt.tight_layout()
 	plt.legend()
-	#plt.show()
+	plt.show()
 	
 	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
 	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)

@@ -312,8 +312,8 @@ class NetworkModel():
 			tvars = tf.trainable_variables()
 
 			# L2 loss
-			l2 = self.lambda_ * sum(tf.nn.l2_loss(tvar) for tvar in tvars if 'bias' or 'auto_encoder' not in tvar.name) 
-
+			l2 = self.lambda_ * sum(tf.nn.l2_loss(tvar) for tvar in tvars if 'bias' or 'auto_encoder' not in tvar.name)
+			
 			# Reduce mean in all dimensions
 			#self.div_loss = tf.reduce_mean(div_loss_over_truncated_back_prop)
 			self.total_loss = tf.reduce_mean(loss_list, axis=0) + (tf.reduce_mean(kl_loss_list, axis=0) * self.KLWEIGHT) #+ l2 # Add Diversity loss: + args.diversity_update*self.div_loss

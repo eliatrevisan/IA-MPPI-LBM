@@ -35,7 +35,7 @@ from colorama import Fore, Style
 
 pretrained_convnet_path = "../trained_models/autoencoder"
 exp_num = 6
-data_path = '../data/roboat_dt4/'
+data_path = '../data/roboat/'
 scenario = 'herengracht'
 no_stopping = True
 
