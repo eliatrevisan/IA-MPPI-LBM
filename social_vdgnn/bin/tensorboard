@@ -1,4 +1,4 @@
-#!/home/walter/I-LSTM/social_vdgnn/bin/python
+#!/media/elia/DATA/Walter/I-LSTM/social_vdgnn/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -6,3 +6,4 @@ progressbar
 opencv-python
 pykalman
 scipy
+pip install protobuf==3.20.*
