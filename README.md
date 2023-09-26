@@ -1,6 +1,6 @@
 # Interaction-Aware Sampling-Based MPC with Learned Local Goal Predictions
 
-<img src="doc/imgs/framework.png">
+<img src="docs/imgs/framework.png">
 
 This repository contains the training and testing scripts for the prediction model used in the "Interaction-Aware Sampling-Based MPC with Learned Local Goal Predictions" paper.
 
