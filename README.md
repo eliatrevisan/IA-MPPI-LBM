@@ -11,6 +11,8 @@ Move the data folder into the repository.
 
 ### Setup
 
+This repository requires python <= 3.7 and tensorflow == 1.15.x. The instructions were tested on Ubuntu 16.
+
 ```
 ./install.sh
 source social_vdgnn/bin/activate
