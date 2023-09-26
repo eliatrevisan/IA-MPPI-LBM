@@ -1,0 +1,83 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.21
+    framework: tensorflow
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.6.9
+    start_time: 1658927641
+    t:
+      1:
+      - 3
+      - 55
+      2:
+      - 3
+      - 55
+      3:
+      - 16
+      - 29
+      - 35
+      4: 3.6.9
+      5: 0.12.21
+      8:
+      - 5
+alsologtostderr:
+  desc: null
+  value: false
+log_dir:
+  desc: null
+  value: ''
+logtostderr:
+  desc: null
+  value: false
+only_check_args:
+  desc: null
+  value: false
+op_conversion_fallback_to_while_loop:
+  desc: null
+  value: false
+pdb_post_mortem:
+  desc: null
+  value: false
+profile_file:
+  desc: null
+  value: null
+run_with_pdb:
+  desc: null
+  value: false
+run_with_profiling:
+  desc: null
+  value: false
+showprefixforinfo:
+  desc: null
+  value: true
+stderrthreshold:
+  desc: null
+  value: fatal
+test_random_seed:
+  desc: null
+  value: 301
+test_randomize_ordering_seed:
+  desc: null
+  value: ''
+test_srcdir:
+  desc: null
+  value: ''
+test_tmpdir:
+  desc: null
+  value: /tmp/absl_testing
+use_cprofile_for_profiling:
+  desc: null
+  value: true
+v:
+  desc: null
+  value: -1
+verbosity:
+  desc: null
+  value: -1
+xml_output_file:
+  desc: null
+  value: ''

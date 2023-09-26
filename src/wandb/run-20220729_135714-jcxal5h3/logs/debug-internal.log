@@ -1,0 +1,68 @@
+2022-07-29 13:57:15,849 INFO    MainThread:16756 [internal.py:wandb_internal():93] W&B internal server running at pid: 16756, started at: 2022-07-29 13:57:15.848894
+2022-07-29 13:57:15,854 INFO    WriterThread:16756 [datastore.py:open_for_write():75] open: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/run-jcxal5h3.wandb
+2022-07-29 13:57:15,856 DEBUG   SenderThread:16756 [sender.py:send():236] send: header
+2022-07-29 13:57:15,856 DEBUG   SenderThread:16756 [sender.py:send():236] send: run
+2022-07-29 13:57:16,067 DEBUG   HandlerThread:16756 [handler.py:handle_request():140] handle_request: check_version
+2022-07-29 13:57:16,068 INFO    SenderThread:16756 [dir_watcher.py:__init__():216] watching files in: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files
+2022-07-29 13:57:16,068 INFO    SenderThread:16756 [sender.py:_start_run_threads():818] run started: jcxal5h3 with start time 1659095834
+2022-07-29 13:57:16,068 DEBUG   SenderThread:16756 [sender.py:send():236] send: summary
+2022-07-29 13:57:16,068 INFO    SenderThread:16756 [sender.py:_save_file():952] saving file wandb-summary.json with policy end
+2022-07-29 13:57:16,069 DEBUG   SenderThread:16756 [sender.py:send_request():250] send_request: check_version
+2022-07-29 13:57:16,199 DEBUG   HandlerThread:16756 [handler.py:handle_request():140] handle_request: run_start
+2022-07-29 13:57:16,202 DEBUG   HandlerThread:16756 [meta.py:__init__():35] meta init
+2022-07-29 13:57:16,202 DEBUG   HandlerThread:16756 [meta.py:__init__():49] meta init done
+2022-07-29 13:57:16,202 DEBUG   HandlerThread:16756 [meta.py:probe():209] probe
+2022-07-29 13:57:16,209 DEBUG   HandlerThread:16756 [meta.py:_setup_git():199] setup git
+2022-07-29 13:57:16,220 DEBUG   HandlerThread:16756 [meta.py:_setup_git():206] setup git done
+2022-07-29 13:57:16,221 DEBUG   HandlerThread:16756 [meta.py:_save_pip():53] save pip
+2022-07-29 13:57:16,221 DEBUG   HandlerThread:16756 [meta.py:_save_pip():67] save pip done
+2022-07-29 13:57:16,221 DEBUG   HandlerThread:16756 [meta.py:probe():247] probe done
+2022-07-29 13:57:16,326 DEBUG   SenderThread:16756 [sender.py:send():236] send: files
+2022-07-29 13:57:16,326 INFO    SenderThread:16756 [sender.py:_save_file():952] saving file wandb-metadata.json with policy now
+2022-07-29 13:57:16,330 DEBUG   HandlerThread:16756 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 13:57:16,331 DEBUG   SenderThread:16756 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 13:57:16,483 DEBUG   SenderThread:16756 [sender.py:send():236] send: telemetry
+2022-07-29 13:57:16,921 INFO    Thread-11 :16756 [upload_job.py:push():138] Uploaded file /tmp/tmppu0gsx2twandb/30tih8tp-wandb-metadata.json
+2022-07-29 13:57:17,070 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/output.log
+2022-07-29 13:57:17,070 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/wandb-metadata.json
+2022-07-29 13:57:17,071 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/wandb-summary.json
+2022-07-29 13:57:17,071 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/requirements.txt
+2022-07-29 13:57:19,069 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/output.log
+2022-07-29 13:57:21,069 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/output.log
+2022-07-29 13:57:31,485 DEBUG   HandlerThread:16756 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 13:57:31,485 DEBUG   SenderThread:16756 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 13:57:40,458 INFO    HandlerThread:16756 [handler.py:handle_tbrecord():723] handling tbrecord: tbrecord {
+  log_dir: "../trained_models/VGDNN/55/log/train"
+  save: true
+}
+
+2022-07-29 13:57:40,459 DEBUG   HandlerThread:16756 [config_util.py:dict_from_config_file():100] no default config file found in config-defaults.yaml
+2022-07-29 13:57:40,460 DEBUG   SenderThread:16756 [sender.py:send():236] send: tbrecord
+2022-07-29 13:57:43,077 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/output.log
+2022-07-29 13:57:44,980 DEBUG   SenderThread:16756 [sender.py:send():236] send: stats
+2022-07-29 13:57:46,655 DEBUG   HandlerThread:16756 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 13:57:46,655 DEBUG   SenderThread:16756 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 13:57:47,079 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/config.yaml
+2022-07-29 13:57:53,639 DEBUG   SenderThread:16756 [sender.py:send():236] send: files
+2022-07-29 13:57:53,639 INFO    SenderThread:16756 [sender.py:_save_file():952] saving file train/events.out.tfevents.1659095872.GroupMachineF-2-180 with policy live
+2022-07-29 13:57:54,081 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/train/events.out.tfevents.1659095872.GroupMachineF-2-180
+2022-07-29 13:57:54,081 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_created():269] file/dir created: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/train
+2022-07-29 13:57:54,649 INFO    Thread-14 :16756 [upload_job.py:push():138] Uploaded file /tmp/tmppu0gsx2twandb/1r4zazl7-train/events.out.tfevents.1659095872.GroupMachineF-2-180
+2022-07-29 13:58:02,386 DEBUG   HandlerThread:16756 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-29 13:58:02,386 DEBUG   SenderThread:16756 [sender.py:send_request():250] send_request: stop_status
+2022-07-29 13:58:09,516 INFO    HandlerThread:16756 [handler.py:handle_tbrecord():723] handling tbrecord: tbrecord {
+  log_dir: "../trained_models/VGDNN/55/log/validation"
+  save: true
+}
+
+2022-07-29 13:58:09,517 DEBUG   SenderThread:16756 [sender.py:send():236] send: tbrecord
+2022-07-29 13:58:10,088 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/train/events.out.tfevents.1659095872.GroupMachineF-2-180
+2022-07-29 13:58:11,088 INFO    Thread-7  :16756 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/files/output.log
+2022-07-29 13:58:13,970 WARNING MainThread:16756 [internal.py:wandb_internal():153] Internal process interrupt: 1
+2022-07-29 13:58:13,980 DEBUG   SenderThread:16756 [sender.py:send():236] send: telemetry
+2022-07-29 13:58:14,628 WARNING MainThread:16756 [internal.py:wandb_internal():153] Internal process interrupt: 2
+2022-07-29 13:58:14,629 ERROR   MainThread:16756 [internal.py:wandb_internal():156] Internal process interrupted.
+2022-07-29 13:58:14,980 INFO    WriterThread:16756 [datastore.py:close():279] close: /home/stlucas/I-LSTM/src/wandb/run-20220729_135714-jcxal5h3/run-jcxal5h3.wandb
+2022-07-29 13:58:14,980 INFO    SenderThread:16756 [sender.py:finish():1114] shutting down sender
+2022-07-29 13:58:14,980 INFO    SenderThread:16756 [dir_watcher.py:finish():353] shutting down directory watcher
+2022-07-29 13:58:15,066 INFO    MainThread:16756 [internal.py:handle_exit():80] Internal process exited

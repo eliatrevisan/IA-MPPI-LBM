@@ -1,0 +1,29 @@
+
+Loading data from: '../data/comparison/data12_8_8_correct.pickle'
+Input list length: 8
+Output list length: 8
+Single input shape: (?, 18)
+Single output shape: (?, 24)
+Length occ grid series: 8
+Dim out fc_grid_dec (conv2_flat_out): (?, 392)
+Dim out conv3 reshape (conv3_out): (?, 7, 7, 8)
+Dim out deconv3 (conv2_out): (?, 15, 15, 32)
+Dim out deconv2 (conv1_out): (?, 30, 30, 64)
+Dim out deconv1 (image input): (?, 60, 60, 1)
+[34m[1mwandb[39m[22m: [33mWARNING[39m Found log directory outside of given root_logdir, dropping given root_logdir for event file in ../trained_models/VGDNN/55/log/train
+[34m[1mwandb[39m[22m: [33mWARNING[39m When using several event log directories, please call `wandb.tensorboard.patch(root_logdir="...")` before `wandb.init`
+[34m[1mwandb[39m[22m: [33mWARNING[39m Found log directory outside of given root_logdir, dropping given root_logdir for event file in ../trained_models/VGDNN/55/log/validation
+Loading convnet parameters from "../trained_models/autoencoder_with_ped"
+Restoring convnet ../trained_models/autoencoder_with_ped/final-model.ckpt
+Traceback (most recent call last):
+  File "train_VGDNN.py", line 445, in <module>
+    model_output = model.train_step(sess, feed_dict_train,step)
+  File "../src/models/VGDNN.py", line 578, in train_step
+    feed_dict=feed_dict_train)
+ValueError: too many values to unpack (expected 14)
+Traceback (most recent call last):
+  File "train_VGDNN.py", line 445, in <module>
+    model_output = model.train_step(sess, feed_dict_train,step)
+  File "../src/models/VGDNN.py", line 578, in train_step
+    feed_dict=feed_dict_train)
+ValueError: too many values to unpack (expected 14)
