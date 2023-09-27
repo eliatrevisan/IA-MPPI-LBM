@@ -8,7 +8,7 @@ SOURCE_VENV=${2:-true}
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if $MAKE_VENV; then
-    # Virtualenv w/ python3
+    # Virtualenv w/ python3 (should be <3.7)
     export PYTHONPATH=/usr/bin/python3 # point to your python3
     python3 -m pip install virtualenv
     cd $DIR
