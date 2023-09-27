@@ -71,10 +71,10 @@ def write_results_summary(mse, fde, avg_div, args, test_args, cvmse, cvfde):
 				 args.prediction_horizon, args.prev_horizon, args.truncated_backprop_length,test_args.scenario,args.others_info, cvmse, cvfde])
 
 	else:
-		with open(test_args.model_name + "_roboat_summary.csv", 'r') as readFile:
+		with open(test_args.model_name + "_summary.csv", 'r') as readFile:
 			reader = csv.reader(readFile)
 			lines = list(reader)
-		with open(test_args.model_name + "_roboat_summary.csv", 'w') as csvfile:
+		with open(test_args.model_name + "_summary.csv", 'w') as csvfile:
 			writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
 			if len(lines) > 3000:#args.exp_num + 1:
 				for i in range(len(lines)):

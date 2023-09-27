@@ -436,7 +436,6 @@ if test_args.record:
 else:
 	print("Performance tests")
 	
-
 	cv_fde, cv_std = compute_rolling_fde(args, trajectories, cv_predictions)
 	
 	fde_roll = []
@@ -446,25 +445,24 @@ else:
 		fde_roll.append(np.mean(pred_error_summary_lstm_fde))
 		std_roll.append(std)
 
-	print("CV: ", cv_fde)
-	print("SVRNN: ", fde_roll)
+	# print("CV: ", cv_fde)
+	# print("SVRNN: ", fde_roll)
 
-	# 30% of STD, just like in bruno's paper, but why?
 	std_roll = np.array(std_roll)*0.3
 	cv_std = cv_std * 0.3
 
-	fig, ax = plt.subplots(figsize=(4,3))
-	x = [1,2,3,4,5,6,7,8,9,10,11,12]
-	ax.set_title("Herengracht")
-	ax.plot(x, cv_fde, label="CV", color="b")
-	ax.plot(x, fde_roll, label="SVRNN", color="r")
-	ax.fill_between(x, cv_fde+cv_std, cv_fde-cv_std, color="b", alpha=0.2)
-	ax.fill_between(x, fde_roll+std_roll, fde_roll-std_roll, color="r", alpha=0.2)
-	ax.set_xlabel("Timestep")
-	ax.set_ylabel("Displacement Error [m]")
-	plt.tight_layout()
-	plt.legend()
-	plt.show()
+	# fig, ax = plt.subplots(figsize=(4,3))
+	# x = [1,2,3,4,5,6,7,8,9,10,11,12]
+	# ax.set_title("Herengracht")
+	# ax.plot(x, cv_fde, label="CV", color="b")
+	# ax.plot(x, fde_roll, label="SVRNN", color="r")
+	# ax.fill_between(x, cv_fde+cv_std, cv_fde-cv_std, color="b", alpha=0.2)
+	# ax.fill_between(x, fde_roll+std_roll, fde_roll-std_roll, color="r", alpha=0.2)
+	# ax.set_xlabel("Timestep")
+	# ax.set_ylabel("Displacement Error [m]")
+	# plt.tight_layout()
+	# plt.legend()
+	# plt.show()
 	
 	pred_error, pred_error_summary_lstm = compute_trajectory_prediction_mse(args, trajectories, all_predictions)
 	pred_fde, pred_error_summary_lstm_fde = compute_trajectory_fde(args, trajectories, all_predictions)
