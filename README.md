@@ -6,8 +6,10 @@ This repository contains the training and testing scripts for the prediction mod
 
 ### Data
 
-Download the dataset here: <a href="https://www.surfdrive.surf.nl/files/index.php/s/2x9P82EOjNWDVwP">Dataset</a>
-Move the data folder into the repository.
+To download the data and trained models (prediction model and pre-trained autoencoder), run
+```
+./download_data.sh
+``` 
 
 ### Setup
 
