@@ -40,7 +40,12 @@ Model parameters will be automatically saved in /trained_models
 ### If you find this code useful, please consider citing:
 
 ```
-@inproceedings{
-    ...
+@inproceedings{jansma2023,
+  author={Jansma, Walter and Trevisan, Elia and Serra-Gómez, {\'A}lvaro and Alonso-Mora, Javier},
+  booktitle={2023 International Symposium on Multi-Robot and Multi-Agent Systems (MRS)}, 
+  title={Interaction-Aware Sampling-Based MPC with Learned Local Goal Predictions},
+  year={2023},
 }
 ```
+
+This code and the model are base on "Social-VRNN: One-Shot Multi-modal Trajectory Prediction for Interacting Pedestrians" by de Brito et al. You can find their code [here](https://github.com/tud-amr/social_vrnn) and their paper [here](https://proceedings.mlr.press/v155/brito21a.html). If relevant, please consider citing them too.
